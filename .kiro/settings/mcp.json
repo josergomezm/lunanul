@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "dart": {
+      "command": "dart",
+      "args": [
+        "mcp-server",
+        "--force-roots-fallback"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "mcp_dart_add_roots",
+        "mcp_dart_analyze_files",
+        "mcp_dart_dart_format",
+        "mcp_dart_resolve_workspace_symbol",
+        "mcp_dart_hover",
+        "mcp_dart_signature_help",
+        "analyze_files",
+        "pub"
+      ]
+    }
+  }
+}
