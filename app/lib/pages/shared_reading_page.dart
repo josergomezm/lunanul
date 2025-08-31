@@ -120,7 +120,7 @@ class _SharedReadingPageState extends ConsumerState<SharedReadingPage>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Shared ${widget.sharedReading.formattedShareDate}',
+                    'Shared ${widget.sharedReading.getFormattedShareDate(Localizations.localeOf(context))}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),

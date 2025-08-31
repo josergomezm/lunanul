@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'enums.dart';
 
 /// Represents a tarot card with all its properties and meanings
@@ -13,6 +14,12 @@ class TarotCard {
   final String reversedMeaning;
   final bool isReversed;
 
+  // Localized content (optional, used when localization is available)
+  final String? localizedName;
+  final List<String>? localizedKeywords;
+  final String? localizedUprightMeaning;
+  final String? localizedReversedMeaning;
+
   const TarotCard({
     required this.id,
     required this.name,
@@ -23,6 +30,10 @@ class TarotCard {
     required this.uprightMeaning,
     required this.reversedMeaning,
     this.isReversed = false,
+    this.localizedName,
+    this.localizedKeywords,
+    this.localizedUprightMeaning,
+    this.localizedReversedMeaning,
   });
 
   /// Create a copy of this card with some properties changed
@@ -36,6 +47,10 @@ class TarotCard {
     String? uprightMeaning,
     String? reversedMeaning,
     bool? isReversed,
+    String? localizedName,
+    List<String>? localizedKeywords,
+    String? localizedUprightMeaning,
+    String? localizedReversedMeaning,
   }) {
     return TarotCard(
       id: id ?? this.id,
@@ -47,14 +62,78 @@ class TarotCard {
       uprightMeaning: uprightMeaning ?? this.uprightMeaning,
       reversedMeaning: reversedMeaning ?? this.reversedMeaning,
       isReversed: isReversed ?? this.isReversed,
+      localizedName: localizedName ?? this.localizedName,
+      localizedKeywords: localizedKeywords ?? this.localizedKeywords,
+      localizedUprightMeaning:
+          localizedUprightMeaning ?? this.localizedUprightMeaning,
+      localizedReversedMeaning:
+          localizedReversedMeaning ?? this.localizedReversedMeaning,
     );
   }
 
-  /// Get the current meaning based on card orientation
-  String get currentMeaning => isReversed ? reversedMeaning : uprightMeaning;
+  /// Get the current meaning based on card orientation (localized if available)
+  String get currentMeaning {
+    if (isReversed) {
+      return localizedReversedMeaning ?? reversedMeaning;
+    } else {
+      return localizedUprightMeaning ?? uprightMeaning;
+    }
+  }
 
-  /// Get the display name with orientation indicator
-  String get displayName => isReversed ? '$name (Reversed)' : name;
+  /// Get the display name with orientation indicator (localized if available)
+  String get displayName {
+    final cardName = localizedName ?? name;
+    return isReversed ? '$cardName (Reversed)' : cardName;
+  }
+
+  /// Get the localized display name with orientation indicator for a specific locale
+  String getLocalizedDisplayName(Locale locale, {String? reversedSuffix}) {
+    final cardName = localizedName ?? name;
+    if (isReversed) {
+      final suffix =
+          reversedSuffix ??
+          (locale.languageCode == 'es' ? ' (Invertida)' : ' (Reversed)');
+      return '$cardName$suffix';
+    }
+    return cardName;
+  }
+
+  /// Get the effective name (localized if available, otherwise fallback to original)
+  String get effectiveName => localizedName ?? name;
+
+  /// Get the effective keywords (localized if available, otherwise fallback to original)
+  List<String> get effectiveKeywords => localizedKeywords ?? keywords;
+
+  /// Get the effective upright meaning (localized if available, otherwise fallback to original)
+  String get effectiveUprightMeaning =>
+      localizedUprightMeaning ?? uprightMeaning;
+
+  /// Get the effective reversed meaning (localized if available, otherwise fallback to original)
+  String get effectiveReversedMeaning =>
+      localizedReversedMeaning ?? reversedMeaning;
+
+  /// Create a localized version of this card
+  TarotCard withLocalization({
+    String? localizedName,
+    List<String>? localizedKeywords,
+    String? localizedUprightMeaning,
+    String? localizedReversedMeaning,
+  }) {
+    return copyWith(
+      localizedName: localizedName,
+      localizedKeywords: localizedKeywords,
+      localizedUprightMeaning: localizedUprightMeaning,
+      localizedReversedMeaning: localizedReversedMeaning,
+    );
+  }
+
+  /// Check if this card has localized content
+  bool get hasLocalization {
+    return localizedName != null ||
+        localizedKeywords != null ||
+        localizedUprightMeaning != null ||
+        localizedReversedMeaning != null;
+  }
 
   /// Check if this is a Major Arcana card
   bool get isMajorArcana => suit == TarotSuit.majorArcana;
@@ -84,6 +163,10 @@ class TarotCard {
       'uprightMeaning': uprightMeaning,
       'reversedMeaning': reversedMeaning,
       'isReversed': isReversed,
+      'localizedName': localizedName,
+      'localizedKeywords': localizedKeywords,
+      'localizedUprightMeaning': localizedUprightMeaning,
+      'localizedReversedMeaning': localizedReversedMeaning,
     };
   }
 
@@ -99,6 +182,12 @@ class TarotCard {
       uprightMeaning: json['uprightMeaning'] as String,
       reversedMeaning: json['reversedMeaning'] as String,
       isReversed: json['isReversed'] as bool? ?? false,
+      localizedName: json['localizedName'] as String?,
+      localizedKeywords: json['localizedKeywords'] != null
+          ? List<String>.from(json['localizedKeywords'] as List)
+          : null,
+      localizedUprightMeaning: json['localizedUprightMeaning'] as String?,
+      localizedReversedMeaning: json['localizedReversedMeaning'] as String?,
     );
   }
 

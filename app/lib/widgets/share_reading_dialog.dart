@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../providers/friends_provider.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Dialog for sharing a reading with friends
 class ShareReadingDialog extends ConsumerWidget {
@@ -11,10 +12,11 @@ class ShareReadingDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
     final friendsAsync = ref.watch(friendsProvider);
 
     return AlertDialog(
-      title: const Text('Share Reading'),
+      title: Text(localizations.shareReading),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(

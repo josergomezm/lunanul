@@ -4,7 +4,10 @@ import '../models/enums.dart';
 import '../models/reading.dart';
 import '../providers/reading_provider.dart';
 import '../providers/journal_provider.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../utils/constants.dart';
+import '../widgets/topic_selector_widget.dart';
+import '../widgets/background_widget.dart';
 import 'spread_selection_page.dart';
 import 'reading_detail_page.dart';
 
@@ -14,43 +17,48 @@ class ReadingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Readings'),
+        title: Text(localizations.readings),
         centerTitle: true,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Page description
-              Text(
-                'Choose a topic for your reading',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+      body: BackgroundWidget(
+        imagePath: 'assets/images/bg_readings.jpg',
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Page description
+                Text(
+                  localizations.chooseTopicForReading,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Let the cards guide you with AI-powered insights',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
+                const SizedBox(height: 8),
+                Text(
+                  localizations.aiPoweredInsights,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Topic selection grid
-              _buildTopicGrid(context, ref),
+                // Topic selection grid
+                _buildTopicGrid(context, ref),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Recent saved readings section
-              _buildRecentReadings(context),
-            ],
+                // Recent saved readings section
+                _buildRecentReadings(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -76,28 +84,6 @@ class ReadingsPage extends ConsumerWidget {
     ReadingTopic topic,
     WidgetRef ref,
   ) {
-    IconData icon;
-    Color color;
-
-    switch (topic) {
-      case ReadingTopic.self:
-        icon = Icons.self_improvement;
-        color = Colors.purple;
-        break;
-      case ReadingTopic.love:
-        icon = Icons.favorite;
-        color = Colors.pink;
-        break;
-      case ReadingTopic.work:
-        icon = Icons.work;
-        color = Colors.blue;
-        break;
-      case ReadingTopic.social:
-        icon = Icons.people;
-        color = Colors.green;
-        break;
-    }
-
     return Card(
       elevation: 2,
       child: InkWell(
@@ -111,36 +97,79 @@ class ReadingsPage extends ConsumerWidget {
           );
         },
         borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            fit: StackFit.expand,
             children: [
+              // Background image
+              Image.asset(
+                topic.imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        topic.color.withValues(alpha: 0.7),
+                        topic.color.withValues(alpha: 0.9),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Soft color overlay
               Container(
-                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      topic.color.withValues(alpha: 0.2),
+                      topic.color.withValues(alpha: 0.4),
+                    ],
+                  ),
                 ),
-                child: Icon(icon, size: 32, color: color),
               ),
-              const SizedBox(height: 12),
-              Text(
-                topic.displayName,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                topic.description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
+              // Dark overlay for text readability
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.1),
+                      Colors.black.withValues(alpha: 0.5),
+                    ],
+                  ),
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              ),
+              // Text content
+              Positioned(
+                bottom: 16,
+                left: 16,
+                right: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      topic.displayName,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(0, 1),
+                            blurRadius: 3,
+                            color: Colors.black.withValues(alpha: 0.7),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

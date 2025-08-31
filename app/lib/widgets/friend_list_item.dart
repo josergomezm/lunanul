@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../utils/constants.dart';
+import '../utils/date_time_localizations.dart';
+import '../providers/language_provider.dart';
 
 /// Widget for displaying a friend in the friends list
-class FriendListItem extends StatelessWidget {
+class FriendListItem extends ConsumerWidget {
   const FriendListItem({
     super.key,
     required this.friend,
@@ -18,7 +21,8 @@ class FriendListItem extends StatelessWidget {
   final bool showLastActive;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -46,7 +50,10 @@ class FriendListItem extends StatelessWidget {
             if (showLastActive) ...[
               const SizedBox(height: 4),
               Text(
-                _getLastActiveText(),
+                DateTimeLocalizations.getActivityTime(
+                  friend.user.lastActiveAt,
+                  locale,
+                ),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
@@ -62,7 +69,9 @@ class FriendListItem extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Friends since ${_getFriendsSinceText()}',
+                  locale.languageCode == 'es'
+                      ? 'Amigos desde ${DateTimeLocalizations.getRelativeDate(friend.friendsSince, locale)}'
+                      : 'Friends since ${DateTimeLocalizations.getRelativeDate(friend.friendsSince, locale)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -99,45 +108,6 @@ class FriendListItem extends StatelessWidget {
         onTap: onTap,
       ),
     );
-  }
-
-  String _getLastActiveText() {
-    final now = DateTime.now();
-    final difference = now.difference(friend.user.lastActiveAt);
-
-    if (difference.inMinutes < 5) {
-      return 'Active now';
-    } else if (difference.inMinutes < 60) {
-      return 'Active ${difference.inMinutes}m ago';
-    } else if (difference.inHours < 24) {
-      return 'Active ${difference.inHours}h ago';
-    } else if (difference.inDays == 1) {
-      return 'Active yesterday';
-    } else if (difference.inDays < 7) {
-      return 'Active ${difference.inDays} days ago';
-    } else {
-      return 'Active ${friend.user.lastActiveAt.day}/${friend.user.lastActiveAt.month}';
-    }
-  }
-
-  String _getFriendsSinceText() {
-    final friendsSince = friend.friendsSince;
-    final now = DateTime.now();
-    final difference = now.difference(friendsSince);
-
-    if (difference.inDays < 1) {
-      return 'today';
-    } else if (difference.inDays == 1) {
-      return 'yesterday';
-    } else if (difference.inDays < 30) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inDays < 365) {
-      final months = (difference.inDays / 30).floor();
-      return months == 1 ? '1 month ago' : '$months months ago';
-    } else {
-      final years = (difference.inDays / 365).floor();
-      return years == 1 ? '1 year ago' : '$years years ago';
-    }
   }
 
   void _showRemoveDialog(BuildContext context) {

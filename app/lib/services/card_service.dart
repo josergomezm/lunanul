@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import '../models/tarot_card.dart';
 import '../models/enums.dart';
+import 'tarot_card_localizations.dart';
 
 /// Service for managing tarot cards, loading card data, and shuffling
 class CardService {
@@ -12,6 +14,7 @@ class CardService {
 
   List<TarotCard>? _allCards;
   final Random _random = Random();
+  final TarotCardLocalizations _localizations = TarotCardLocalizations();
 
   /// Get all 78 tarot cards
   Future<List<TarotCard>> getAllCards() async {
@@ -205,6 +208,140 @@ class CardService {
     return drawCards(count, allowReversed: true, allowDuplicates: false);
   }
 
+  /// Get a localized version of a specific card by ID
+  Future<TarotCard?> getLocalizedCardById(String id, Locale locale) async {
+    final card = await getCardById(id);
+    if (card == null) return null;
+
+    return await _localizeCard(card, locale);
+  }
+
+  /// Get all cards with localization for the specified locale
+  Future<List<TarotCard>> getLocalizedCards(Locale locale) async {
+    final cards = await getAllCards();
+    final localizedCards = <TarotCard>[];
+
+    for (final card in cards) {
+      final localizedCard = await _localizeCard(card, locale);
+      localizedCards.add(localizedCard);
+    }
+
+    return localizedCards;
+  }
+
+  /// Draw a single localized card
+  Future<TarotCard> drawLocalizedSingleCard(
+    Locale locale, {
+    bool allowReversed = true,
+  }) async {
+    final card = await drawSingleCard(allowReversed: allowReversed);
+    return await _localizeCard(card, locale);
+  }
+
+  /// Draw multiple localized cards
+  Future<List<TarotCard>> drawLocalizedCards(
+    int count,
+    Locale locale, {
+    bool allowReversed = true,
+    bool allowDuplicates = false,
+  }) async {
+    final cards = await drawCards(
+      count,
+      allowReversed: allowReversed,
+      allowDuplicates: allowDuplicates,
+    );
+
+    final localizedCards = <TarotCard>[];
+    for (final card in cards) {
+      final localizedCard = await _localizeCard(card, locale);
+      localizedCards.add(localizedCard);
+    }
+
+    return localizedCards;
+  }
+
+  /// Get a localized card of the day
+  Future<TarotCard> getLocalizedCardOfTheDay(
+    Locale locale, {
+    DateTime? date,
+  }) async {
+    final card = await getCardOfTheDay(date: date);
+    return await _localizeCard(card, locale);
+  }
+
+  /// Search cards with localized content
+  Future<List<TarotCard>> searchLocalizedCards(
+    String query,
+    Locale locale,
+  ) async {
+    if (query.isEmpty) {
+      return getLocalizedCards(locale);
+    }
+
+    final cards = await getAllCards();
+    final lowercaseQuery = query.toLowerCase();
+    final matchingCards = <TarotCard>[];
+
+    for (final card in cards) {
+      final localizedCard = await _localizeCard(card, locale);
+
+      // Search in both original and localized content
+      final searchableContent = [
+        card.name.toLowerCase(),
+        localizedCard.effectiveName.toLowerCase(),
+        ...card.keywords.map((k) => k.toLowerCase()),
+        ...localizedCard.effectiveKeywords.map((k) => k.toLowerCase()),
+        card.uprightMeaning.toLowerCase(),
+        localizedCard.effectiveUprightMeaning.toLowerCase(),
+        card.reversedMeaning.toLowerCase(),
+        localizedCard.effectiveReversedMeaning.toLowerCase(),
+      ];
+
+      if (searchableContent.any(
+        (content) => content.contains(lowercaseQuery),
+      )) {
+        matchingCards.add(localizedCard);
+      }
+    }
+
+    return matchingCards;
+  }
+
+  /// Helper method to localize a single card
+  Future<TarotCard> _localizeCard(TarotCard card, Locale locale) async {
+    try {
+      // If it's English or already localized, return as is
+      if (locale.languageCode == 'en' || card.hasLocalization) {
+        return card;
+      }
+
+      // Get localized content
+      final localizedName = await _localizations.getCardName(card.id, locale);
+      final localizedKeywords = await _localizations.getKeywords(
+        card.id,
+        locale,
+      );
+      final localizedUprightMeaning = await _localizations.getUprightMeaning(
+        card.id,
+        locale,
+      );
+      final localizedReversedMeaning = await _localizations.getReversedMeaning(
+        card.id,
+        locale,
+      );
+
+      return card.withLocalization(
+        localizedName: localizedName,
+        localizedKeywords: localizedKeywords,
+        localizedUprightMeaning: localizedUprightMeaning,
+        localizedReversedMeaning: localizedReversedMeaning,
+      );
+    } catch (e) {
+      // If localization fails, return the original card
+      return card;
+    }
+  }
+
   /// Validate that all cards are properly loaded
   Future<bool> validateCardData() async {
     try {
@@ -244,6 +381,7 @@ class CardService {
   /// Clear cached cards (useful for testing)
   void clearCache() {
     _allCards = null;
+    _localizations.clearCache();
   }
 
   /// Get card statistics

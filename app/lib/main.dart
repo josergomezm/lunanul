@@ -3,13 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'utils/app_theme.dart';
 import 'utils/constants.dart';
 import 'utils/app_router.dart';
+import 'utils/date_time_localizations.dart';
 import 'providers/providers.dart';
 import 'services/image_cache_service.dart';
 import 'widgets/image_preloader_widget.dart';
 import 'widgets/loading_animations.dart';
+import 'l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize date/time locale data
+  await DateTimeLocalizations.initializeLocaleData();
 
   // Initialize image cache service
   ImageCacheService().initialize();
@@ -25,6 +30,14 @@ class LunanulApp extends ConsumerWidget {
     // Watch theme provider for dynamic theme switching
     final themeMode = ref.watch(themeProvider);
 
+    // Watch current language for locale updates
+    final currentLocale = ref.watch(languageProvider);
+
+    // Initialize language on app start
+    ref.listen(languageInitializationProvider, (previous, next) {
+      // Language initialization is handled automatically by the provider
+    });
+
     return MaterialApp.router(
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
@@ -32,6 +45,13 @@ class LunanulApp extends ConsumerWidget {
       themeMode: _getThemeMode(themeMode),
       routerConfig: AppRouter.router,
       debugShowCheckedModeBanner: false,
+
+      // Localization configuration
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: currentLocale,
+      localeResolutionCallback: _resolveLocale,
+
       builder: (context, child) {
         return ImagePreloaderWidget(
           preloadEssentials: true,
@@ -52,6 +72,32 @@ class LunanulApp extends ConsumerWidget {
       default:
         return ThemeMode.system;
     }
+  }
+
+  /// Resolve locale with proper fallback handling
+  Locale? _resolveLocale(Locale? locale, Iterable<Locale> supportedLocales) {
+    // If no locale is provided, return null to use system default
+    if (locale == null) {
+      return null;
+    }
+
+    // Check if the exact locale is supported
+    for (final supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode &&
+          supportedLocale.countryCode == locale.countryCode) {
+        return supportedLocale;
+      }
+    }
+
+    // Check if the language code is supported (ignore country code)
+    for (final supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode) {
+        return supportedLocale;
+      }
+    }
+
+    // Fallback to English if the locale is not supported
+    return const Locale('en');
   }
 }
 

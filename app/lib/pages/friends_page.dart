@@ -6,7 +6,9 @@ import '../providers/friends_provider.dart';
 import '../providers/user_provider.dart' show currentUserProvider;
 import '../widgets/friend_list_item.dart';
 import '../widgets/shared_reading_item.dart';
+import '../widgets/background_widget.dart';
 import '../pages/shared_reading_page.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../utils/constants.dart';
 
 /// Friends and sharing page
@@ -15,9 +17,11 @@ class FriendsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Friends'),
+        title: Text(localizations.friends),
         centerTitle: true,
         elevation: 0,
         actions: [
@@ -26,46 +30,49 @@ class FriendsPage extends ConsumerWidget {
               _showAddFriendDialog(context, ref);
             },
             icon: const Icon(Icons.person_add),
-            tooltip: 'Add Friend',
+            tooltip: localizations.addFriend,
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Page description
-              Text(
-                'Share your journey',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+      body: BackgroundWidget(
+        imagePath: 'assets/images/bg_friends.jpg',
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Page description
+                Text(
+                  localizations.shareYourJourney,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Connect with trusted friends and share meaningful readings',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
+                const SizedBox(height: 8),
+                Text(
+                  localizations.connectWithFriends,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Friends list section
-              _buildFriendsList(context, ref),
+                // Friends list section
+                _buildFriendsList(context, ref),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Shared readings section
-              _buildSharedReadings(context, ref),
+                // Shared readings section
+                _buildSharedReadings(context, ref),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Privacy info
-              _buildPrivacyInfo(context),
-            ],
+                // Privacy info
+                _buildPrivacyInfo(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -73,6 +80,7 @@ class FriendsPage extends ConsumerWidget {
   }
 
   Widget _buildFriendsList(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
     final friendsAsync = ref.watch(friendsProvider);
 
     return Column(
@@ -82,7 +90,7 @@ class FriendsPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Your Friends',
+              localizations.yourFriends,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -90,7 +98,7 @@ class FriendsPage extends ConsumerWidget {
             TextButton.icon(
               onPressed: () => _showAddFriendDialog(context, ref),
               icon: const Icon(Icons.add),
-              label: const Text('Add Friend'),
+              label: Text(localizations.addFriend),
             ),
           ],
         ),

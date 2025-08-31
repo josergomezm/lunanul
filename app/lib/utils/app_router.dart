@@ -47,6 +47,12 @@ class AppRouter {
             pageBuilder: (context, state) =>
                 _buildPageWithTransition(context, state, const FriendsPage()),
           ),
+          GoRoute(
+            path: AppConstants.settingsRoute,
+            name: 'settings',
+            pageBuilder: (context, state) =>
+                _buildPageWithTransition(context, state, const SettingsPage()),
+          ),
         ],
       ),
     ],
@@ -123,6 +129,9 @@ extension AppRouterExtension on BuildContext {
 
   /// Navigate to friends page
   void goFriends() => go(AppConstants.friendsRoute);
+
+  /// Navigate to settings page
+  void goSettings() => go(AppConstants.settingsRoute);
 
   /// Get current route path
   String get currentRoute => GoRouterState.of(this).uri.path;

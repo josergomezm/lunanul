@@ -10,6 +10,7 @@ class AppConstants {
   static const String interpretationsRoute = '/interpretations';
   static const String yourselfRoute = '/yourself';
   static const String friendsRoute = '/friends';
+  static const String settingsRoute = '/settings';
 
   // Storage Keys
   static const String userPrefsKey = 'user_preferences';

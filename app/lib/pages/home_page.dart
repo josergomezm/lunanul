@@ -4,9 +4,11 @@ import 'package:lunanul/utils/app_router.dart';
 import '../providers/providers.dart';
 import '../utils/constants.dart';
 import '../utils/theme_helpers.dart';
+import '../utils/date_time_localizations.dart';
 import '../widgets/card_widget.dart';
 import '../widgets/loading_animations.dart';
 import '../widgets/background_widget.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Home page with Card of the Day and recent readings
 class HomePage extends ConsumerStatefulWidget {
@@ -22,13 +24,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     // Watch providers for home page data
-    final cardOfTheDayAsync = ref.watch(cardOfTheDayProvider);
+    final cardOfTheDayAsync = ref.watch(localizedCardOfTheDayProvider);
     final currentUserAsync = ref.watch(currentUserProvider);
     final recentReadingsAsync = ref.watch(recentReadingsProvider);
 
     return Scaffold(
       body: BackgroundWidget(
-        imagePath: 'assets/images/home_background.png',
+        imagePath: 'assets/images/bg_home.png',
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -61,19 +63,20 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Widget _buildGreeting(BuildContext context, AsyncValue currentUserAsync) {
+    final localizations = AppLocalizations.of(context);
+    final locale = ref.watch(languageProvider);
     final now = DateTime.now();
     final hour = now.hour;
-    String greeting;
+
+    // Use localized greeting from DateTimeLocalizations
+    final greeting = DateTimeLocalizations.getTimeBasedGreeting(now, locale);
     IconData greetingIcon;
 
     if (hour < 12) {
-      greeting = 'Good morning';
       greetingIcon = Icons.wb_sunny;
     } else if (hour < 17) {
-      greeting = 'Good afternoon';
       greetingIcon = Icons.wb_sunny_outlined;
     } else {
-      greeting = 'Good evening';
       greetingIcon = Icons.nights_stay;
     }
 
@@ -125,12 +128,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       loading: () => Text(
-                        'Welcome',
+                        localizations.welcome,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       error: (_, _) => Text(
-                        'Welcome',
+                        localizations.welcome,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
@@ -142,7 +145,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Welcome to your personal sanctuary of reflection and insight.',
+            localizations.welcomeMessage,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               height: 1.3,
@@ -158,6 +161,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     WidgetRef ref,
     AsyncValue cardOfTheDayAsync,
   ) {
+    final localizations = AppLocalizations.of(context);
+
     return Card(
       elevation: 8,
       color: ThemeHelpers.getCardColor(context),
@@ -174,7 +179,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Card of the Day',
+                  localizations.cardOfTheDay,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -209,7 +214,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     Column(
                       children: [
                         Text(
-                          'Tap the card to reveal your daily guidance',
+                          localizations.tapToReveal,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: Theme.of(
@@ -268,7 +273,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ref.invalidate(cardOfTheDayProvider);
                           },
                           icon: const Icon(Icons.refresh),
-                          label: const Text('New Card'),
+                          label: Text(localizations.newCard),
                         ),
                       ),
                       if (_isCardRevealed) ...[
@@ -279,7 +284,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               context.goYourself();
                             },
                             icon: const Icon(Icons.book),
-                            label: const Text('Journal'),
+                            label: Text(localizations.journal),
                           ),
                         ),
                       ],
@@ -287,12 +292,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-              loading: () => const Center(
+              loading: () => Center(
                 child: Padding(
-                  padding: EdgeInsets.all(40),
+                  padding: const EdgeInsets.all(40),
                   child: CalmingLoadingAnimation(
                     size: 64,
-                    message: 'Drawing your card...',
+                    message: localizations.drawingCard,
                   ),
                 ),
               ),
@@ -307,12 +312,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Unable to load your card',
+                      localizations.unableToLoadCard,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Please try again',
+                      localizations.pleaseRetry,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -320,7 +325,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => ref.invalidate(cardOfTheDayProvider),
-                      child: const Text('Retry'),
+                      child: Text(localizations.retry),
                     ),
                   ],
                 ),
@@ -336,6 +341,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     BuildContext context,
     AsyncValue recentReadingsAsync,
   ) {
+    final localizations = AppLocalizations.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -343,7 +350,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Recent Readings',
+              localizations.recentReadings,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -352,10 +359,10 @@ class _HomePageState extends ConsumerState<HomePage> {
               onPressed: () {
                 // TODO: Navigate to full readings history
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Full history coming soon!')),
+                  SnackBar(content: Text(localizations.fullHistoryComingSoon)),
                 );
               },
-              child: const Text('View All'),
+              child: Text(localizations.viewAll),
             ),
           ],
         ),
@@ -376,13 +383,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No readings yet',
+                          localizations.noReadingsYet,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Start your journey with a new reading',
+                          localizations.startJourney,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: Theme.of(
@@ -396,13 +403,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                           onPressed: () {
                             // TODO: Navigate to readings page
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Navigate to readings page'),
+                              SnackBar(
+                                content: Text(
+                                  localizations.navigateToReadingsPage,
+                                ),
                               ),
                             );
                           },
                           icon: const Icon(Icons.add),
-                          label: const Text('Start Reading'),
+                          label: Text(localizations.startReading),
                         ),
                       ],
                     ),
@@ -470,16 +479,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      Text(
-                                        reading.formattedDate,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSurfaceVariant,
-                                            ),
+                                      Consumer(
+                                        builder: (context, ref, child) {
+                                          final locale = ref.watch(
+                                            languageProvider,
+                                          );
+                                          return Text(
+                                            reading.getFormattedDate(locale),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                          );
+                                        },
                                       ),
                                     ],
                                   ),
@@ -514,12 +530,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                     },
                   ),
                 ),
-          loading: () => const Center(
+          loading: () => Center(
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: CalmingLoadingAnimation(
                 size: 48,
-                message: 'Loading readings...',
+                message: localizations.loadingReadings,
               ),
             ),
           ),
@@ -537,12 +553,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Unable to load recent readings',
+                    localizations.unableToLoadReadings,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please try again',
+                    localizations.pleaseRetry,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -557,21 +573,35 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Widget _buildJournalPrompt(BuildContext context) {
-    final prompts = [
-      'What energy do you want to cultivate today?',
-      'What lesson is the universe trying to teach you?',
-      'How can you show yourself compassion today?',
-      'What are you ready to release?',
-      'What brings you peace in this moment?',
-      'How can you honor your intuition today?',
-      'What patterns are you noticing in your life?',
-      'What would your highest self do in this situation?',
-      'How can you create more balance in your life?',
-      'What are you most grateful for right now?',
-    ];
+    return Consumer(
+      builder: (context, ref, child) {
+        final localizations = AppLocalizations.of(context);
+        final locale = ref.watch(languageProvider);
+        final dynamicLocalizations = ref.read(
+          dynamicContentLocalizationsProvider,
+        );
 
-    final prompt = prompts[DateTime.now().day % prompts.length];
+        return FutureBuilder<String>(
+          future: dynamicLocalizations.getDailyJournalPrompt(
+            DateTime.now(),
+            locale,
+          ),
+          builder: (context, snapshot) {
+            final prompt = snapshot.data ?? localizations.loading;
 
+            return _buildJournalPromptCard(context, localizations, prompt, ref);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildJournalPromptCard(
+    BuildContext context,
+    AppLocalizations localizations,
+    String prompt,
+    WidgetRef ref,
+  ) {
     return Card(
       elevation: 6,
       color: ThemeHelpers.getCardColor(context),
@@ -614,7 +644,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Daily Reflection',
+                    localizations.dailyReflection,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -664,13 +694,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                       onPressed: () {
                         // TODO: Navigate to journal page
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Journal page coming soon!'),
+                          SnackBar(
+                            content: Text(localizations.journalPageComingSoon),
                           ),
                         );
                       },
                       icon: const Icon(Icons.edit_note),
-                      label: const Text('Reflect'),
+                      label: Text(localizations.reflect),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -681,7 +711,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       });
                     },
                     icon: const Icon(Icons.refresh),
-                    tooltip: 'New prompt',
+                    tooltip: localizations.newPrompt,
                   ),
                 ],
               ),

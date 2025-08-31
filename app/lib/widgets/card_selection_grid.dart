@@ -4,6 +4,8 @@ import '../models/tarot_card.dart';
 import '../models/enums.dart';
 import '../widgets/card_widget.dart';
 import '../utils/constants.dart';
+import '../l10n/generated/app_localizations.dart';
+import '../providers/language_provider.dart';
 
 /// Widget for displaying a searchable grid of tarot cards for selection
 class CardSelectionGrid extends ConsumerStatefulWidget {
@@ -46,30 +48,38 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    final locale = ref.watch(languageProvider);
+    final dynamicLocalizations = ref.read(dynamicContentLocalizationsProvider);
     return Column(
       children: [
         // Search and filter section
-        _buildSearchAndFilter(),
+        _buildSearchAndFilter(localizations, locale, dynamicLocalizations),
         const SizedBox(height: 16),
 
         // Cards grid
         Expanded(
           child: widget.isLoading
               ? const Center(child: CircularProgressIndicator())
-              : _buildCardsGrid(),
+              : _buildCardsGrid(localizations),
         ),
       ],
     );
   }
 
-  Widget _buildSearchAndFilter() {
+  Widget _buildSearchAndFilter(
+    AppLocalizations localizations,
+    Locale locale,
+    dynamic dynamicLocalizations,
+  ) {
     return Column(
       children: [
         // Search bar
         TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: 'Search cards by name or keywords...',
+            hintText:
+                'Search cards by name or keywords...', // TODO: Add to localizations
             prefixIcon: const Icon(Icons.search),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
@@ -93,7 +103,7 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
           child: Row(
             children: [
               FilterChip(
-                label: const Text('All'),
+                label: Text(localizations.allCards),
                 selected: _selectedSuit == null,
                 onSelected: (selected) {
                   setState(() {
@@ -107,7 +117,12 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
                 (suit) => Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
-                    label: Text(suit.displayName),
+                    label: Text(
+                      dynamicLocalizations.getTarotSuitDisplayName(
+                        suit,
+                        locale,
+                      ),
+                    ),
                     selected: _selectedSuit == suit,
                     onSelected: (selected) {
                       setState(() {
@@ -125,7 +140,7 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
     );
   }
 
-  Widget _buildCardsGrid() {
+  Widget _buildCardsGrid(AppLocalizations localizations) {
     if (widget.cards.isEmpty) {
       return Center(
         child: Column(

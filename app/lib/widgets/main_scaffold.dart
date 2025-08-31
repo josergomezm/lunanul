@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/constants.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'custom_icon.dart';
 
 /// Main scaffold with bottom navigation bar
@@ -21,6 +22,7 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     final currentLocation = GoRouterState.of(context).uri.path;
     final currentIndex = _getSelectedIndex(currentLocation);
 
@@ -46,7 +48,7 @@ class BottomNavBar extends StatelessWidget {
             iconPath: currentIndex == 0
                 ? NavIcons.homeFilled
                 : NavIcons.homeOutlined,
-            label: 'Home',
+            label: localizations.navigationHome,
           ),
           _buildNavItem(
             context: context,
@@ -55,7 +57,7 @@ class BottomNavBar extends StatelessWidget {
             iconPath: currentIndex == 1
                 ? NavIcons.readingsFilled
                 : NavIcons.readingsOutlined,
-            label: 'Readings',
+            label: localizations.navigationReadings,
           ),
           _buildNavItem(
             context: context,
@@ -64,7 +66,7 @@ class BottomNavBar extends StatelessWidget {
             iconPath: currentIndex == 2
                 ? NavIcons.manualFilled
                 : NavIcons.manualOutlined,
-            label: 'Manual',
+            label: localizations.navigationManual,
           ),
           _buildNavItem(
             context: context,
@@ -73,7 +75,7 @@ class BottomNavBar extends StatelessWidget {
             iconPath: currentIndex == 3
                 ? NavIcons.yourselfFilled
                 : NavIcons.yourselfOutlined,
-            label: 'Yourself',
+            label: localizations.navigationYourself,
           ),
           _buildNavItem(
             context: context,
@@ -82,7 +84,7 @@ class BottomNavBar extends StatelessWidget {
             iconPath: currentIndex == 4
                 ? NavIcons.friendsFilled
                 : NavIcons.friendsOutlined,
-            label: 'Friends',
+            label: localizations.navigationFriends,
           ),
         ],
       ),

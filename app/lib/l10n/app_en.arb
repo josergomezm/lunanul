@@ -1,0 +1,391 @@
+{
+  "@@locale": "en",
+  "appTitle": "Lunanul",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "homeTitle": "Home",
+  "cardOfTheDay": "Card of the Day",
+  "tapToReveal": "Tap the card to reveal your daily guidance",
+  "recentReadings": "Recent Readings",
+  "dailyReflection": "Daily Reflection",
+  "goodMorning": "Good morning",
+  "@goodMorning": {
+    "description": "Morning greeting"
+  },
+  "goodAfternoon": "Good afternoon",
+  "@goodAfternoon": {
+    "description": "Afternoon greeting"
+  },
+  "goodEvening": "Good evening",
+  "@goodEvening": {
+    "description": "Evening greeting"
+  },
+  "welcome": "Welcome",
+  "welcomeMessage": "Welcome to your personal sanctuary of reflection and insight.",
+  "noReadingsYet": "No readings yet",
+  "startReading": "Start Reading",
+  "newCard": "New Card",
+  "journal": "Journal",
+  "viewAll": "View All",
+  "reflect": "Reflect",
+  "newPrompt": "New prompt",
+  "drawingCard": "Drawing your card...",
+  "loadingReadings": "Loading readings...",
+  "unableToLoadCard": "Unable to load your card",
+  "unableToLoadReadings": "Unable to load recent readings",
+  "pleaseRetry": "Please try again",
+  "retry": "Retry",
+  "loading": "Loading...",
+  "error": "Error",
+  "cancel": "Cancel",
+  "save": "Save",
+  "startJourney": "Start your journey with a new reading",
+  "fullHistoryComingSoon": "Full history coming soon!",
+  "journalPageComingSoon": "Journal page coming soon!",
+  "navigateToReadingsPage": "Navigate to readings page",
+  
+  "manualInterpretations": "Manual Interpretations",
+  "inputPhysicalDeck": "Input your physical deck draws for AI-enhanced insights",
+  "selectReadingContext": "Select reading context",
+  "chooseAreaOfLife": "Choose the area of life you want to explore",
+  "addYourCards": "Add your cards",
+  "selectCardsFromDeck": "Select the cards you drew from your physical deck",
+  "pleaseSelectContext": "Please select a reading context first",
+  "addCardFromDeck": "Add Card from Deck",
+  "clearAll": "Clear All",
+  "saveReading": "Save Reading",
+  "saveInterpretation": "Save interpretation",
+  "startOver": "Start over",
+  "selectedCards": "Selected Cards",
+  "noCardsSelected": "No cards selected",
+  "editPositionName": "Edit Position Name",
+  "positionName": "Position Name",
+  "positionNameHint": "e.g., Past, Present, Future",
+  "selectCard": "Select a Card",
+  "cardConnections": "Card Connections",
+  "recentManualInterpretations": "Recent Manual Interpretations",
+  "noManualInterpretations": "No manual interpretations yet",
+  "addCardsToGetStarted": "Add cards from your physical deck to get started",
+  "interpretationDetailsComingSoon": "Interpretation details coming soon",
+  "failedToLoadInterpretations": "Failed to load interpretations",
+  "saveInterpretationDialog": "Save Interpretation",
+  "saveInterpretationQuestion": "Save this manual interpretation to your journal?",
+  "personalNotes": "Personal notes (optional)",
+  "addThoughts": "Add your thoughts about this reading...",
+  "interpretationSaved": "Interpretation saved to journal",
+  "failedToSave": "Failed to save",
+  
+  "navigationHome": "Home",
+  "navigationReadings": "Readings",
+  "navigationManual": "Manual",
+  "navigationYourself": "Yourself",
+  "navigationFriends": "Friends",
+  
+  "readingDetails": "Reading Details",
+  "yourReflection": "Your Reflection",
+  "readingStatistics": "Reading Statistics",
+  "majorArcana": "Major Arcana",
+  "reversed": "Reversed",
+  "suits": "Suits",
+  "share": "Share",
+  "delete": "Delete",
+  
+  "imageUnavailable": "Image unavailable",
+  
+  "removeFriend": "Remove Friend",
+  "removeFriendConfirm": "Are you sure you want to remove {friendName} from your friends?",
+  "@removeFriendConfirm": {
+    "description": "Confirmation message for removing a friend",
+    "placeholders": {
+      "friendName": {
+        "type": "String",
+        "example": "Sarah"
+      }
+    }
+  },
+  "remove": "Remove",
+  "activeNow": "Active now",
+  "activeMinutesAgo": "Active {minutes}m ago",
+  "@activeMinutesAgo": {
+    "description": "Shows when user was active minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "activeHoursAgo": "Active {hours}h ago",
+  "@activeHoursAgo": {
+    "description": "Shows when user was active hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "activeYesterday": "Active yesterday",
+  "activeDaysAgo": "Active {days} days ago",
+  "@activeDaysAgo": {
+    "description": "Shows when user was active days ago",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "today": "today",
+  "yesterday": "yesterday",
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "description": "Shows how many days ago something happened",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  
+  "startConversation": "Start the conversation",
+  "shareThoughts": "Share your thoughts about this reading with your friend",
+  
+  "allCards": "All",
+  "noCardsFound": "No cards found",
+  "tryAdjustingSearch": "Try adjusting your search or filter",
+  
+  "spreadPast": "Past",
+  "spreadPresent": "Present",
+  "spreadFuture": "Future",
+  "spreadYou": "You",
+  "spreadThem": "Them",
+  "spreadConnection": "Connection",
+  "spreadCurrentSituation": "Current Situation",
+  "spreadStrengths": "Strengths",
+  "spreadChallenges": "Challenges",
+  
+  "topicSelf": "Self",
+  "topicLove": "Love",
+  "topicWork": "Work",
+  "topicSocial": "Social",
+  "topicSelfDescription": "Personal growth and self-discovery",
+  "topicLoveDescription": "Relationships and emotional connections",
+  "topicWorkDescription": "Career and professional life",
+  "topicSocialDescription": "Community and social interactions",
+  
+  "readingJournal": "Reading Journal",
+  "searchReadings": "Search readings...",
+  "all": "All",
+  "noReadingsFound": "No readings found",
+  "tryAdjustingFilters": "Try adjusting your search or filters",
+  "noJournalEntries": "No journal entries yet",
+  "saveReadingsToStart": "Save readings to start building your journal",
+  "createReading": "Create Reading",
+  "unableToLoadJournal": "Unable to load journal",
+  "tryAgain": "Try Again",
+  "deleteReading": "Delete Reading",
+  "deleteReadingConfirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+  "@deleteReadingConfirm": {
+    "description": "Confirmation message for deleting a reading",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Love Reading"
+      }
+    }
+  },
+  "readingDeletedSuccess": "Reading deleted successfully",
+  "failedToDeleteReading": "Failed to delete reading",
+  
+  "friends": "Friends",
+  "addFriend": "Add Friend",
+  "shareYourJourney": "Share your journey",
+  "connectWithFriends": "Connect with trusted friends and share meaningful readings",
+  "yourFriends": "Your Friends",
+  "noFriendsYet": "No friends yet",
+  "addFriendsToShare": "Add friends to share your tarot journey privately",
+  "addYourFirstFriend": "Add Your First Friend",
+  "errorLoadingFriends": "Error loading friends",
+  "sharedReadings": "Shared Readings",
+  "noSharedReadings": "No shared readings",
+  "shareReadingsFromJournal": "Share readings from your journal to start conversations",
+  "errorLoadingSharedReadings": "Error loading shared readings",
+  "errorLoadingUserData": "Error loading user data",
+  "privacySafety": "Privacy & Safety",
+  "privacyInfo": "• Friends can only be added through private invitation codes\n• You control what readings to share\n• All conversations are private between you and your friend\n• You can remove friends at any time",
+  "chooseHowToConnect": "Choose how to connect with your friend:",
+  "shareInvitationCode": "Share Invitation Code",
+  "enterFriendsCode": "Enter Friend's Code",
+  "yourInvitationCode": "Your Invitation Code",
+  "shareThisCode": "Share this code with your friend:",
+  "copyCode": "Copy Code",
+  "codeCopiedToClipboard": "Code copied to clipboard",
+  "errorGeneratingCode": "Error generating code: {error}",
+  "@errorGeneratingCode": {
+    "description": "Error message when generating invitation code fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "done": "Done",
+  "codeUniqueToYou": "This code is unique to you and can be used multiple times",
+  "enterFriendsCodeDialog": "Enter Friend's Code",
+  "enterInvitationCode": "Enter the invitation code your friend shared:",
+  "invitationCode": "Invitation Code",
+  "invitationCodeHint": "LUNA-1234-ABC567",
+  "sendRequest": "Send Request",
+  "pleaseEnterCode": "Please enter an invitation code",
+  "sendingFriendRequest": "Sending friend request...",
+  "friendRequestSentSuccess": "Friend request sent successfully!",
+  "failedToSendFriendRequest": "Failed to send friend request: {error}",
+  "@failedToSendFriendRequest": {
+    "description": "Error message when sending friend request fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Invalid code"
+      }
+    }
+  },
+  "friendRemovedSuccess": "{name} removed from friends",
+  "@friendRemovedSuccess": {
+    "description": "Success message when friend is removed",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Sarah"
+      }
+    }
+  },
+  "failedToRemoveFriend": "Failed to remove friend: {error}",
+  "@failedToRemoveFriend": {
+    "description": "Error message when removing friend fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  
+  "readings": "Readings",
+  "chooseTopicForReading": "Choose a topic for your reading",
+  "aiPoweredInsights": "Let the cards guide you with AI-powered insights",
+  "recentSavedReadings": "Recent Saved Readings",
+  "navigateToYourselfPage": "Navigate to Yourself page to see all readings",
+  "unableToLoadReadings": "Unable to load readings",
+  "noSavedReadingsYet": "No saved readings yet",
+  "completeReadingToSee": "Complete a reading above and save it to see it here",
+  
+  "saveReadingDialog": "Save Reading",
+  "addThoughtsOptional": "Add your thoughts about this reading (optional)...",
+  "saving": "Saving...",
+  "readingSavedToJournal": "Reading saved to your journal",
+  "failedToSaveReading": "Failed to save reading",
+  "saved": "Saved",
+  "alreadySaved": "Already saved",
+  "saveReading": "Save Reading",
+  "readingSaved": "Reading saved",
+  
+  "shareReading": "Share Reading",
+  "cardsSpread": "{count} cards • {spread}",
+  "@cardsSpread": {
+    "description": "Shows number of cards and spread type",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      },
+      "spread": {
+        "type": "String",
+        "example": "Past Present Future"
+      }
+    }
+  },
+  "chooseFriendToShare": "Choose a friend to share with:",
+  "noFriendsToShareWith": "No friends to share with",
+  "addFriendsToStartSharing": "Add friends to start sharing readings",
+  "sharingReading": "Sharing reading...",
+  "readingSharedWith": "Reading shared with {name}",
+  "@readingSharedWith": {
+    "description": "Success message when reading is shared",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Sarah"
+      }
+    }
+  },
+  "failedToShareReading": "Failed to share reading: {error}",
+  "@failedToShareReading": {
+    "description": "Error message when sharing reading fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  
+  "settings": "Settings",
+  "language": "Language",
+  "languageSelection": "Language Selection",
+  "chooseLanguage": "Choose your preferred language",
+  "english": "English",
+  "spanish": "Español",
+  "currentLanguage": "Current language: {language}",
+  "@currentLanguage": {
+    "description": "Shows the currently selected language",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "example": "English"
+      }
+    }
+  },
+  "languageChanged": "Language changed to {language}",
+  "@languageChanged": {
+    "description": "Confirmation message when language is changed",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "example": "English"
+      }
+    }
+  },
+  
+  "yourTarotJourney": "Your tarot journey",
+  "reflectOnReadings": "Reflect on your readings and explore the cards",
+  "yourJourney": "Your Journey",
+  "totalReadings": "Total Readings",
+  "thisWeek": "This Week",
+  "favoriteTopic": "Favorite Topic",
+  "none": "None",
+  "readingJournalDescription": "View and reflect on your saved readings",
+  "cardEncyclopedia": "Card Encyclopedia",
+  "cardEncyclopediaDescription": "Learn about all 78 tarot cards",
+  "readingPatterns": "Reading Patterns",
+  "readingPatternsDescription": "Discover recurring themes and cards",
+  "settingsDescription": "Language preferences and app settings",
+  "recentJournalEntries": "Recent Journal Entries",
+  "noJournalEntriesYet": "No journal entries yet",
+  "saveReadingsToBuildJournal": "Save readings to start building your journal",
+  "cardsCount": "{count} cards",
+  "@cardsCount": {
+    "description": "Shows number of cards in a reading",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "unableToLoadStats": "Unable to load stats",
+  "unableToLoadJournalEntries": "Unable to load journal entries"
+}

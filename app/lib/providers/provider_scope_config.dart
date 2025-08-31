@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/card_service.dart';
 import '../services/mock_reading_service.dart';
@@ -54,7 +55,10 @@ class ProviderScopeConfig {
       await container.read(cardOfTheDayProvider.future);
     } catch (e) {
       // Handle initialization errors gracefully
-      print('Provider initialization warning: $e');
+      developer.log(
+        'Provider initialization warning: $e',
+        name: 'ProviderScopeConfig',
+      );
     }
   }
 
@@ -79,8 +83,9 @@ class ProviderLogger extends ProviderObserver {
   ) {
     // Log provider updates in debug mode
     if (const bool.fromEnvironment('dart.vm.product') == false) {
-      print(
+      developer.log(
         'Provider ${provider.name ?? provider.runtimeType} updated: $newValue',
+        name: 'ProviderLogger',
       );
     }
   }
@@ -92,7 +97,10 @@ class ProviderLogger extends ProviderObserver {
   ) {
     // Log provider disposal in debug mode
     if (const bool.fromEnvironment('dart.vm.product') == false) {
-      print('Provider ${provider.name ?? provider.runtimeType} disposed');
+      developer.log(
+        'Provider ${provider.name ?? provider.runtimeType} disposed',
+        name: 'ProviderLogger',
+      );
     }
   }
 
@@ -104,7 +112,10 @@ class ProviderLogger extends ProviderObserver {
     ProviderContainer container,
   ) {
     // Log provider errors
-    print('Provider ${provider.name ?? provider.runtimeType} failed: $error');
+    developer.log(
+      'Provider ${provider.name ?? provider.runtimeType} failed: $error',
+      name: 'ProviderLogger',
+    );
   }
 }
 

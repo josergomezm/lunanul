@@ -1,0 +1,136 @@
+{
+  "cards": {
+    "fool": {
+      "name": "El Loco",
+      "keywords": ["nuevos comienzos", "inocencia", "aventura", "espontaneidad"],
+      "uprightMeaning": "Nuevos comienzos, inocencia, espontaneidad y espíritu libre. El Loco representa el inicio de un viaje y abrazar lo desconocido con optimismo.",
+      "reversedMeaning": "Imprudencia, ser aprovechado, inconsideración y necedad. Una advertencia para pensar antes de actuar y considerar las consecuencias."
+    },
+    "magician": {
+      "name": "El Mago",
+      "keywords": ["manifestación", "ingenio", "poder", "acción inspirada"],
+      "uprightMeaning": "Manifestación, ingenio, poder y acción inspirada. Tienes las herramientas y la habilidad para lograr tus objetivos.",
+      "reversedMeaning": "Manipulación, mala planificación, talentos sin explotar y falta de enfoque. La energía está siendo mal dirigida o desperdiciada."
+    },
+    "high_priestess": {
+      "name": "La Suma Sacerdotisa",
+      "keywords": ["intuición", "conocimiento sagrado", "femenino divino", "mente subconsciente"],
+      "uprightMeaning": "Intuición, conocimiento sagrado, femenino divino y mente subconsciente. Confía en tu voz interior y presta atención a tus sueños.",
+      "reversedMeaning": "Secretos, desconexión de la intuición, retraimiento y silencio. Puedes estar ignorando tu voz interior o guardando secretos dañinos."
+    },
+    "empress": {
+      "name": "La Emperatriz",
+      "keywords": ["feminidad", "belleza", "naturaleza", "crianza", "abundancia"],
+      "uprightMeaning": "Feminidad, belleza, naturaleza, crianza y abundancia. Un tiempo de crecimiento, creatividad y energía maternal.",
+      "reversedMeaning": "Bloqueo creativo, dependencia de otros, sobreprotección, falta de crecimiento. Puedes estar sofocando tu propio crecimiento o el de otros."
+    },
+    "emperor": {
+      "name": "El Emperador",
+      "keywords": ["autoridad", "establecimiento", "estructura", "figura paterna"],
+      "uprightMeaning": "Autoridad, establecimiento, estructura y figura paterna. Liderazgo, estabilidad y la necesidad de orden y disciplina.",
+      "reversedMeaning": "Dominación, control excesivo, falta de disciplina, inflexibilidad. Abuso de poder o ser demasiado rígido en tu enfoque."
+    },
+    "hierophant": {
+      "name": "El Hierofante",
+      "keywords": ["sabiduría espiritual", "creencias religiosas", "conformidad", "tradición"],
+      "uprightMeaning": "Sabiduría espiritual, creencias religiosas, conformidad y tradición. Aprender de instituciones establecidas y seguir caminos convencionales.",
+      "reversedMeaning": "Creencias personales, libertad, desafiar el status quo. Alejarse de la tradición y encontrar tu propio camino espiritual."
+    },
+    "lovers": {
+      "name": "Los Enamorados",
+      "keywords": ["amor", "armonía", "relaciones", "alineación de valores"],
+      "uprightMeaning": "Amor, armonía, relaciones y alineación de valores. Unión perfecta, asociación y tomar decisiones basadas en el amor.",
+      "reversedMeaning": "Amor propio, desarmonía, desequilibrio, desalineación de valores. Problemas de relación o dificultad para tomar decisiones importantes."
+    },
+    "chariot": {
+      "name": "El Carro",
+      "keywords": ["control", "fuerza de voluntad", "éxito", "determinación"],
+      "uprightMeaning": "Control, fuerza de voluntad, éxito y determinación. Superar obstáculos a través del enfoque y la determinación.",
+      "reversedMeaning": "Autodisciplina, guía interior, falta de control, falta de dirección. Puedes estar luchando por mantener el control o la dirección."
+    },
+    "strength": {
+      "name": "La Fuerza",
+      "keywords": ["fuerza", "coraje", "persuasión", "influencia", "compasión"],
+      "uprightMeaning": "Fuerza interior, coraje, persuasión, influencia y compasión. Superar desafíos a través del poder interior y el control gentil.",
+      "reversedMeaning": "Dudas sobre uno mismo, baja energía, emoción cruda. Puedes estar careciendo de confianza o luchando con el autocontrol."
+    },
+    "hermit": {
+      "name": "El Ermitaño",
+      "keywords": ["búsqueda del alma", "buscar guía interior", "mirar hacia adentro"],
+      "uprightMeaning": "Búsqueda del alma, buscar guía interior y mirar hacia adentro. Un tiempo para la introspección y encontrar tu luz interior.",
+      "reversedMeaning": "Aislamiento, soledad, retraimiento. Puedes estar aislándote demasiado o evitando el trabajo interior."
+    },
+    "wheel_of_fortune": {
+      "name": "La Rueda de la Fortuna",
+      "keywords": ["buena suerte", "karma", "ciclos de vida", "destino", "punto de inflexión"],
+      "uprightMeaning": "Buena suerte, karma, ciclos de vida, destino y punto de inflexión. Un golpe de buena fortuna y cambio positivo.",
+      "reversedMeaning": "Mala suerte, falta de control, aferrarse al control, mal karma. Resistencia al cambio o experimentar contratiempos."
+    },
+    "justice": {
+      "name": "La Justicia",
+      "keywords": ["justicia", "equidad", "verdad", "causa y efecto", "ley"],
+      "uprightMeaning": "Justicia, equidad, verdad, causa y efecto, y ley. Buscar la verdad y tomar decisiones justas basadas en consideración cuidadosa.",
+      "reversedMeaning": "Injusticia, falta de responsabilidad, deshonestidad. Evitar la responsabilidad o experimentar injusticia."
+    },
+    "hanged_man": {
+      "name": "El Colgado",
+      "keywords": ["suspensión", "restricción", "dejar ir", "sacrificio"],
+      "uprightMeaning": "Suspensión, restricción, dejar ir y sacrificio. Un tiempo de espera, rendición y ganar nueva perspectiva.",
+      "reversedMeaning": "Retrasos, resistencia, estancamiento, indecisión. Falta de voluntad para hacer sacrificios necesarios o ver las cosas de manera diferente."
+    },
+    "death": {
+      "name": "La Muerte",
+      "keywords": ["finales", "comienzos", "cambio", "transformación", "transición"],
+      "uprightMeaning": "Finales, comienzos, cambio, transformación y transición. Un cambio de vida mayor o transformación está ocurriendo.",
+      "reversedMeaning": "Resistencia al cambio, transformación personal, purga interior. Miedo al cambio o aferrarse al pasado."
+    },
+    "temperance": {
+      "name": "La Templanza",
+      "keywords": ["equilibrio", "moderación", "paciencia", "propósito"],
+      "uprightMeaning": "Equilibrio, moderación, paciencia y propósito. Encontrar el término medio y practicar la moderación en todas las cosas.",
+      "reversedMeaning": "Desequilibrio, exceso, auto-sanación, realineación. Falta de equilibrio o ir a los extremos."
+    },
+    "devil": {
+      "name": "El Diablo",
+      "keywords": ["esclavitud", "adicción", "sexualidad", "materialismo"],
+      "uprightMeaning": "Esclavitud, adicción, sexualidad y materialismo. Estar atrapado por deseos materiales o apegos poco saludables.",
+      "reversedMeaning": "Liberar creencias limitantes, explorar pensamientos oscuros, desapego. Liberarse de patrones negativos o adicciones."
+    },
+    "tower": {
+      "name": "La Torre",
+      "keywords": ["cambio súbito", "trastorno", "caos", "revelación", "despertar"],
+      "uprightMeaning": "Cambio súbito, trastorno, caos, revelación y despertar. Un cambio súbito y disruptivo que abre el camino para nuevo crecimiento.",
+      "reversedMeaning": "Transformación personal, miedo al cambio, evitar el desastre. Evitar cambios necesarios o experimentar turbulencia interior."
+    },
+    "star": {
+      "name": "La Estrella",
+      "keywords": ["esperanza", "fe", "propósito", "renovación", "espiritualidad"],
+      "uprightMeaning": "Esperanza, fe, propósito, renovación y espiritualidad. Un tiempo de sanación, inspiración y fe renovada en el futuro.",
+      "reversedMeaning": "Falta de fe, desesperación, confianza en uno mismo, desconexión. Sentirse sin esperanza o desconectado de tu camino espiritual."
+    },
+    "moon": {
+      "name": "La Luna",
+      "keywords": ["ilusión", "miedo", "ansiedad", "subconsciente", "intuición"],
+      "uprightMeaning": "Ilusión, miedo, ansiedad, subconsciente e intuición. Las cosas no son como parecen; confía en tu intuición para guiarte.",
+      "reversedMeaning": "Liberación del miedo, emoción reprimida, confusión interior. Superar miedos o lidiar con emociones ocultas."
+    },
+    "sun": {
+      "name": "El Sol",
+      "keywords": ["positividad", "diversión", "calidez", "éxito", "vitalidad"],
+      "uprightMeaning": "Positividad, diversión, calidez, éxito y vitalidad. La alegría, el éxito y la energía positiva iluminan tu camino.",
+      "reversedMeaning": "Niño interior, sentirse decaído, demasiado optimista. Contratiempos temporales o necesidad de reconectar con tu alegría interior."
+    },
+    "judgement": {
+      "name": "El Juicio",
+      "keywords": ["juicio", "renacimiento", "llamada interior", "absolución"],
+      "uprightMeaning": "Juicio, renacimiento, llamada interior y absolución. Un tiempo de reflexión, evaluación y despertar espiritual.",
+      "reversedMeaning": "Dudas sobre uno mismo, crítico interior, ignorar la llamada, falta de autoconciencia. Ser demasiado duro contigo mismo o ignorar tu voz interior."
+    },
+    "world": {
+      "name": "El Mundo",
+      "keywords": ["finalización", "integración", "logro", "viaje"],
+      "uprightMeaning": "Finalización, integración, logro y viaje. El final exitoso de un ciclo y el logro de tus objetivos.",
+      "reversedMeaning": "Buscar cierre personal, atajo al éxito, falta de logro. Proyectos incompletos o buscar validación externa."
+    }
+  }
+}

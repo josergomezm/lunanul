@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:math';
 import '../models/user.dart';
 import '../models/reading.dart';
@@ -267,7 +268,10 @@ class MockUserService {
     }
 
     // Simulate success (in real app, this would create a pending friendship)
-    print('Friend invitation sent with code: $inviteCode');
+    developer.log(
+      'Friend invitation sent with code: $inviteCode',
+      name: 'MockUserService',
+    );
   }
 
   /// Share reading with friend

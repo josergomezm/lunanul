@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../models/tarot_card.dart';
@@ -7,10 +6,10 @@ import 'cached_card_image.dart';
 
 /// Enum for different card sizes
 enum CardSize {
-  tiny(40, 60),
-  small(80, 120),
-  medium(120, 200),
-  large(160, 260);
+  tiny(40, 63),
+  small(80, 125),
+  medium(120, 188),
+  large(160, 250);
 
   const CardSize(this.width, this.height);
   final double width;
@@ -208,18 +207,10 @@ class CardWidget extends StatelessWidget {
 
   Widget _buildCardBack() {
     return Container(
+      width: size.width,
+      height: size.height,
       decoration: BoxDecoration(
         borderRadius: AppTheme.cardRadius,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primaryPurple,
-            AppTheme.mysticPurple,
-            AppTheme.deepBlue,
-          ],
-          stops: const [0.0, 0.5, 1.0],
-        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
@@ -232,83 +223,27 @@ class CardWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: AppTheme.cardRadius,
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            // Animated background pattern
-            Positioned.fill(
-              child: CustomPaint(painter: _EnhancedCardBackPainter()),
+            // Card back image - fills entire container
+            Image.asset(
+              'assets/images/card_back.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
             ),
-            // Subtle shimmer effect
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: AppTheme.cardRadius,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.1),
-                      Colors.transparent,
-                      Colors.white.withValues(alpha: 0.05),
-                    ],
-                  ),
+            // Subtle overlay for depth and consistency
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.05),
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.05),
+                  ],
                 ),
-              ),
-            ),
-            // Center celestial icon with glow
-            Center(
-              child: Container(
-                padding: const EdgeInsets.all(AppTheme.spacingM),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-                child: Icon(
-                  Icons.nights_stay,
-                  size: size.width * 0.3,
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
-              ),
-            ),
-            // Corner decorative elements
-            Positioned(
-              top: AppTheme.spacingS,
-              left: AppTheme.spacingS,
-              child: Icon(
-                Icons.star,
-                size: 12,
-                color: Colors.white.withValues(alpha: 0.6),
-              ),
-            ),
-            Positioned(
-              top: AppTheme.spacingS,
-              right: AppTheme.spacingS,
-              child: Icon(
-                Icons.star,
-                size: 8,
-                color: Colors.white.withValues(alpha: 0.4),
-              ),
-            ),
-            Positioned(
-              bottom: AppTheme.spacingS,
-              left: AppTheme.spacingS,
-              child: Icon(
-                Icons.star,
-                size: 10,
-                color: Colors.white.withValues(alpha: 0.5),
-              ),
-            ),
-            Positioned(
-              bottom: AppTheme.spacingS,
-              right: AppTheme.spacingS,
-              child: Icon(
-                Icons.star,
-                size: 14,
-                color: Colors.white.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -316,94 +251,4 @@ class CardWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Enhanced custom painter for the card back decorative pattern
-class _EnhancedCardBackPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15)
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
-
-    final fillPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
-      ..style = PaintingStyle.fill;
-
-    // Draw outer decorative border
-    final outerBorderRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(
-        AppTheme.spacingS,
-        AppTheme.spacingS,
-        size.width - (AppTheme.spacingS * 2),
-        size.height - (AppTheme.spacingS * 2),
-      ),
-      const Radius.circular(12),
-    );
-    canvas.drawRRect(outerBorderRect, paint);
-
-    // Draw inner decorative border
-    final innerBorderRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(
-        AppTheme.spacingM,
-        AppTheme.spacingM,
-        size.width - (AppTheme.spacingM * 2),
-        size.height - (AppTheme.spacingM * 2),
-      ),
-      const Radius.circular(8),
-    );
-    canvas.drawRRect(innerBorderRect, paint);
-
-    // Draw mystical geometric patterns
-    final centerX = size.width / 2;
-    final centerY = size.height / 2;
-    final radius = size.width * 0.15;
-
-    // Draw hexagon pattern
-    final hexagonPath = Path();
-    for (int i = 0; i < 6; i++) {
-      final angle = (i * 60) * (3.14159 / 180);
-      final x = centerX + radius * cos(angle);
-      final y = centerY + radius * sin(angle);
-
-      if (i == 0) {
-        hexagonPath.moveTo(x, y);
-      } else {
-        hexagonPath.lineTo(x, y);
-      }
-    }
-    hexagonPath.close();
-
-    canvas.drawPath(hexagonPath, fillPaint);
-    canvas.drawPath(hexagonPath, paint);
-
-    // Draw connecting lines from corners to center
-    final cornerPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.1)
-      ..strokeWidth = 0.8;
-
-    final corners = [
-      Offset(AppTheme.spacingM, AppTheme.spacingM),
-      Offset(size.width - AppTheme.spacingM, AppTheme.spacingM),
-      Offset(AppTheme.spacingM, size.height - AppTheme.spacingM),
-      Offset(size.width - AppTheme.spacingM, size.height - AppTheme.spacingM),
-    ];
-
-    for (final corner in corners) {
-      canvas.drawLine(corner, Offset(centerX, centerY), cornerPaint);
-    }
-
-    // Draw small circles at corners
-    final circlePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.2)
-      ..style = PaintingStyle.fill;
-
-    for (final corner in corners) {
-      canvas.drawCircle(corner, 3, circlePaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

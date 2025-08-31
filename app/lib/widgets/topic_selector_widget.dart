@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/enums.dart';
 import '../utils/app_theme.dart';
+import '../providers/language_provider.dart';
 
 /// A beautiful widget for selecting reading topics with animated buttons
-class TopicSelectorWidget extends StatelessWidget {
+class TopicSelectorWidget extends ConsumerWidget {
   final ReadingTopic? selectedTopic;
   final Function(ReadingTopic) onTopicSelected;
   final bool showDescriptions;
@@ -19,7 +21,9 @@ class TopicSelectorWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
+    final dynamicLocalizations = ref.read(dynamicContentLocalizationsProvider);
     return Padding(
       padding: padding,
       child: Column(
@@ -33,17 +37,23 @@ class TopicSelectorWidget extends StatelessWidget {
           Text(
             'Select the area of life you\'d like guidance on',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 24),
-          _buildTopicGrid(),
+          _buildTopicGrid(context, locale, dynamicLocalizations),
         ],
       ),
     );
   }
 
-  Widget _buildTopicGrid() {
+  Widget _buildTopicGrid(
+    BuildContext context,
+    Locale locale,
+    dynamic dynamicLocalizations,
+  ) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -56,12 +66,9 @@ class TopicSelectorWidget extends StatelessWidget {
       itemCount: ReadingTopic.values.length,
       itemBuilder: (context, index) {
         final topic = ReadingTopic.values[index];
-        return _buildTopicButton(topic, context)
+        return _buildTopicButton(topic, context, locale, dynamicLocalizations)
             .animate()
-            .fadeIn(
-              duration: AppTheme.mediumAnimation,
-              delay: (index * 100).ms,
-            )
+            .fadeIn(duration: AppTheme.mediumAnimation, delay: (index * 100).ms)
             .scale(
               begin: const Offset(0.8, 0.8),
               end: const Offset(1.0, 1.0),
@@ -80,7 +87,12 @@ class TopicSelectorWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTopicButton(ReadingTopic topic, BuildContext context) {
+  Widget _buildTopicButton(
+    ReadingTopic topic,
+    BuildContext context,
+    Locale locale,
+    dynamic dynamicLocalizations,
+  ) {
     final isSelected = selectedTopic == topic;
 
     return Material(
@@ -93,59 +105,120 @@ class TopicSelectorWidget extends StatelessWidget {
           duration: AppTheme.shortAnimation,
           decoration: BoxDecoration(
             borderRadius: AppTheme.cardRadius,
-            gradient: isSelected
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppTheme.primaryPurple,
-                      AppTheme.primaryPurple.withValues(alpha: 0.8),
-                    ],
-                  )
-                : null,
-            color: isSelected ? null : Colors.white,
             border: Border.all(
               color: isSelected
                   ? AppTheme.primaryPurple
                   : Colors.grey.withValues(alpha: 0.2),
-              width: isSelected ? 2 : 1,
+              width: isSelected ? 3 : 1,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          child: ClipRRect(
+            borderRadius: AppTheme.cardRadius,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                Icon(
-                  _getTopicIcon(topic),
-                  size: 32,
-                  color: isSelected ? Colors.white : AppTheme.primaryPurple,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  topic.displayName,
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (showDescriptions) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    topic.description,
-                    style: TextStyle(
-                      color: isSelected
-                          ? Colors.white.withValues(alpha: 0.9)
-                          : Colors.black54,
-                      fontSize: 12,
+                // Background image
+                Image.asset(
+                  topic.imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          topic.color.withValues(alpha: 0.7),
+                          topic.color.withValues(alpha: 0.9),
+                        ],
+                      ),
                     ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
+                ),
+                // Soft color overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        topic.color.withValues(alpha: 0.2),
+                        topic.color.withValues(alpha: 0.4),
+                      ],
+                    ),
+                  ),
+                ),
+                // Dark overlay for text readability
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.1),
+                        Colors.black.withValues(alpha: 0.5),
+                      ],
+                    ),
+                  ),
+                ),
+                // Selection overlay
+                if (isSelected)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryPurple.withValues(alpha: 0.2),
+                    ),
+                  ),
+                // Text content
+                Positioned(
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        dynamicLocalizations.getTopicDisplayName(topic, locale),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              shadows: [
+                                Shadow(
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 3,
+                                  color: Colors.black.withValues(alpha: 0.7),
+                                ),
+                              ],
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Selection indicator
+                if (isSelected)
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryPurple,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -153,23 +226,10 @@ class TopicSelectorWidget extends StatelessWidget {
       ),
     );
   }
-
-  IconData _getTopicIcon(ReadingTopic topic) {
-    switch (topic) {
-      case ReadingTopic.self:
-        return Icons.self_improvement;
-      case ReadingTopic.love:
-        return Icons.favorite;
-      case ReadingTopic.work:
-        return Icons.work;
-      case ReadingTopic.social:
-        return Icons.people;
-    }
-  }
 }
 
 /// A compact horizontal version of the topic selector
-class CompactTopicSelectorWidget extends StatelessWidget {
+class CompactTopicSelectorWidget extends ConsumerWidget {
   final ReadingTopic? selectedTopic;
   final Function(ReadingTopic) onTopicSelected;
   final EdgeInsets padding;
@@ -182,7 +242,9 @@ class CompactTopicSelectorWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
+    final dynamicLocalizations = ref.read(dynamicContentLocalizationsProvider);
     return Padding(
       padding: padding,
       child: SingleChildScrollView(
@@ -192,7 +254,13 @@ class CompactTopicSelectorWidget extends StatelessWidget {
             final isSelected = selectedTopic == topic;
             return Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: _buildCompactTopicChip(context, topic, isSelected),
+              child: _buildCompactTopicChip(
+                context,
+                topic,
+                isSelected,
+                locale,
+                dynamicLocalizations,
+              ),
             );
           }).toList(),
         ),
@@ -204,6 +272,8 @@ class CompactTopicSelectorWidget extends StatelessWidget {
     BuildContext context,
     ReadingTopic topic,
     bool isSelected,
+    Locale locale,
+    dynamic dynamicLocalizations,
   ) {
     return Material(
       elevation: isSelected ? 4 : 1,
@@ -213,49 +283,99 @@ class CompactTopicSelectorWidget extends StatelessWidget {
         borderRadius: AppTheme.buttonRadius,
         child: AnimatedContainer(
           duration: AppTheme.shortAnimation,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          height: 40,
           decoration: BoxDecoration(
             borderRadius: AppTheme.buttonRadius,
-            color: isSelected ? AppTheme.primaryPurple : Colors.white,
             border: Border.all(
               color: isSelected
                   ? AppTheme.primaryPurple
                   : Colors.grey.withValues(alpha: 0.3),
+              width: isSelected ? 2 : 1,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _getTopicIcon(topic),
-                size: 16,
-                color: isSelected ? Colors.white : AppTheme.primaryPurple,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                topic.displayName,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black87,
-                  fontWeight: FontWeight.w500,
+          child: ClipRRect(
+            borderRadius: AppTheme.buttonRadius,
+            child: Stack(
+              children: [
+                // Background image
+                Positioned.fill(
+                  child: Image.asset(
+                    topic.imagePath,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: isSelected
+                          ? AppTheme.primaryPurple
+                          : topic.color.withValues(alpha: 0.1),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                // Soft color overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppTheme.primaryPurple.withValues(alpha: 0.7)
+                          : topic.color.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ),
+                // Content
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Center(
+                    child: Text(
+                      dynamicLocalizations.getTopicDisplayName(topic, locale),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(0, 1),
+                            blurRadius: 2,
+                            color: Colors.black.withValues(alpha: 0.5),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  IconData _getTopicIcon(ReadingTopic topic) {
-    switch (topic) {
+// Helper extension for topic utilities
+extension TopicSelectorHelpers on ReadingTopic {
+  String get imagePath {
+    switch (this) {
       case ReadingTopic.self:
-        return Icons.self_improvement;
+        return 'assets/images/topic_self.jpg';
       case ReadingTopic.love:
-        return Icons.favorite;
+        return 'assets/images/topic_love.jpg';
       case ReadingTopic.work:
-        return Icons.work;
+        return 'assets/images/topic_work.jpg';
       case ReadingTopic.social:
-        return Icons.people;
+        return 'assets/images/topic_social.jpg';
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case ReadingTopic.self:
+        return Colors.purple;
+      case ReadingTopic.love:
+        return Colors.pink;
+      case ReadingTopic.work:
+        return Colors.blue;
+      case ReadingTopic.social:
+        return Colors.green;
     }
   }
 }

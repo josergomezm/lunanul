@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'reading.dart';
+import '../utils/date_time_localizations.dart';
 
 /// Represents a reading shared between friends
 class SharedReading {
@@ -70,20 +72,17 @@ class SharedReading {
         .length;
   }
 
-  /// Get formatted share date
+  /// Get formatted share date (deprecated - use getFormattedShareDate with locale)
+  @Deprecated(
+    'Use getFormattedShareDate(locale) instead for proper localization',
+  )
   String get formattedShareDate {
-    final now = DateTime.now();
-    final difference = now.difference(sharedAt);
+    return getFormattedShareDate(const Locale('en'));
+  }
 
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${sharedAt.day}/${sharedAt.month}/${sharedAt.year}';
-    }
+  /// Get localized formatted share date
+  String getFormattedShareDate(Locale locale) {
+    return DateTimeLocalizations.formatReadingDate(sharedAt, locale);
   }
 
   /// Validate shared reading data
@@ -198,19 +197,33 @@ class ChatMessage {
     return readByUserIds.contains(userId);
   }
 
-  /// Get formatted time string
+  /// Get formatted time string (deprecated - use getFormattedTime with locale)
+  @Deprecated('Use getFormattedTime(locale) instead for proper localization')
   String get formattedTime {
+    return getFormattedTime(const Locale('en'));
+  }
+
+  /// Get localized formatted time string
+  String getFormattedTime(Locale locale) {
     final now = DateTime.now();
     final difference = now.difference(sentAt);
 
     if (difference.inMinutes < 1) {
-      return 'Just now';
+      return locale.languageCode == 'es' ? 'Ahora mismo' : 'Just now';
     } else if (difference.inHours < 1) {
-      return '${difference.inMinutes}m ago';
+      if (locale.languageCode == 'es') {
+        return 'hace ${difference.inMinutes}m';
+      } else {
+        return '${difference.inMinutes}m ago';
+      }
     } else if (difference.inDays < 1) {
-      return '${difference.inHours}h ago';
+      if (locale.languageCode == 'es') {
+        return 'hace ${difference.inHours}h';
+      } else {
+        return '${difference.inHours}h ago';
+      }
     } else {
-      return '${sentAt.day}/${sentAt.month}';
+      return DateTimeLocalizations.getShortDateFormatter(locale).format(sentAt);
     }
   }
 

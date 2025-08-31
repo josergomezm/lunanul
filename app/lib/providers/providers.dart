@@ -13,6 +13,9 @@ export 'user_provider.dart'
 export 'manual_interpretation_provider.dart';
 export 'friends_provider.dart';
 
+// Language and localization
+export 'language_provider.dart';
+
 // Navigation and app state
 export 'app_state_provider.dart';
 

@@ -6,6 +6,7 @@ import '../models/enums.dart';
 import '../utils/constants.dart';
 import '../widgets/journal_entry_widget.dart';
 import '../widgets/share_reading_dialog.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'reading_detail_page.dart';
 
 /// Journal page showing chronological list of saved readings
@@ -29,11 +30,12 @@ class _JournalPageState extends ConsumerState<JournalPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     final savedReadingsAsync = ref.watch(savedReadingsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reading Journal'),
+        title: Text(localizations.readingJournal),
         centerTitle: true,
         elevation: 0,
         actions: [
@@ -66,6 +68,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
   }
 
   Widget _buildSearchAndFilter(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.defaultPadding),
       decoration: BoxDecoration(
@@ -84,7 +88,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: 'Search readings...',
+              hintText: localizations.searchReadings,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
@@ -119,7 +123,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             child: Row(
               children: [
                 FilterChip(
-                  label: const Text('All'),
+                  label: Text(localizations.all),
                   selected: _selectedTopic == null,
                   onSelected: (selected) {
                     setState(() {
@@ -196,6 +200,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -212,15 +218,15 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             const SizedBox(height: 16),
             Text(
               _searchQuery.isNotEmpty || _selectedTopic != null
-                  ? 'No readings found'
-                  : 'No journal entries yet',
+                  ? localizations.noReadingsFound
+                  : localizations.noJournalEntries,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
               _searchQuery.isNotEmpty || _selectedTopic != null
-                  ? 'Try adjusting your search or filters'
-                  : 'Save readings to start building your journal',
+                  ? localizations.tryAdjustingFilters
+                  : localizations.saveReadingsToStart,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
               ),
@@ -231,7 +237,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
               ElevatedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.add),
-                label: const Text('Create Reading'),
+                label: Text(localizations.createReading),
               ),
             ],
           ],
@@ -241,6 +247,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
   }
 
   Widget _buildErrorState(BuildContext context, Object error) {
+    final localizations = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.defaultPadding),
@@ -254,7 +262,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Unable to load journal',
+              localizations.unableToLoadJournal,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
@@ -271,7 +279,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                 ref.read(savedReadingsProvider.notifier).refresh();
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              label: Text(localizations.tryAgain),
             ),
           ],
         ),
@@ -295,24 +303,24 @@ class _JournalPageState extends ConsumerState<JournalPage> {
   }
 
   Future<void> _deleteReading(BuildContext context, Reading reading) async {
+    final localizations = AppLocalizations.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Reading'),
-        content: Text(
-          'Are you sure you want to delete "${reading.displayTitle}"? This action cannot be undone.',
-        ),
+        title: Text(localizations.deleteReading),
+        content: Text(localizations.deleteReadingConfirm(reading.displayTitle)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(localizations.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(localizations.delete),
           ),
         ],
       ),
@@ -328,8 +336,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
           SnackBar(
             content: Text(
               success
-                  ? 'Reading deleted successfully'
-                  : 'Failed to delete reading',
+                  ? localizations.readingDeletedSuccess
+                  : localizations.failedToDeleteReading,
             ),
             backgroundColor: success
                 ? Theme.of(context).colorScheme.primary

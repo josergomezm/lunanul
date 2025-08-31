@@ -162,7 +162,7 @@ class _BackgroundWidgetState extends State<BackgroundWidget>
   }
 
   Widget _buildImageBackground(BuildContext context, bool isDark) {
-    final effectiveOpacity = widget.overlayOpacity ?? (isDark ? 0.7 : 0.4);
+    final effectiveOpacity = widget.overlayOpacity ?? (isDark ? 0.7 : 0.8);
     final effectiveBlendMode =
         widget.blendMode ?? (isDark ? BlendMode.darken : BlendMode.lighten);
     final overlayColor = isDark

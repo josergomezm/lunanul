@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/reading.dart';
 import '../providers/journal_provider.dart';
 import '../widgets/reflection_input_widget.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Dialog for saving a reading with optional reflection
 class SaveReadingDialog extends ConsumerStatefulWidget {
@@ -20,6 +21,8 @@ class _SaveReadingDialogState extends ConsumerState<SaveReadingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return Dialog(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
@@ -40,7 +43,7 @@ class _SaveReadingDialogState extends ConsumerState<SaveReadingDialog> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Save Reading',
+                      localizations.saveReadingDialog,
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.w600),
                     ),

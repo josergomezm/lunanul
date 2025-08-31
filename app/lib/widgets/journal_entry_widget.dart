@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/reading.dart';
 import '../models/card_position.dart';
 import '../models/enums.dart';
 import '../utils/app_theme.dart';
+import '../providers/language_provider.dart';
 import 'reading_spread_widget.dart';
 
 /// A widget for displaying reading history entries in the journal
-class JournalEntryWidget extends StatefulWidget {
+class JournalEntryWidget extends ConsumerStatefulWidget {
   final Reading reading;
   final VoidCallback? onTap;
   final VoidCallback? onShare;
@@ -25,10 +27,10 @@ class JournalEntryWidget extends StatefulWidget {
   });
 
   @override
-  State<JournalEntryWidget> createState() => _JournalEntryWidgetState();
+  ConsumerState<JournalEntryWidget> createState() => _JournalEntryWidgetState();
 }
 
-class _JournalEntryWidgetState extends State<JournalEntryWidget>
+class _JournalEntryWidgetState extends ConsumerState<JournalEntryWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
@@ -135,11 +137,16 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget>
           ),
         ),
         const Spacer(),
-        Text(
-          widget.reading.formattedDate,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
+        Consumer(
+          builder: (context, ref, child) {
+            final locale = ref.watch(languageProvider);
+            return Text(
+              widget.reading.getFormattedDate(locale),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            );
+          },
         ),
         const SizedBox(width: 8),
         Icon(
@@ -429,7 +436,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget>
 }
 
 /// A compact version for displaying in lists
-class CompactJournalEntryWidget extends StatelessWidget {
+class CompactJournalEntryWidget extends ConsumerWidget {
   final Reading reading;
   final VoidCallback? onTap;
 
@@ -440,7 +447,8 @@ class CompactJournalEntryWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       elevation: 1,
@@ -466,7 +474,7 @@ class CompactJournalEntryWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
-          reading.formattedDate,
+          reading.getFormattedDate(locale),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(
               context,

@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../services/card_service.dart';
+import 'language_provider.dart';
 
 /// Provider for the CardService instance
 final cardServiceProvider = Provider<CardService>((ref) {
@@ -144,4 +146,141 @@ final randomCardsProvider = FutureProvider.family<List<TarotCard>, int>((
     allowReversed: true,
     allowDuplicates: false,
   );
+});
+
+// LOCALIZED CARD PROVIDERS
+
+/// Provider for all localized tarot cards
+final localizedAllCardsProvider = FutureProvider<List<TarotCard>>((ref) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  return cardService.getLocalizedCards(locale);
+});
+
+/// Provider for localized card of the day
+final localizedCardOfTheDayProvider = FutureProvider<TarotCard>((ref) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  return cardService.getLocalizedCardOfTheDay(locale);
+});
+
+/// Provider for localized card search
+final localizedCardSearchProvider =
+    StateNotifierProvider<
+      LocalizedCardSearchNotifier,
+      AsyncValue<List<TarotCard>>
+    >((ref) {
+      return LocalizedCardSearchNotifier(ref);
+    });
+
+/// State notifier for localized card search functionality
+class LocalizedCardSearchNotifier
+    extends StateNotifier<AsyncValue<List<TarotCard>>> {
+  LocalizedCardSearchNotifier(this._ref) : super(const AsyncValue.loading()) {
+    // Initialize with all cards
+    _loadAllCards();
+  }
+
+  final Ref _ref;
+
+  /// Get current locale from the language provider
+  Locale get _currentLocale => _ref.read(languageProvider);
+
+  /// Get card service
+  CardService get _cardService => _ref.read(cardServiceProvider);
+
+  /// Load all localized cards initially
+  Future<void> _loadAllCards() async {
+    try {
+      final locale = _currentLocale;
+      final cards = await _cardService.getLocalizedCards(locale);
+      state = AsyncValue.data(cards);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  /// Search localized cards by query
+  Future<void> searchCards(String query) async {
+    if (query.isEmpty) {
+      _loadAllCards();
+      return;
+    }
+
+    state = const AsyncValue.loading();
+    try {
+      final locale = _currentLocale;
+      final cards = await _cardService.searchLocalizedCards(query, locale);
+      state = AsyncValue.data(cards);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  /// Reset to show all cards
+  void resetSearch() {
+    _loadAllCards();
+  }
+}
+
+/// Provider for localized card by ID
+final localizedCardByIdProvider = FutureProvider.family<TarotCard?, String>((
+  ref,
+  cardId,
+) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  return cardService.getLocalizedCardById(cardId, locale);
+});
+
+/// Provider for drawing localized random cards
+final localizedRandomCardsProvider =
+    FutureProvider.family<List<TarotCard>, int>((ref, count) async {
+      final cardService = ref.read(cardServiceProvider);
+      final locale = ref.watch(languageProvider);
+      return cardService.drawLocalizedCards(
+        count,
+        locale,
+        allowReversed: true,
+        allowDuplicates: false,
+      );
+    });
+
+/// Provider for localized cards by suit
+final localizedCardsBySuitProvider =
+    FutureProvider.family<List<TarotCard>, TarotSuit>((ref, suit) async {
+      final cardService = ref.read(cardServiceProvider);
+      final locale = ref.watch(languageProvider);
+      final allLocalizedCards = await cardService.getLocalizedCards(locale);
+      return allLocalizedCards.where((card) => card.suit == suit).toList();
+    });
+
+/// Provider for localized Major Arcana cards
+final localizedMajorArcanaCardsProvider = FutureProvider<List<TarotCard>>((
+  ref,
+) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  final allLocalizedCards = await cardService.getLocalizedCards(locale);
+  return allLocalizedCards.where((card) => card.isMajorArcana).toList();
+});
+
+/// Provider for localized Minor Arcana cards
+final localizedMinorArcanaCardsProvider = FutureProvider<List<TarotCard>>((
+  ref,
+) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  final allLocalizedCards = await cardService.getLocalizedCards(locale);
+  return allLocalizedCards.where((card) => !card.isMajorArcana).toList();
+});
+
+/// Provider for localized court cards
+final localizedCourtCardsProvider = FutureProvider<List<TarotCard>>((
+  ref,
+) async {
+  final cardService = ref.read(cardServiceProvider);
+  final locale = ref.watch(languageProvider);
+  final allLocalizedCards = await cardService.getLocalizedCards(locale);
+  return allLocalizedCards.where((card) => card.isCourtCard).toList();
 });

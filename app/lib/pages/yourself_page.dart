@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
 import '../utils/constants.dart';
+import '../widgets/background_widget.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'journal_page.dart';
 import 'card_encyclopedia_page.dart';
 import 'reading_patterns_page.dart';
+import 'settings_page.dart';
 
 /// Personal journal and learning page
 class YourselfPage extends ConsumerWidget {
@@ -12,48 +15,53 @@ class YourselfPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Yourself'),
+        title: Text(localizations.navigationYourself),
         centerTitle: true,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Page description
-              Text(
-                'Your tarot journey',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+      body: BackgroundWidget(
+        imagePath: 'assets/images/bg_yourself.jpg',
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppConstants.defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Page description
+                Text(
+                  localizations.yourTarotJourney,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Reflect on your readings and explore the cards',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
+                const SizedBox(height: 8),
+                Text(
+                  localizations.reflectOnReadings,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Quick stats section
-              _buildQuickStats(context, ref),
+                // Quick stats section
+                _buildQuickStats(context, ref),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Navigation sections
-              _buildNavigationSections(context),
+                // Navigation sections
+                _buildNavigationSections(context, localizations),
 
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
-              // Recent journal entries
-              _buildRecentJournalEntries(context, ref),
-            ],
+                // Recent journal entries
+                _buildRecentJournalEntries(context, ref, localizations),
+              ],
+            ),
           ),
         ),
       ),
@@ -61,6 +69,7 @@ class YourselfPage extends ConsumerWidget {
   }
 
   Widget _buildQuickStats(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
     final recentReadingsAsync = ref.watch(recentReadingsProvider);
 
     return Card(
@@ -71,7 +80,7 @@ class YourselfPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your Journey',
+              localizations.yourJourney,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -83,7 +92,7 @@ class YourselfPage extends ConsumerWidget {
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'Total Readings',
+                      localizations.totalReadings,
                       readings.length.toString(),
                       Icons.auto_stories,
                     ),
@@ -91,7 +100,7 @@ class YourselfPage extends ConsumerWidget {
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'This Week',
+                      localizations.thisWeek,
                       readings
                           .where(
                             (r) =>
@@ -106,17 +115,17 @@ class YourselfPage extends ConsumerWidget {
                   Expanded(
                     child: _buildStatItem(
                       context,
-                      'Favorite Topic',
+                      localizations.favoriteTopic,
                       readings.isNotEmpty
                           ? _getMostFrequentTopic(readings)
-                          : 'None',
+                          : localizations.none,
                       Icons.favorite,
                     ),
                   ),
                 ],
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, _) => const Text('Unable to load stats'),
+              error: (_, _) => Text(localizations.unableToLoadStats),
             ),
           ],
         ),
@@ -164,13 +173,16 @@ class YourselfPage extends ConsumerWidget {
     return topicCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
-  Widget _buildNavigationSections(BuildContext context) {
+  Widget _buildNavigationSections(
+    BuildContext context,
+    AppLocalizations localizations,
+  ) {
     return Column(
       children: [
         _buildSectionCard(
           context,
-          'Reading Journal',
-          'View and reflect on your saved readings',
+          localizations.readingJournal,
+          localizations.readingJournalDescription,
           Icons.book,
           Colors.purple,
           () {
@@ -182,8 +194,8 @@ class YourselfPage extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildSectionCard(
           context,
-          'Card Encyclopedia',
-          'Learn about all 78 tarot cards',
+          localizations.cardEncyclopedia,
+          localizations.cardEncyclopediaDescription,
           Icons.library_books,
           Colors.blue,
           () {
@@ -197,8 +209,8 @@ class YourselfPage extends ConsumerWidget {
         const SizedBox(height: 16),
         _buildSectionCard(
           context,
-          'Reading Patterns',
-          'Discover recurring themes and cards',
+          localizations.readingPatterns,
+          localizations.readingPatternsDescription,
           Icons.analytics,
           Colors.green,
           () {
@@ -206,6 +218,19 @@ class YourselfPage extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => const ReadingPatternsPage(),
               ),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        _buildSectionCard(
+          context,
+          localizations.settings,
+          localizations.settingsDescription,
+          Icons.settings,
+          Colors.orange,
+          () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
             );
           },
         ),
@@ -271,14 +296,18 @@ class YourselfPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentJournalEntries(BuildContext context, WidgetRef ref) {
+  Widget _buildRecentJournalEntries(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations localizations,
+  ) {
     final recentReadingsAsync = ref.watch(recentReadingsProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Journal Entries',
+          localizations.recentJournalEntries,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -301,12 +330,12 @@ class YourselfPage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'No journal entries yet',
+                        localizations.noJournalEntriesYet,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Save readings to start building your journal',
+                        localizations.saveReadingsToBuildJournal,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.outline,
                         ),
@@ -355,7 +384,7 @@ class YourselfPage extends ConsumerWidget {
                           ],
                         ),
                         trailing: Text(
-                          '${reading.cards.length} cards',
+                          localizations.cardsCount(reading.cards.length),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onTap: () {
@@ -372,7 +401,7 @@ class YourselfPage extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => const Text('Unable to load journal entries'),
+          error: (_, _) => Text(localizations.unableToLoadJournalEntries),
         ),
       ],
     );

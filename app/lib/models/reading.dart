@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'enums.dart';
 import 'card_position.dart';
+import '../utils/date_time_localizations.dart';
 
 /// Represents a complete tarot reading with all its components
 class Reading {
@@ -55,20 +57,15 @@ class Reading {
     return '${topic.displayName} - ${spreadType.displayName}';
   }
 
-  /// Get formatted date string
+  /// Get formatted date string (deprecated - use getFormattedDate with locale)
+  @Deprecated('Use getFormattedDate(locale) instead for proper localization')
   String get formattedDate {
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
+    return getFormattedDate(const Locale('en'));
+  }
 
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${createdAt.day}/${createdAt.month}/${createdAt.year}';
-    }
+  /// Get localized formatted date string
+  String getFormattedDate(Locale locale) {
+    return DateTimeLocalizations.formatReadingDate(createdAt, locale);
   }
 
   /// Get a summary of the reading

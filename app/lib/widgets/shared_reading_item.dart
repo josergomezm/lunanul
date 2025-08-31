@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../utils/constants.dart';
+import '../providers/language_provider.dart';
 
 /// Widget for displaying a shared reading in the list
 class SharedReadingItem extends ConsumerWidget {
@@ -18,6 +19,7 @@ class SharedReadingItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
     final isSharedByMe = sharedReading.sharedByUserId == currentUserId;
 
     return Card(
@@ -57,7 +59,7 @@ class SharedReadingItem extends ConsumerWidget {
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          sharedReading.formattedShareDate,
+                          sharedReading.getFormattedShareDate(locale),
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.outline,
@@ -157,7 +159,8 @@ class SharedReadingItem extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        sharedReading.latestMessage?.formattedTime ?? '',
+                        sharedReading.latestMessage?.getFormattedTime(locale) ??
+                            '',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.outline,
                         ),

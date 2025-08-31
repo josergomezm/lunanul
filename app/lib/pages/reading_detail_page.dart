@@ -150,7 +150,9 @@ class _ReadingDetailPageState extends ConsumerState<ReadingDetailPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  widget.reading.formattedDate,
+                  widget.reading.getFormattedDate(
+                    Localizations.localeOf(context),
+                  ),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),

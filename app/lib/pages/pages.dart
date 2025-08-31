@@ -11,3 +11,4 @@ export 'card_detail_page.dart';
 export 'reading_patterns_page.dart';
 export 'reading_detail_page.dart';
 export 'shared_reading_page.dart';
+export 'settings_page.dart';

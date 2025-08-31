@@ -209,7 +209,7 @@ class _ChatWidgetState extends ConsumerState<ChatWidget> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    message.formattedTime,
+                    message.getFormattedTime(Localizations.localeOf(context)),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: isMyMessage
                           ? Theme.of(
