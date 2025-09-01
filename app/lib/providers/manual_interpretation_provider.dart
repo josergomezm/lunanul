@@ -92,11 +92,18 @@ class ManualInterpretationNotifier
   }
 
   /// Add a card to the interpretation
-  Future<void> addCard(TarotCard card, {String? customPosition}) async {
+  Future<void> addCard(
+    TarotCard card, {
+    String? customPosition,
+    bool isReversed = false,
+  }) async {
     if (state.selectedTopic == null) return;
 
     try {
       state = state.copyWith(isLoading: true, error: null);
+
+      // Apply reversed orientation to the card
+      final orientedCard = card.copyWith(isReversed: isReversed);
 
       // Determine position name
       final currentCount = state.selectedCards.length;
@@ -111,14 +118,14 @@ class ManualInterpretationNotifier
 
       // Generate interpretation
       final interpretation = await _service.generateInterpretation(
-        card: card,
+        card: orientedCard,
         topic: state.selectedTopic!,
         positionName: positionName,
       );
 
       // Create new card position
       final cardPosition = ManualCardPosition(
-        card: card,
+        card: orientedCard,
         positionName: positionName,
         interpretation: interpretation,
         order: currentCount,
@@ -207,12 +214,27 @@ class ManualInterpretationNotifier
   /// Search cards by query
   Future<void> searchCards(String query) async {
     try {
+      print('DEBUG: Searching for: "$query"'); // Debug print
       state = state.copyWith(isSearching: true, searchQuery: query);
 
-      final filteredCards = await _cardService.searchCards(query);
+      List<TarotCard> filteredCards;
+      if (query.trim().isEmpty) {
+        // If query is empty, show all cards
+        filteredCards = await _cardService.getAllCards();
+        print(
+          'DEBUG: Empty query, showing ${filteredCards.length} cards',
+        ); // Debug print
+      } else {
+        // Search with the query
+        filteredCards = await _cardService.searchCards(query.trim());
+        print(
+          'DEBUG: Search found ${filteredCards.length} cards',
+        ); // Debug print
+      }
 
       state = state.copyWith(availableCards: filteredCards, isSearching: false);
     } catch (e) {
+      print('DEBUG: Search error: $e'); // Debug print
       state = state.copyWith(error: 'Search failed: $e', isSearching: false);
     }
   }
@@ -226,17 +248,48 @@ class ManualInterpretationNotifier
   /// Filter cards by suit
   Future<void> filterBySuit(TarotSuit? suit) async {
     try {
+      print('DEBUG: Filtering by suit: ${suit?.name ?? "all"}'); // Debug print
       state = state.copyWith(isLoading: true);
 
       List<TarotCard> filteredCards;
       if (suit == null) {
-        filteredCards = await _cardService.getAllCards();
+        // Show all cards, but apply current search if any
+        if (state.searchQuery.trim().isNotEmpty) {
+          filteredCards = await _cardService.searchCards(
+            state.searchQuery.trim(),
+          );
+          print(
+            'DEBUG: All cards with search "${state.searchQuery}": ${filteredCards.length}',
+          ); // Debug print
+        } else {
+          filteredCards = await _cardService.getAllCards();
+          print('DEBUG: All cards: ${filteredCards.length}'); // Debug print
+        }
       } else {
+        // Filter by suit first, then apply search if any
         filteredCards = await _cardService.getCardsBySuit(suit);
+        print(
+          'DEBUG: Cards for suit ${suit.name}: ${filteredCards.length}',
+        ); // Debug print
+        if (state.searchQuery.trim().isNotEmpty) {
+          final query = state.searchQuery.trim().toLowerCase();
+          filteredCards = filteredCards.where((card) {
+            return card.name.toLowerCase().contains(query) ||
+                card.keywords.any(
+                  (keyword) => keyword.toLowerCase().contains(query),
+                ) ||
+                card.uprightMeaning.toLowerCase().contains(query) ||
+                card.reversedMeaning.toLowerCase().contains(query);
+          }).toList();
+          print(
+            'DEBUG: Cards after search filter: ${filteredCards.length}',
+          ); // Debug print
+        }
       }
 
       state = state.copyWith(availableCards: filteredCards, isLoading: false);
     } catch (e) {
+      print('DEBUG: Filter error: $e'); // Debug print
       state = state.copyWith(error: 'Filter failed: $e', isLoading: false);
     }
   }

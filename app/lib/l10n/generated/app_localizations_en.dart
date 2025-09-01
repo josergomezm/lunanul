@@ -116,6 +116,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectReadingContext => 'Select reading context';
 
   @override
+  String get searchCardsHint => 'Search cards by name or keywords...';
+
+  @override
+  String get noCardsFound => 'No cards found';
+
+  @override
+  String get tryAdjustingSearch => 'Try adjusting your search or filter';
+
+  @override
+  String get selectCard => 'Select a Card';
+
+  @override
+  String get selectCardOrientation => 'Select Card Orientation';
+
+  @override
+  String get chooseCardPosition =>
+      'Choose how this card appeared in your reading:';
+
+  @override
+  String get upright => 'Upright';
+
+  @override
+  String get reversed => 'Reversed';
+
+  @override
+  String get allCards => 'All';
+
+  @override
   String get chooseAreaOfLife => 'Choose the area of life you want to explore';
 
   @override
@@ -157,9 +185,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get positionNameHint => 'e.g., Past, Present, Future';
-
-  @override
-  String get selectCard => 'Select a Card';
 
   @override
   String get cardConnections => 'Card Connections';
@@ -228,9 +253,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get majorArcana => 'Major Arcana';
 
   @override
-  String get reversed => 'Reversed';
-
-  @override
   String get suits => 'Suits';
 
   @override
@@ -291,15 +313,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareThoughts =>
       'Share your thoughts about this reading with your friend';
-
-  @override
-  String get allCards => 'All';
-
-  @override
-  String get noCardsFound => 'No cards found';
-
-  @override
-  String get tryAdjustingSearch => 'Try adjusting your search or filter';
 
   @override
   String get spreadPast => 'Past';
@@ -692,4 +705,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unableToLoadJournalEntries => 'Unable to load journal entries';
+
+  @override
+  String get chooseYourSpread => 'Choose Your Spread';
+
+  @override
+  String get selectSpreadType =>
+      'Select the type of reading that resonates with your question';
+
+  @override
+  String get selectASpread => 'Select a Spread';
+
+  @override
+  String startSpreadReading(String spreadName) {
+    return 'Start $spreadName Reading';
+  }
+
+  @override
+  String get shufflingCards => 'Shuffling the cards...';
+
+  @override
+  String get universePreparingReading =>
+      'The universe is preparing your reading';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get unableToCreateReading =>
+      'Unable to create your reading. Please try again.';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get cardsBeingDealt => 'Cards are being dealt...';
+
+  @override
+  String get watchCardsPlaced =>
+      'Watch as your cards are placed in their positions';
+
+  @override
+  String get tapToRevealCards => 'Tap to reveal your cards';
+
+  @override
+  String get touchCardWhenReady =>
+      'Touch each card when you\'re ready to see its message';
+
+  @override
+  String get yourReading => 'Your Reading';
+
+  @override
+  String get saveToJournal => 'Save to Journal';
+
+  @override
+  String get newReading => 'New Reading';
 }

@@ -308,6 +308,60 @@ abstract class AppLocalizations {
   /// **'Select reading context'**
   String get selectReadingContext;
 
+  /// No description provided for @searchCardsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search cards by name or keywords...'**
+  String get searchCardsHint;
+
+  /// No description provided for @noCardsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards found'**
+  String get noCardsFound;
+
+  /// No description provided for @tryAdjustingSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filter'**
+  String get tryAdjustingSearch;
+
+  /// No description provided for @selectCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a Card'**
+  String get selectCard;
+
+  /// No description provided for @selectCardOrientation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Card Orientation'**
+  String get selectCardOrientation;
+
+  /// No description provided for @chooseCardPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how this card appeared in your reading:'**
+  String get chooseCardPosition;
+
+  /// No description provided for @upright.
+  ///
+  /// In en, this message translates to:
+  /// **'Upright'**
+  String get upright;
+
+  /// No description provided for @reversed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reversed'**
+  String get reversed;
+
+  /// No description provided for @allCards.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allCards;
+
   /// No description provided for @chooseAreaOfLife.
   ///
   /// In en, this message translates to:
@@ -391,12 +445,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g., Past, Present, Future'**
   String get positionNameHint;
-
-  /// No description provided for @selectCard.
-  ///
-  /// In en, this message translates to:
-  /// **'Select a Card'**
-  String get selectCard;
 
   /// No description provided for @cardConnections.
   ///
@@ -524,12 +572,6 @@ abstract class AppLocalizations {
   /// **'Major Arcana'**
   String get majorArcana;
 
-  /// No description provided for @reversed.
-  ///
-  /// In en, this message translates to:
-  /// **'Reversed'**
-  String get reversed;
-
   /// No description provided for @suits.
   ///
   /// In en, this message translates to:
@@ -631,24 +673,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share your thoughts about this reading with your friend'**
   String get shareThoughts;
-
-  /// No description provided for @allCards.
-  ///
-  /// In en, this message translates to:
-  /// **'All'**
-  String get allCards;
-
-  /// No description provided for @noCardsFound.
-  ///
-  /// In en, this message translates to:
-  /// **'No cards found'**
-  String get noCardsFound;
-
-  /// No description provided for @tryAdjustingSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Try adjusting your search or filter'**
-  String get tryAdjustingSearch;
 
   /// No description provided for @spreadPast.
   ///
@@ -1357,6 +1381,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to load journal entries'**
   String get unableToLoadJournalEntries;
+
+  /// No description provided for @chooseYourSpread.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Spread'**
+  String get chooseYourSpread;
+
+  /// No description provided for @selectSpreadType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the type of reading that resonates with your question'**
+  String get selectSpreadType;
+
+  /// No description provided for @selectASpread.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a Spread'**
+  String get selectASpread;
+
+  /// Button text to start a specific spread reading
+  ///
+  /// In en, this message translates to:
+  /// **'Start {spreadName} Reading'**
+  String startSpreadReading(String spreadName);
+
+  /// No description provided for @shufflingCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Shuffling the cards...'**
+  String get shufflingCards;
+
+  /// No description provided for @universePreparingReading.
+  ///
+  /// In en, this message translates to:
+  /// **'The universe is preparing your reading'**
+  String get universePreparingReading;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @unableToCreateReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create your reading. Please try again.'**
+  String get unableToCreateReading;
+
+  /// No description provided for @goBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBack;
+
+  /// No description provided for @cardsBeingDealt.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards are being dealt...'**
+  String get cardsBeingDealt;
+
+  /// No description provided for @watchCardsPlaced.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch as your cards are placed in their positions'**
+  String get watchCardsPlaced;
+
+  /// No description provided for @tapToRevealCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to reveal your cards'**
+  String get tapToRevealCards;
+
+  /// No description provided for @touchCardWhenReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch each card when you\'re ready to see its message'**
+  String get touchCardWhenReady;
+
+  /// No description provided for @yourReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Reading'**
+  String get yourReading;
+
+  /// No description provided for @saveToJournal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to Journal'**
+  String get saveToJournal;
+
+  /// No description provided for @newReading.
+  ///
+  /// In en, this message translates to:
+  /// **'New Reading'**
+  String get newReading;
 }
 
 class _AppLocalizationsDelegate

@@ -10,7 +10,7 @@ import '../providers/language_provider.dart';
 /// Widget for displaying a searchable grid of tarot cards for selection
 class CardSelectionGrid extends ConsumerStatefulWidget {
   final List<TarotCard> cards;
-  final Function(TarotCard) onCardSelected;
+  final Function(TarotCard, {bool isReversed}) onCardSelected;
   final bool isLoading;
   final String searchQuery;
   final Function(String) onSearchChanged;
@@ -38,12 +38,28 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
   void initState() {
     super.initState();
     _searchController.text = widget.searchQuery;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void didUpdateWidget(CardSelectionGrid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update search controller if the search query changed externally
+    if (widget.searchQuery != oldWidget.searchQuery &&
+        _searchController.text != widget.searchQuery) {
+      _searchController.text = widget.searchQuery;
+    }
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    widget.onSearchChanged(_searchController.text);
   }
 
   @override
@@ -78,21 +94,19 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
         TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText:
-                'Search cards by name or keywords...', // TODO: Add to localizations
+            hintText: localizations.searchCardsHint,
             prefixIcon: const Icon(Icons.search),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear),
                     onPressed: () {
                       _searchController.clear();
-                      widget.onSearchChanged('');
+                      _onSearchChanged();
                     },
                   )
                 : null,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          onChanged: widget.onSearchChanged,
         ),
 
         const SizedBox(height: 12),
@@ -153,12 +167,12 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No cards found',
+              localizations.noCardsFound,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your search or filter',
+              localizations.tryAdjustingSearch,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.outline,
               ),
@@ -186,7 +200,7 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
 
   Widget _buildSelectableCard(TarotCard card) {
     return GestureDetector(
-      onTap: () => widget.onCardSelected(card),
+      onTap: () => _showCardOrientationDialog(card),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -241,16 +255,72 @@ class _CardSelectionGridState extends ConsumerState<CardSelectionGrid> {
       ),
     );
   }
+
+  void _showCardOrientationDialog(TarotCard card) {
+    final localizations = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(localizations.selectCardOrientation),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              card.name,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 16),
+            Text(localizations.chooseCardPosition),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              widget.onCardSelected(card, isReversed: false);
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.arrow_upward, size: 16),
+                const SizedBox(width: 4),
+                Text(localizations.upright),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              widget.onCardSelected(card, isReversed: true);
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.arrow_downward, size: 16),
+                const SizedBox(width: 4),
+                Text(localizations.reversed),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// Dialog for selecting cards from the full deck
 class CardSelectionDialog extends ConsumerWidget {
-  final Function(TarotCard) onCardSelected;
+  final Function(TarotCard, {bool isReversed}) onCardSelected;
 
   const CardSelectionDialog({super.key, required this.onCardSelected});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
+
     return Dialog(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
@@ -262,7 +332,7 @@ class CardSelectionDialog extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  'Select a Card',
+                  localizations.selectCard,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -281,8 +351,8 @@ class CardSelectionDialog extends ConsumerWidget {
             Expanded(
               child: CardSelectionGrid(
                 cards: const [], // Will be populated by provider
-                onCardSelected: (card) {
-                  onCardSelected(card);
+                onCardSelected: (card, {bool isReversed = false}) {
+                  onCardSelected(card, isReversed: isReversed);
                   Navigator.of(context).pop();
                 },
                 onSearchChanged: (query) {

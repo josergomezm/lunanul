@@ -5,8 +5,14 @@
       "name": "The Fool",
       "suit": "majorArcana",
       "number": 0,
-      "imageUrl": "https://api.lunanul.com/cards/major/fool.png",
-      "keywords": ["new beginnings", "innocence", "adventure", "spontaneity", "free spirit"],
+      "imageUrl": "assets/images/cards/major/fool.png",
+      "keywords": [
+        "new beginnings",
+        "innocence",
+        "adventure",
+        "spontaneity",
+        "free spirit"
+      ],
       "uprightMeaning": "The Fool represents new beginnings, having faith in the future, being inexperienced, not knowing what to expect, having beginner's luck, improvisation and believing in the universe.",
       "reversedMeaning": "The Fool reversed represents recklessness, carelessness, negligence, stupidity, distraction, apathy, irrationality and lack of fun."
     },
@@ -16,7 +22,13 @@
       "suit": "majorArcana",
       "number": 1,
       "imageUrl": "https://api.lunanul.com/cards/major/magician.png",
-      "keywords": ["manifestation", "resourcefulness", "power", "inspired action", "creativity"],
+      "keywords": [
+        "manifestation",
+        "resourcefulness",
+        "power",
+        "inspired action",
+        "creativity"
+      ],
       "uprightMeaning": "The Magician represents manifestation, resourcefulness, power, inspired action and creativity. You have the tools and resources you need to manifest your desires.",
       "reversedMeaning": "The Magician reversed represents manipulation, poor planning, untapped talents, lack of focus and wasted potential."
     },
@@ -26,7 +38,13 @@
       "suit": "majorArcana",
       "number": 2,
       "imageUrl": "https://api.lunanul.com/cards/major/high_priestess.png",
-      "keywords": ["intuition", "sacred knowledge", "divine feminine", "subconscious mind", "inner voice"],
+      "keywords": [
+        "intuition",
+        "sacred knowledge",
+        "divine feminine",
+        "subconscious mind",
+        "inner voice"
+      ],
       "uprightMeaning": "The High Priestess represents intuition, sacred knowledge, divine feminine, the subconscious mind and higher powers. Trust your intuition and inner voice.",
       "reversedMeaning": "The High Priestess reversed represents secrets, disconnected from intuition, withdrawal and silence, repressed feelings."
     },
@@ -36,7 +54,13 @@
       "suit": "majorArcana",
       "number": 3,
       "imageUrl": "https://api.lunanul.com/cards/major/empress.png",
-      "keywords": ["femininity", "beauty", "nature", "nurturing", "abundance"],
+      "keywords": [
+        "femininity",
+        "beauty",
+        "nature",
+        "nurturing",
+        "abundance"
+      ],
       "uprightMeaning": "The Empress represents femininity, beauty, nature, nurturing, abundance and creativity. She encourages you to connect with your feminine energy.",
       "reversedMeaning": "The Empress reversed represents creative block, dependence on others, smothering, lack of growth and overbearing nature."
     },
@@ -46,7 +70,13 @@
       "suit": "majorArcana",
       "number": 4,
       "imageUrl": "https://api.lunanul.com/cards/major/emperor.png",
-      "keywords": ["authority", "establishment", "structure", "father figure", "leadership"],
+      "keywords": [
+        "authority",
+        "establishment",
+        "structure",
+        "father figure",
+        "leadership"
+      ],
       "uprightMeaning": "The Emperor represents authority, establishment, structure, a father figure and leadership. He brings stability and order to your life.",
       "reversedMeaning": "The Emperor reversed represents domination, excessive control, lack of discipline, inflexibility and abuse of power."
     },
@@ -56,7 +86,13 @@
       "suit": "majorArcana",
       "number": 5,
       "imageUrl": "https://api.lunanul.com/cards/major/hierophant.png",
-      "keywords": ["spiritual wisdom", "religious beliefs", "conformity", "tradition", "institutions"],
+      "keywords": [
+        "spiritual wisdom",
+        "religious beliefs",
+        "conformity",
+        "tradition",
+        "institutions"
+      ],
       "uprightMeaning": "The Hierophant represents spiritual wisdom, religious beliefs, conformity, tradition and institutions. Seek guidance from a mentor or spiritual teacher.",
       "reversedMeaning": "The Hierophant reversed represents personal beliefs, freedom, challenging the status quo, unconventional approaches."
     },
@@ -66,7 +102,13 @@
       "suit": "majorArcana",
       "number": 6,
       "imageUrl": "https://api.lunanul.com/cards/major/lovers.png",
-      "keywords": ["love", "harmony", "relationships", "values alignment", "choices"],
+      "keywords": [
+        "love",
+        "harmony",
+        "relationships",
+        "values alignment",
+        "choices"
+      ],
       "uprightMeaning": "The Lovers represents love, harmony, relationships, values alignment and important choices. A significant relationship or decision awaits.",
       "reversedMeaning": "The Lovers reversed represents disharmony, imbalance, misalignment of values, relationship problems."
     },
@@ -76,7 +118,13 @@
       "suit": "majorArcana",
       "number": 7,
       "imageUrl": "https://api.lunanul.com/cards/major/chariot.png",
-      "keywords": ["control", "willpower", "success", "determination", "direction"],
+      "keywords": [
+        "control",
+        "willpower",
+        "success",
+        "determination",
+        "direction"
+      ],
       "uprightMeaning": "The Chariot represents control, willpower, success, determination and direction. You have the strength to overcome obstacles.",
       "reversedMeaning": "The Chariot reversed represents lack of control, lack of direction, aggression, powerlessness."
     },
@@ -86,7 +134,13 @@
       "suit": "majorArcana",
       "number": 8,
       "imageUrl": "https://api.lunanul.com/cards/major/strength.png",
-      "keywords": ["strength", "courage", "persuasion", "influence", "compassion"],
+      "keywords": [
+        "strength",
+        "courage",
+        "persuasion",
+        "influence",
+        "compassion"
+      ],
       "uprightMeaning": "Strength represents inner strength, courage, persuasion, influence and compassion. You have the power to overcome challenges through gentleness.",
       "reversedMeaning": "Strength reversed represents self-doubt, lack of confidence, low energy, raw emotion."
     },
@@ -96,7 +150,13 @@
       "suit": "majorArcana",
       "number": 9,
       "imageUrl": "https://api.lunanul.com/cards/major/hermit.png",
-      "keywords": ["soul searching", "seeking truth", "inner guidance", "solitude", "introspection"],
+      "keywords": [
+        "soul searching",
+        "seeking truth",
+        "inner guidance",
+        "solitude",
+        "introspection"
+      ],
       "uprightMeaning": "The Hermit represents soul searching, seeking truth, inner guidance and introspection. Take time for self-reflection and inner wisdom.",
       "reversedMeaning": "The Hermit reversed represents isolation, loneliness, withdrawal, paranoia, misguided advice."
     },
@@ -106,7 +166,13 @@
       "suit": "majorArcana",
       "number": 10,
       "imageUrl": "https://api.lunanul.com/cards/major/wheel_of_fortune.png",
-      "keywords": ["good luck", "karma", "life cycles", "destiny", "turning point"],
+      "keywords": [
+        "good luck",
+        "karma",
+        "life cycles",
+        "destiny",
+        "turning point"
+      ],
       "uprightMeaning": "The Wheel of Fortune represents good luck, karma, life cycles, destiny and a turning point. Positive change is coming.",
       "reversedMeaning": "The Wheel of Fortune reversed represents bad luck, lack of control, clinging to control, unwelcome changes."
     },
@@ -116,7 +182,13 @@
       "suit": "majorArcana",
       "number": 11,
       "imageUrl": "https://api.lunanul.com/cards/major/justice.png",
-      "keywords": ["justice", "fairness", "truth", "cause and effect", "law"],
+      "keywords": [
+        "justice",
+        "fairness",
+        "truth",
+        "cause and effect",
+        "law"
+      ],
       "uprightMeaning": "Justice represents justice, fairness, truth, cause and effect, and law. You will receive what you deserve based on your actions.",
       "reversedMeaning": "Justice reversed represents unfairness, lack of accountability, dishonesty, bias."
     },
@@ -126,7 +198,13 @@
       "suit": "majorArcana",
       "number": 12,
       "imageUrl": "https://api.lunanul.com/cards/major/hanged_man.png",
-      "keywords": ["suspension", "restriction", "letting go", "sacrifice", "new perspective"],
+      "keywords": [
+        "suspension",
+        "restriction",
+        "letting go",
+        "sacrifice",
+        "new perspective"
+      ],
       "uprightMeaning": "The Hanged Man represents suspension, restriction, letting go, sacrifice and gaining a new perspective. Sometimes you must pause to move forward.",
       "reversedMeaning": "The Hanged Man reversed represents delays, resistance, stalling, indecision."
     },
@@ -136,7 +214,13 @@
       "suit": "majorArcana",
       "number": 13,
       "imageUrl": "https://api.lunanul.com/cards/major/death.png",
-      "keywords": ["endings", "beginnings", "change", "transformation", "transition"],
+      "keywords": [
+        "endings",
+        "beginnings",
+        "change",
+        "transformation",
+        "transition"
+      ],
       "uprightMeaning": "Death represents endings, beginnings, change, transformation and transition. One chapter ends so another can begin.",
       "reversedMeaning": "Death reversed represents resistance to change, personal transformation, inner purging."
     },
@@ -146,7 +230,13 @@
       "suit": "majorArcana",
       "number": 14,
       "imageUrl": "https://api.lunanul.com/cards/major/temperance.png",
-      "keywords": ["balance", "moderation", "patience", "purpose", "meaning"],
+      "keywords": [
+        "balance",
+        "moderation",
+        "patience",
+        "purpose",
+        "meaning"
+      ],
       "uprightMeaning": "Temperance represents balance, moderation, patience, purpose and finding meaning. Seek harmony and avoid extremes.",
       "reversedMeaning": "Temperance reversed represents imbalance, excess, self-healing, re-alignment."
     },
@@ -156,7 +246,13 @@
       "suit": "majorArcana",
       "number": 15,
       "imageUrl": "https://api.lunanul.com/cards/major/devil.png",
-      "keywords": ["bondage", "addiction", "sexuality", "materialism", "temptation"],
+      "keywords": [
+        "bondage",
+        "addiction",
+        "sexuality",
+        "materialism",
+        "temptation"
+      ],
       "uprightMeaning": "The Devil represents bondage, addiction, sexuality, materialism and temptation. You may be trapped by your own limiting beliefs.",
       "reversedMeaning": "The Devil reversed represents releasing limiting beliefs, exploring dark thoughts, detachment."
     },
@@ -166,7 +262,13 @@
       "suit": "majorArcana",
       "number": 16,
       "imageUrl": "https://api.lunanul.com/cards/major/tower.png",
-      "keywords": ["sudden change", "upheaval", "chaos", "revelation", "awakening"],
+      "keywords": [
+        "sudden change",
+        "upheaval",
+        "chaos",
+        "revelation",
+        "awakening"
+      ],
       "uprightMeaning": "The Tower represents sudden change, upheaval, chaos, revelation and awakening. Dramatic change will clear the way for new growth.",
       "reversedMeaning": "The Tower reversed represents personal transformation, fear of change, averting disaster."
     },
@@ -176,7 +278,13 @@
       "suit": "majorArcana",
       "number": 17,
       "imageUrl": "https://api.lunanul.com/cards/major/star.png",
-      "keywords": ["hope", "faith", "purpose", "renewal", "spirituality"],
+      "keywords": [
+        "hope",
+        "faith",
+        "purpose",
+        "renewal",
+        "spirituality"
+      ],
       "uprightMeaning": "The Star represents hope, faith, purpose, renewal and spirituality. You are blessed with inspiration and hope for the future.",
       "reversedMeaning": "The Star reversed represents lack of faith, despair, self-trust, disconnection."
     },
@@ -186,7 +294,13 @@
       "suit": "majorArcana",
       "number": 18,
       "imageUrl": "https://api.lunanul.com/cards/major/moon.png",
-      "keywords": ["illusion", "fear", "anxiety", "subconscious", "intuition"],
+      "keywords": [
+        "illusion",
+        "fear",
+        "anxiety",
+        "subconscious",
+        "intuition"
+      ],
       "uprightMeaning": "The Moon represents illusion, fear, anxiety, subconscious and intuition. Trust your intuition but be aware of deception.",
       "reversedMeaning": "The Moon reversed represents release of fear, repressed emotion, inner confusion."
     },
@@ -196,7 +310,13 @@
       "suit": "majorArcana",
       "number": 19,
       "imageUrl": "https://api.lunanul.com/cards/major/sun.png",
-      "keywords": ["positivity", "fun", "warmth", "success", "vitality"],
+      "keywords": [
+        "positivity",
+        "fun",
+        "warmth",
+        "success",
+        "vitality"
+      ],
       "uprightMeaning": "The Sun represents positivity, fun, warmth, success and vitality. Joy and success are coming your way.",
       "reversedMeaning": "The Sun reversed represents inner child, feeling down, overly optimistic."
     },
@@ -206,7 +326,13 @@
       "suit": "majorArcana",
       "number": 20,
       "imageUrl": "https://api.lunanul.com/cards/major/judgement.png",
-      "keywords": ["judgement", "rebirth", "inner calling", "absolution", "awakening"],
+      "keywords": [
+        "judgement",
+        "rebirth",
+        "inner calling",
+        "absolution",
+        "awakening"
+      ],
       "uprightMeaning": "Judgement represents judgement, rebirth, inner calling, absolution and awakening. You are being called to a higher purpose.",
       "reversedMeaning": "Judgement reversed represents self-doubt, inner critic, ignoring the call, lack of self-awareness."
     },
@@ -216,7 +342,13 @@
       "suit": "majorArcana",
       "number": 21,
       "imageUrl": "https://api.lunanul.com/cards/major/world.png",
-      "keywords": ["completion", "integration", "accomplishment", "travel", "fulfillment"],
+      "keywords": [
+        "completion",
+        "integration",
+        "accomplishment",
+        "travel",
+        "fulfillment"
+      ],
       "uprightMeaning": "The World represents completion, integration, accomplishment and fulfillment. You have achieved your goals and found success.",
       "reversedMeaning": "The World reversed represents seeking personal closure, short-cut to success, lack of achievement."
     },
@@ -226,7 +358,13 @@
       "suit": "cups",
       "number": 1,
       "imageUrl": "https://api.lunanul.com/cards/cups/ace.png",
-      "keywords": ["love", "new relationships", "compassion", "creativity", "emotional awakening"],
+      "keywords": [
+        "love",
+        "new relationships",
+        "compassion",
+        "creativity",
+        "emotional awakening"
+      ],
       "uprightMeaning": "The Ace of Cups represents love, new relationships, compassion, creativity and emotional awakening. A new emotional beginning awaits.",
       "reversedMeaning": "The Ace of Cups reversed represents self-love, intuition, repressed emotions, emotional loss."
     },
@@ -236,7 +374,13 @@
       "suit": "cups",
       "number": 2,
       "imageUrl": "https://api.lunanul.com/cards/cups/two.png",
-      "keywords": ["unified love", "partnership", "mutual attraction", "relationships", "connection"],
+      "keywords": [
+        "unified love",
+        "partnership",
+        "mutual attraction",
+        "relationships",
+        "connection"
+      ],
       "uprightMeaning": "The Two of Cups represents unified love, partnership, mutual attraction and deep connection. A meaningful relationship is forming.",
       "reversedMeaning": "The Two of Cups reversed represents self-love, break-ups, disharmony, distrust."
     },
@@ -246,7 +390,13 @@
       "suit": "cups",
       "number": 3,
       "imageUrl": "https://api.lunanul.com/cards/cups/three.png",
-      "keywords": ["celebration", "friendship", "creativity", "collaborations", "community"],
+      "keywords": [
+        "celebration",
+        "friendship",
+        "creativity",
+        "collaborations",
+        "community"
+      ],
       "uprightMeaning": "The Three of Cups represents celebration, friendship, creativity, collaborations and community. Enjoy time with friends and celebrate achievements.",
       "reversedMeaning": "The Three of Cups reversed represents independence, alone time, hardcore partying, three's a crowd."
     },
@@ -256,7 +406,13 @@
       "suit": "cups",
       "number": 4,
       "imageUrl": "https://api.lunanul.com/cards/cups/four.png",
-      "keywords": ["meditation", "contemplation", "apathy", "reevaluation", "boredom"],
+      "keywords": [
+        "meditation",
+        "contemplation",
+        "apathy",
+        "reevaluation",
+        "boredom"
+      ],
       "uprightMeaning": "The Four of Cups represents meditation, contemplation, apathy and reevaluation. Take time to reflect on your emotional state.",
       "reversedMeaning": "The Four of Cups reversed represents retreat, withdrawal, checking in with yourself."
     },
@@ -266,7 +422,13 @@
       "suit": "cups",
       "number": 5,
       "imageUrl": "https://api.lunanul.com/cards/cups/five.png",
-      "keywords": ["regret", "failure", "disappointment", "pessimism", "loss"],
+      "keywords": [
+        "regret",
+        "failure",
+        "disappointment",
+        "pessimism",
+        "loss"
+      ],
       "uprightMeaning": "The Five of Cups represents regret, failure, disappointment and loss. Focus on what remains rather than what is lost.",
       "reversedMeaning": "The Five of Cups reversed represents personal setbacks, self-forgiveness, moving on."
     },
@@ -276,7 +438,13 @@
       "suit": "cups",
       "number": 6,
       "imageUrl": "https://api.lunanul.com/cards/cups/six.png",
-      "keywords": ["revisiting the past", "childhood memories", "innocence", "joy", "nostalgia"],
+      "keywords": [
+        "revisiting the past",
+        "childhood memories",
+        "innocence",
+        "joy",
+        "nostalgia"
+      ],
       "uprightMeaning": "The Six of Cups represents revisiting the past, childhood memories, innocence and nostalgia. Happy memories bring comfort and joy.",
       "reversedMeaning": "The Six of Cups reversed represents living in the past, forgiveness, lacking playfulness."
     },
@@ -286,7 +454,13 @@
       "suit": "cups",
       "number": 7,
       "imageUrl": "https://api.lunanul.com/cards/cups/seven.png",
-      "keywords": ["opportunities", "choices", "wishful thinking", "illusion", "fantasy"],
+      "keywords": [
+        "opportunities",
+        "choices",
+        "wishful thinking",
+        "illusion",
+        "fantasy"
+      ],
       "uprightMeaning": "The Seven of Cups represents opportunities, choices, wishful thinking and illusion. Many options are available but choose wisely.",
       "reversedMeaning": "The Seven of Cups reversed represents alignment, personal values, overwhelmed by choices."
     },
@@ -296,7 +470,13 @@
       "suit": "cups",
       "number": 8,
       "imageUrl": "https://api.lunanul.com/cards/cups/eight.png",
-      "keywords": ["disappointment", "abandonment", "withdrawal", "escapism", "seeking truth"],
+      "keywords": [
+        "disappointment",
+        "abandonment",
+        "withdrawal",
+        "escapism",
+        "seeking truth"
+      ],
       "uprightMeaning": "The Eight of Cups represents disappointment, abandonment, withdrawal and seeking deeper truth. It's time to move on from what no longer serves you.",
       "reversedMeaning": "The Eight of Cups reversed represents trying one more time, indecision, aimless drifting."
     },
@@ -306,7 +486,13 @@
       "suit": "cups",
       "number": 9,
       "imageUrl": "https://api.lunanul.com/cards/cups/nine.png",
-      "keywords": ["contentment", "satisfaction", "gratitude", "wish fulfillment", "luxury"],
+      "keywords": [
+        "contentment",
+        "satisfaction",
+        "gratitude",
+        "wish fulfillment",
+        "luxury"
+      ],
       "uprightMeaning": "The Nine of Cups represents contentment, satisfaction, gratitude and wish fulfillment. Your dreams are coming true.",
       "reversedMeaning": "The Nine of Cups reversed represents inner happiness, materialism, dissatisfaction."
     },
@@ -316,7 +502,13 @@
       "suit": "cups",
       "number": 10,
       "imageUrl": "https://api.lunanul.com/cards/cups/ten.png",
-      "keywords": ["divine love", "blissful relationships", "harmony", "alignment", "happiness"],
+      "keywords": [
+        "divine love",
+        "blissful relationships",
+        "harmony",
+        "alignment",
+        "happiness"
+      ],
       "uprightMeaning": "The Ten of Cups represents divine love, blissful relationships, harmony and happiness. Perfect emotional fulfillment is achieved.",
       "reversedMeaning": "The Ten of Cups reversed represents disconnection, misaligned values, struggling relationships."
     },
@@ -326,7 +518,13 @@
       "suit": "cups",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/cups/page.png",
-      "keywords": ["creative opportunities", "intuitive messages", "curiosity", "possibility", "inner child"],
+      "keywords": [
+        "creative opportunities",
+        "intuitive messages",
+        "curiosity",
+        "possibility",
+        "inner child"
+      ],
       "uprightMeaning": "The Page of Cups represents creative opportunities, intuitive messages, curiosity and new possibilities. Trust your creative instincts.",
       "reversedMeaning": "The Page of Cups reversed represents new ideas, doubting intuition, creative blocks."
     },
@@ -336,7 +534,13 @@
       "suit": "cups",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/cups/knight.png",
-      "keywords": ["creativity", "romance", "charm", "imagination", "beauty"],
+      "keywords": [
+        "creativity",
+        "romance",
+        "charm",
+        "imagination",
+        "beauty"
+      ],
       "uprightMeaning": "The Knight of Cups represents creativity, romance, charm and imagination. Follow your heart and pursue your dreams.",
       "reversedMeaning": "The Knight of Cups reversed represents overactive imagination, unrealistic, jealousy."
     },
@@ -346,7 +550,13 @@
       "suit": "cups",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/cups/queen.png",
-      "keywords": ["compassionate", "caring", "emotionally stable", "intuitive", "healer"],
+      "keywords": [
+        "compassionate",
+        "caring",
+        "emotionally stable",
+        "intuitive",
+        "healer"
+      ],
       "uprightMeaning": "The Queen of Cups represents compassion, caring, emotional stability and intuitive healing. Trust your emotional intelligence.",
       "reversedMeaning": "The Queen of Cups reversed represents inner compassion, self-care, co-dependency."
     },
@@ -356,7 +566,13 @@
       "suit": "cups",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/cups/king.png",
-      "keywords": ["emotionally balanced", "compassionate", "diplomatic", "wisdom", "devotion"],
+      "keywords": [
+        "emotionally balanced",
+        "compassionate",
+        "diplomatic",
+        "wisdom",
+        "devotion"
+      ],
       "uprightMeaning": "The King of Cups represents emotional balance, compassion, diplomacy and wisdom. You have mastered your emotions.",
       "reversedMeaning": "The King of Cups reversed represents self-compassion, inner feelings, moodiness."
     },
@@ -366,7 +582,13 @@
       "suit": "wands",
       "number": 1,
       "imageUrl": "https://api.lunanul.com/cards/wands/ace.png",
-      "keywords": ["inspiration", "new opportunities", "growth", "potential", "creative spark"],
+      "keywords": [
+        "inspiration",
+        "new opportunities",
+        "growth",
+        "potential",
+        "creative spark"
+      ],
       "uprightMeaning": "The Ace of Wands represents inspiration, new opportunities, growth and creative potential. A new creative venture is beginning.",
       "reversedMeaning": "The Ace of Wands reversed represents an emerging idea, lack of direction, distractions."
     },
@@ -376,7 +598,12 @@
       "suit": "wands",
       "number": 2,
       "imageUrl": "https://api.lunanul.com/cards/wands/two.png",
-      "keywords": ["future planning", "making decisions", "leaving comfort zone", "personal power"],
+      "keywords": [
+        "future planning",
+        "making decisions",
+        "leaving comfort zone",
+        "personal power"
+      ],
       "uprightMeaning": "The Two of Wands represents future planning, making decisions and personal power. You have the world in your hands.",
       "reversedMeaning": "The Two of Wands reversed represents personal goals, inner alignment, fear of unknown."
     },
@@ -386,7 +613,13 @@
       "suit": "wands",
       "number": 3,
       "imageUrl": "https://api.lunanul.com/cards/wands/three.png",
-      "keywords": ["expansion", "foresight", "overseas opportunities", "leadership", "progress"],
+      "keywords": [
+        "expansion",
+        "foresight",
+        "overseas opportunities",
+        "leadership",
+        "progress"
+      ],
       "uprightMeaning": "The Three of Wands represents expansion, foresight, overseas opportunities and progress. Your efforts are paying off.",
       "reversedMeaning": "The Three of Wands reversed represents playing small, lack of foresight, unexpected delays."
     },
@@ -396,7 +629,13 @@
       "suit": "wands",
       "number": 4,
       "imageUrl": "https://api.lunanul.com/cards/wands/four.png",
-      "keywords": ["celebration", "joy", "harmony", "relaxation", "homecoming"],
+      "keywords": [
+        "celebration",
+        "joy",
+        "harmony",
+        "relaxation",
+        "homecoming"
+      ],
       "uprightMeaning": "The Four of Wands represents celebration, joy, harmony and homecoming. A time of happiness and stability.",
       "reversedMeaning": "The Four of Wands reversed represents personal celebration, inner harmony, conflict with others."
     },
@@ -406,7 +645,13 @@
       "suit": "wands",
       "number": 5,
       "imageUrl": "https://api.lunanul.com/cards/wands/five.png",
-      "keywords": ["conflict", "disagreements", "competition", "tension", "diversity"],
+      "keywords": [
+        "conflict",
+        "disagreements",
+        "competition",
+        "tension",
+        "diversity"
+      ],
       "uprightMeaning": "The Five of Wands represents conflict, disagreements, competition and tension. Healthy competition can lead to growth.",
       "reversedMeaning": "The Five of Wands reversed represents inner conflict, conflict avoidance, releasing stress."
     },
@@ -416,7 +661,13 @@
       "suit": "wands",
       "number": 6,
       "imageUrl": "https://api.lunanul.com/cards/wands/six.png",
-      "keywords": ["success", "public recognition", "progress", "self-confidence", "victory"],
+      "keywords": [
+        "success",
+        "public recognition",
+        "progress",
+        "self-confidence",
+        "victory"
+      ],
       "uprightMeaning": "The Six of Wands represents success, public recognition, progress and victory. Your achievements are being recognized.",
       "reversedMeaning": "The Six of Wands reversed represents private achievement, self-validation, fall from grace."
     },
@@ -426,7 +677,13 @@
       "suit": "wands",
       "number": 7,
       "imageUrl": "https://api.lunanul.com/cards/wands/seven.png",
-      "keywords": ["challenge", "competition", "protection", "perseverance", "maintaining control"],
+      "keywords": [
+        "challenge",
+        "competition",
+        "protection",
+        "perseverance",
+        "maintaining control"
+      ],
       "uprightMeaning": "The Seven of Wands represents challenge, competition, protection and perseverance. Stand your ground and defend your position.",
       "reversedMeaning": "The Seven of Wands reversed represents exhaustion, giving up, overwhelmed."
     },
@@ -436,7 +693,13 @@
       "suit": "wands",
       "number": 8,
       "imageUrl": "https://api.lunanul.com/cards/wands/eight.png",
-      "keywords": ["movement", "fast paced change", "action", "alignment", "air travel"],
+      "keywords": [
+        "movement",
+        "fast paced change",
+        "action",
+        "alignment",
+        "air travel"
+      ],
       "uprightMeaning": "The Eight of Wands represents movement, fast-paced change, action and alignment. Things are moving quickly in your favor.",
       "reversedMeaning": "The Eight of Wands reversed represents delays, frustration, resisting change."
     },
@@ -446,7 +709,13 @@
       "suit": "wands",
       "number": 9,
       "imageUrl": "https://api.lunanul.com/cards/wands/nine.png",
-      "keywords": ["resilience", "courage", "persistence", "test of faith", "boundaries"],
+      "keywords": [
+        "resilience",
+        "courage",
+        "persistence",
+        "test of faith",
+        "boundaries"
+      ],
       "uprightMeaning": "The Nine of Wands represents resilience, courage, persistence and boundaries. You're almost at the finish line.",
       "reversedMeaning": "The Nine of Wands reversed represents inner resources, struggle, overwhelm."
     },
@@ -456,7 +725,13 @@
       "suit": "wands",
       "number": 10,
       "imageUrl": "https://api.lunanul.com/cards/wands/ten.png",
-      "keywords": ["burden", "extra responsibility", "hard work", "completion", "achievement"],
+      "keywords": [
+        "burden",
+        "extra responsibility",
+        "hard work",
+        "completion",
+        "achievement"
+      ],
       "uprightMeaning": "The Ten of Wands represents burden, extra responsibility, hard work and completion. Success comes with responsibility.",
       "reversedMeaning": "The Ten of Wands reversed represents doing it all, carrying the burden, delegation."
     },
@@ -466,7 +741,13 @@
       "suit": "wands",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/wands/page.png",
-      "keywords": ["inspiration", "ideas", "discovery", "limitless potential", "free spirit"],
+      "keywords": [
+        "inspiration",
+        "ideas",
+        "discovery",
+        "limitless potential",
+        "free spirit"
+      ],
       "uprightMeaning": "The Page of Wands represents inspiration, ideas, discovery and limitless potential. A new creative project is calling.",
       "reversedMeaning": "The Page of Wands reversed represents newly formed ideas, redirecting energy, self-limiting beliefs."
     },
@@ -476,7 +757,13 @@
       "suit": "wands",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/wands/knight.png",
-      "keywords": ["energy", "passion", "inspired action", "adventure", "impulsiveness"],
+      "keywords": [
+        "energy",
+        "passion",
+        "inspired action",
+        "adventure",
+        "impulsiveness"
+      ],
       "uprightMeaning": "The Knight of Wands represents energy, passion, inspired action and adventure. Take bold action toward your goals.",
       "reversedMeaning": "The Knight of Wands reversed represents passion project, haste, scattered energy."
     },
@@ -486,7 +773,13 @@
       "suit": "wands",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/wands/queen.png",
-      "keywords": ["courage", "confidence", "independence", "social butterfly", "determination"],
+      "keywords": [
+        "courage",
+        "confidence",
+        "independence",
+        "social butterfly",
+        "determination"
+      ],
       "uprightMeaning": "The Queen of Wands represents courage, confidence, independence and determination. You have the power to achieve anything.",
       "reversedMeaning": "The Queen of Wands reversed represents self-respect, self-confidence, introverted."
     },
@@ -496,7 +789,13 @@
       "suit": "wands",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/wands/king.png",
-      "keywords": ["natural leader", "vision", "entrepreneur", "honour", "creative mastery"],
+      "keywords": [
+        "natural leader",
+        "vision",
+        "entrepreneur",
+        "honour",
+        "creative mastery"
+      ],
       "uprightMeaning": "The King of Wands represents natural leadership, vision, entrepreneurship and creative mastery. You are a born leader.",
       "reversedMeaning": "The King of Wands reversed represents impulsiveness, haste, ruthless, high expectations."
     },
@@ -506,7 +805,13 @@
       "suit": "swords",
       "number": 1,
       "imageUrl": "https://api.lunanul.com/cards/swords/ace.png",
-      "keywords": ["breakthrough", "clarity", "sharp mind", "communication", "new ideas"],
+      "keywords": [
+        "breakthrough",
+        "clarity",
+        "sharp mind",
+        "communication",
+        "new ideas"
+      ],
       "uprightMeaning": "The Ace of Swords represents breakthrough, clarity, sharp mind and new ideas. A moment of clarity cuts through confusion.",
       "reversedMeaning": "The Ace of Swords reversed represents inner clarity, re-thinking an idea, clouded judgement."
     },
@@ -516,7 +821,12 @@
       "suit": "swords",
       "number": 2,
       "imageUrl": "https://api.lunanul.com/cards/swords/two.png",
-      "keywords": ["difficult decisions", "weighing up options", "an impasse", "avoidance"],
+      "keywords": [
+        "difficult decisions",
+        "weighing up options",
+        "an impasse",
+        "avoidance"
+      ],
       "uprightMeaning": "The Two of Swords represents difficult decisions, weighing options and being at an impasse. Take time to consider all options.",
       "reversedMeaning": "The Two of Swords reversed represents indecision, confusion, information overload."
     },
@@ -526,7 +836,13 @@
       "suit": "swords",
       "number": 3,
       "imageUrl": "https://api.lunanul.com/cards/swords/three.png",
-      "keywords": ["heartbreak", "emotional pain", "sorrow", "grief", "hurt"],
+      "keywords": [
+        "heartbreak",
+        "emotional pain",
+        "sorrow",
+        "grief",
+        "hurt"
+      ],
       "uprightMeaning": "The Three of Swords represents heartbreak, emotional pain, sorrow and grief. Allow yourself to feel and heal.",
       "reversedMeaning": "The Three of Swords reversed represents negative self-talk, releasing pain, optimism."
     },
@@ -536,7 +852,13 @@
       "suit": "swords",
       "number": 4,
       "imageUrl": "https://api.lunanul.com/cards/swords/four.png",
-      "keywords": ["rest", "relaxation", "meditation", "contemplation", "recuperation"],
+      "keywords": [
+        "rest",
+        "relaxation",
+        "meditation",
+        "contemplation",
+        "recuperation"
+      ],
       "uprightMeaning": "The Four of Swords represents rest, relaxation, meditation and recuperation. Take time to recharge your energy.",
       "reversedMeaning": "The Four of Swords reversed represents awakening, re-entering world, restlessness."
     },
@@ -546,7 +868,13 @@
       "suit": "swords",
       "number": 5,
       "imageUrl": "https://api.lunanul.com/cards/swords/five.png",
-      "keywords": ["conflict", "disagreements", "competition", "defeat", "winning at all costs"],
+      "keywords": [
+        "conflict",
+        "disagreements",
+        "competition",
+        "defeat",
+        "winning at all costs"
+      ],
       "uprightMeaning": "The Five of Swords represents conflict, disagreements, competition and defeat. Consider if winning is worth the cost.",
       "reversedMeaning": "The Five of Swords reversed represents reconciliation, making amends, past resentment."
     },
@@ -556,7 +884,13 @@
       "suit": "swords",
       "number": 6,
       "imageUrl": "https://api.lunanul.com/cards/swords/six.png",
-      "keywords": ["transition", "change", "rite of passage", "releasing baggage", "moving forward"],
+      "keywords": [
+        "transition",
+        "change",
+        "rite of passage",
+        "releasing baggage",
+        "moving forward"
+      ],
       "uprightMeaning": "The Six of Swords represents transition, change, rite of passage and moving forward. You are moving toward calmer waters.",
       "reversedMeaning": "The Six of Swords reversed represents personal transition, resistance to change, unfinished business."
     },
@@ -566,7 +900,12 @@
       "suit": "swords",
       "number": 7,
       "imageUrl": "https://api.lunanul.com/cards/swords/seven.png",
-      "keywords": ["betrayal", "deception", "getting away with something", "acting strategically"],
+      "keywords": [
+        "betrayal",
+        "deception",
+        "getting away with something",
+        "acting strategically"
+      ],
       "uprightMeaning": "The Seven of Swords represents betrayal, deception and acting strategically. Someone may not be entirely honest.",
       "reversedMeaning": "The Seven of Swords reversed represents imposter syndrome, self-deceit, keeping secrets."
     },
@@ -576,7 +915,12 @@
       "suit": "swords",
       "number": 8,
       "imageUrl": "https://api.lunanul.com/cards/swords/eight.png",
-      "keywords": ["negative thoughts", "self-imposed restriction", "imprisonment", "victim mentality"],
+      "keywords": [
+        "negative thoughts",
+        "self-imposed restriction",
+        "imprisonment",
+        "victim mentality"
+      ],
       "uprightMeaning": "The Eight of Swords represents negative thoughts, self-imposed restrictions and victim mentality. You have more power than you realize.",
       "reversedMeaning": "The Eight of Swords reversed represents self-limiting beliefs, inner critic, releasing negative thoughts."
     },
@@ -586,7 +930,13 @@
       "suit": "swords",
       "number": 9,
       "imageUrl": "https://api.lunanul.com/cards/swords/nine.png",
-      "keywords": ["anxiety", "worry", "fear", "depression", "nightmares"],
+      "keywords": [
+        "anxiety",
+        "worry",
+        "fear",
+        "depression",
+        "nightmares"
+      ],
       "uprightMeaning": "The Nine of Swords represents anxiety, worry, fear and nightmares. Your fears may be worse than reality.",
       "reversedMeaning": "The Nine of Swords reversed represents inner turmoil, deep-seated fears, secrets."
     },
@@ -596,7 +946,13 @@
       "suit": "swords",
       "number": 10,
       "imageUrl": "https://api.lunanul.com/cards/swords/ten.png",
-      "keywords": ["painful endings", "deep wounds", "betrayal", "loss", "crisis"],
+      "keywords": [
+        "painful endings",
+        "deep wounds",
+        "betrayal",
+        "loss",
+        "crisis"
+      ],
       "uprightMeaning": "The Ten of Swords represents painful endings, deep wounds, betrayal and crisis. This is rock bottom, but recovery begins now.",
       "reversedMeaning": "The Ten of Swords reversed represents recovery, regeneration, resisting an inevitable end."
     },
@@ -606,7 +962,12 @@
       "suit": "swords",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/swords/page.png",
-      "keywords": ["new ideas", "curiosity", "thirst for knowledge", "new ways of communicating"],
+      "keywords": [
+        "new ideas",
+        "curiosity",
+        "thirst for knowledge",
+        "new ways of communicating"
+      ],
       "uprightMeaning": "The Page of Swords represents new ideas, curiosity, thirst for knowledge and new communication. Stay curious and open-minded.",
       "reversedMeaning": "The Page of Swords reversed represents self-expression, all talk and no action, haste."
     },
@@ -616,7 +977,13 @@
       "suit": "swords",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/swords/knight.png",
-      "keywords": ["ambitious", "action-oriented", "driven to succeed", "fast-thinking", "impatient"],
+      "keywords": [
+        "ambitious",
+        "action-oriented",
+        "driven to succeed",
+        "fast-thinking",
+        "impatient"
+      ],
       "uprightMeaning": "The Knight of Swords represents ambition, action-oriented thinking and being driven to succeed. Act quickly but think first.",
       "reversedMeaning": "The Knight of Swords reversed represents restless, unfocused, impulsive, burn-out."
     },
@@ -626,7 +993,12 @@
       "suit": "swords",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/swords/queen.png",
-      "keywords": ["independent", "unbiased judgement", "clear boundaries", "direct communication"],
+      "keywords": [
+        "independent",
+        "unbiased judgement",
+        "clear boundaries",
+        "direct communication"
+      ],
       "uprightMeaning": "The Queen of Swords represents independence, unbiased judgement, clear boundaries and direct communication. Speak your truth clearly.",
       "reversedMeaning": "The Queen of Swords reversed represents self-defence, self-criticism, harsh judgement."
     },
@@ -636,7 +1008,13 @@
       "suit": "swords",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/swords/king.png",
-      "keywords": ["mental clarity", "intellectual power", "authority", "truth", "clear thinking"],
+      "keywords": [
+        "mental clarity",
+        "intellectual power",
+        "authority",
+        "truth",
+        "clear thinking"
+      ],
       "uprightMeaning": "The King of Swords represents mental clarity, intellectual power, authority and truth. Use your intellect and experience wisely.",
       "reversedMeaning": "The King of Swords reversed represents quiet power, inner truth, misuse of power."
     },
@@ -646,7 +1024,12 @@
       "suit": "pentacles",
       "number": 1,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/ace.png",
-      "keywords": ["manifestation", "new financial opportunity", "abundance", "prosperity"],
+      "keywords": [
+        "manifestation",
+        "new financial opportunity",
+        "abundance",
+        "prosperity"
+      ],
       "uprightMeaning": "The Ace of Pentacles represents manifestation, new financial opportunity, abundance and prosperity. A new opportunity for material success.",
       "reversedMeaning": "The Ace of Pentacles reversed represents lost opportunity, lack of planning, bad investment."
     },
@@ -656,7 +1039,12 @@
       "suit": "pentacles",
       "number": 2,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/two.png",
-      "keywords": ["multiple priorities", "time management", "prioritisation", "adaptability"],
+      "keywords": [
+        "multiple priorities",
+        "time management",
+        "prioritisation",
+        "adaptability"
+      ],
       "uprightMeaning": "The Two of Pentacles represents multiple priorities, time management and adaptability. Balance is key to managing everything.",
       "reversedMeaning": "The Two of Pentacles reversed represents over-committed, disorganisation, reprioritising."
     },
@@ -666,7 +1054,13 @@
       "suit": "pentacles",
       "number": 3,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/three.png",
-      "keywords": ["collaboration", "learning", "implementation", "teamwork", "building"],
+      "keywords": [
+        "collaboration",
+        "learning",
+        "implementation",
+        "teamwork",
+        "building"
+      ],
       "uprightMeaning": "The Three of Pentacles represents collaboration, learning, implementation and teamwork. Work with others to achieve your goals.",
       "reversedMeaning": "The Three of Pentacles reversed represents disharmony, misalignment, working alone."
     },
@@ -676,7 +1070,13 @@
       "suit": "pentacles",
       "number": 4,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/four.png",
-      "keywords": ["saving money", "security", "conservatism", "scarcity", "control"],
+      "keywords": [
+        "saving money",
+        "security",
+        "conservatism",
+        "scarcity",
+        "control"
+      ],
       "uprightMeaning": "The Four of Pentacles represents saving money, security, conservatism and control. Financial security is important but don't be too restrictive.",
       "reversedMeaning": "The Four of Pentacles reversed represents over-spending, greed, self-protection."
     },
@@ -686,7 +1086,13 @@
       "suit": "pentacles",
       "number": 5,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/five.png",
-      "keywords": ["financial loss", "poverty", "lack mindset", "isolation", "worry"],
+      "keywords": [
+        "financial loss",
+        "poverty",
+        "lack mindset",
+        "isolation",
+        "worry"
+      ],
       "uprightMeaning": "The Five of Pentacles represents financial loss, poverty, lack mindset and worry. Help is available if you're willing to accept it.",
       "reversedMeaning": "The Five of Pentacles reversed represents recovery from financial loss, spiritual poverty."
     },
@@ -696,7 +1102,13 @@
       "suit": "pentacles",
       "number": 6,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/six.png",
-      "keywords": ["giving", "receiving", "sharing wealth", "generosity", "charity"],
+      "keywords": [
+        "giving",
+        "receiving",
+        "sharing wealth",
+        "generosity",
+        "charity"
+      ],
       "uprightMeaning": "The Six of Pentacles represents giving, receiving, sharing wealth and generosity. Balance giving and receiving in your life.",
       "reversedMeaning": "The Six of Pentacles reversed represents self-care, unpaid debts, one-sided charity."
     },
@@ -706,7 +1118,12 @@
       "suit": "pentacles",
       "number": 7,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/seven.png",
-      "keywords": ["long-term view", "sustainable results", "perseverance", "investment"],
+      "keywords": [
+        "long-term view",
+        "sustainable results",
+        "perseverance",
+        "investment"
+      ],
       "uprightMeaning": "The Seven of Pentacles represents long-term view, sustainable results, perseverance and investment. Your hard work will pay off.",
       "reversedMeaning": "The Seven of Pentacles reversed represents lack of long-term vision, limited success."
     },
@@ -716,7 +1133,12 @@
       "suit": "pentacles",
       "number": 8,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/eight.png",
-      "keywords": ["apprenticeship", "repetitive tasks", "mastery", "skill development"],
+      "keywords": [
+        "apprenticeship",
+        "repetitive tasks",
+        "mastery",
+        "skill development"
+      ],
       "uprightMeaning": "The Eight of Pentacles represents apprenticeship, repetitive tasks, mastery and skill development. Practice makes perfect.",
       "reversedMeaning": "The Eight of Pentacles reversed represents self-development, perfectionism, misdirected activity."
     },
@@ -726,7 +1148,12 @@
       "suit": "pentacles",
       "number": 9,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/nine.png",
-      "keywords": ["abundance", "luxury", "self-sufficiency", "financial independence"],
+      "keywords": [
+        "abundance",
+        "luxury",
+        "self-sufficiency",
+        "financial independence"
+      ],
       "uprightMeaning": "The Nine of Pentacles represents abundance, luxury, self-sufficiency and financial independence. Enjoy the fruits of your labor.",
       "reversedMeaning": "The Nine of Pentacles reversed represents self-worth, over-investment in work, hustling."
     },
@@ -736,7 +1163,13 @@
       "suit": "pentacles",
       "number": 10,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/ten.png",
-      "keywords": ["wealth", "financial security", "family", "long-term success", "contribution"],
+      "keywords": [
+        "wealth",
+        "financial security",
+        "family",
+        "long-term success",
+        "contribution"
+      ],
       "uprightMeaning": "The Ten of Pentacles represents wealth, financial security, family and long-term success. Generational wealth and stability.",
       "reversedMeaning": "The Ten of Pentacles reversed represents the fleeting nature of material wealth, family financial issues."
     },
@@ -746,7 +1179,12 @@
       "suit": "pentacles",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/page.png",
-      "keywords": ["manifestation", "financial opportunity", "skill development", "ambition"],
+      "keywords": [
+        "manifestation",
+        "financial opportunity",
+        "skill development",
+        "ambition"
+      ],
       "uprightMeaning": "The Page of Pentacles represents manifestation, financial opportunity, skill development and ambition. A new opportunity for growth.",
       "reversedMeaning": "The Page of Pentacles reversed represents lack of progress, procrastination, learn from failure."
     },
@@ -756,7 +1194,13 @@
       "suit": "pentacles",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/knight.png",
-      "keywords": ["hard work", "productivity", "routine", "conservatism", "methodical"],
+      "keywords": [
+        "hard work",
+        "productivity",
+        "routine",
+        "conservatism",
+        "methodical"
+      ],
       "uprightMeaning": "The Knight of Pentacles represents hard work, productivity, routine and being methodical. Slow and steady wins the race.",
       "reversedMeaning": "The Knight of Pentacles reversed represents self-discipline, boredom, feeling 'stuck', perfectionism."
     },
@@ -766,7 +1210,12 @@
       "suit": "pentacles",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/queen.png",
-      "keywords": ["nurturing", "practical", "providing financially", "a working parent"],
+      "keywords": [
+        "nurturing",
+        "practical",
+        "providing financially",
+        "a working parent"
+      ],
       "uprightMeaning": "The Queen of Pentacles represents nurturing, being practical, providing financially and working parent energy. Balance work and family.",
       "reversedMeaning": "The Queen of Pentacles reversed represents financial independence, self-care, work-home conflict."
     },
@@ -776,7 +1225,13 @@
       "suit": "pentacles",
       "number": null,
       "imageUrl": "https://api.lunanul.com/cards/pentacles/king.png",
-      "keywords": ["financial success", "business leader", "security", "discipline", "abundance"],
+      "keywords": [
+        "financial success",
+        "business leader",
+        "security",
+        "discipline",
+        "abundance"
+      ],
       "uprightMeaning": "The King of Pentacles represents financial success, business leadership, security and abundance. You have achieved material mastery.",
       "reversedMeaning": "The King of Pentacles reversed represents financially inept, obsessed with wealth, stubborn."
     }

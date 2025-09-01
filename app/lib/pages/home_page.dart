@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lunanul/utils/app_router.dart';
 import '../providers/providers.dart';
 import '../utils/constants.dart';
 import '../utils/theme_helpers.dart';
@@ -260,36 +259,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
 
                   const SizedBox(height: 16),
-
-                  // Action buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              _isCardRevealed = false;
-                            });
-                            ref.invalidate(cardOfTheDayProvider);
-                          },
-                          icon: const Icon(Icons.refresh),
-                          label: Text(localizations.newCard),
-                        ),
-                      ),
-                      if (_isCardRevealed) ...[
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              context.goYourself();
-                            },
-                            icon: const Icon(Icons.book),
-                            label: Text(localizations.journal),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
                 ],
               ),
               loading: () => Center(

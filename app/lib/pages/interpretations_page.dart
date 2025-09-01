@@ -313,57 +313,7 @@ class InterpretationsPage extends ConsumerWidget {
   }
 
   void _showCardSelectionDialog(BuildContext context, WidgetRef ref) {
-    final localizations = AppLocalizations.of(context);
-    final state = ref.read(manualInterpretationProvider);
-    final notifier = ref.read(manualInterpretationProvider.notifier);
-
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.8,
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          child: Column(
-            children: [
-              // Header
-              Row(
-                children: [
-                  Text(
-                    localizations.selectCard,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              // Card selection grid
-              Expanded(
-                child: CardSelectionGrid(
-                  cards: state.availableCards,
-                  isLoading: state.isLoading || state.isSearching,
-                  searchQuery: state.searchQuery,
-                  onCardSelected: (card) {
-                    notifier.addCard(card);
-                    Navigator.of(context).pop();
-                  },
-                  onSearchChanged: (query) => notifier.searchCards(query),
-                  onSuitFilter: (suit) => notifier.filterBySuit(suit),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    showDialog(context: context, builder: (context) => _CardSelectionDialog());
   }
 
   void _showSaveDialog(BuildContext context, WidgetRef ref) {
@@ -442,6 +392,80 @@ class InterpretationsPage extends ConsumerWidget {
             child: Text(localizations.save),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Reactive card selection dialog that updates with provider state
+class _CardSelectionDialog extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context);
+    final state = ref.watch(manualInterpretationProvider);
+    final notifier = ref.read(manualInterpretationProvider.notifier);
+
+    return Dialog(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.all(AppConstants.defaultPadding),
+        child: Column(
+          children: [
+            // Header
+            Row(
+              children: [
+                Text(
+                  localizations.selectCard,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Card selection grid with Consumer to ensure reactivity
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final state = ref.watch(manualInterpretationProvider);
+                  final notifier = ref.read(
+                    manualInterpretationProvider.notifier,
+                  );
+
+                  return CardSelectionGrid(
+                    cards: state.availableCards,
+                    isLoading: state.isLoading || state.isSearching,
+                    searchQuery: state.searchQuery,
+                    onCardSelected: (card, {bool isReversed = false}) {
+                      notifier.addCard(card, isReversed: isReversed);
+                      Navigator.of(context).pop();
+                    },
+                    onSearchChanged: (query) {
+                      print(
+                        'DEBUG: Search changed to: "$query"',
+                      ); // Debug print
+                      notifier.searchCards(query);
+                    },
+                    onSuitFilter: (suit) {
+                      print(
+                        'DEBUG: Filter changed to: ${suit?.name ?? "all"}',
+                      ); // Debug print
+                      notifier.filterBySuit(suit);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

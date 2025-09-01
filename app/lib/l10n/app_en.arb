@@ -48,6 +48,15 @@
   "manualInterpretations": "Manual Interpretations",
   "inputPhysicalDeck": "Input your physical deck draws for AI-enhanced insights",
   "selectReadingContext": "Select reading context",
+  "searchCardsHint": "Search cards by name or keywords...",
+  "noCardsFound": "No cards found",
+  "tryAdjustingSearch": "Try adjusting your search or filter",
+  "selectCard": "Select a Card",
+  "selectCardOrientation": "Select Card Orientation",
+  "chooseCardPosition": "Choose how this card appeared in your reading:",
+  "upright": "Upright",
+  "reversed": "Reversed",
+  "allCards": "All Cards",
   "chooseAreaOfLife": "Choose the area of life you want to explore",
   "addYourCards": "Add your cards",
   "selectCardsFromDeck": "Select the cards you drew from your physical deck",
@@ -387,5 +396,31 @@
     }
   },
   "unableToLoadStats": "Unable to load stats",
-  "unableToLoadJournalEntries": "Unable to load journal entries"
+  "unableToLoadJournalEntries": "Unable to load journal entries",
+  
+  "chooseYourSpread": "Choose Your Spread",
+  "selectSpreadType": "Select the type of reading that resonates with your question",
+  "selectASpread": "Select a Spread",
+  "startSpreadReading": "Start {spreadName} Reading",
+  "@startSpreadReading": {
+    "description": "Button text to start a specific spread reading",
+    "placeholders": {
+      "spreadName": {
+        "type": "String",
+        "example": "Past Present Future"
+      }
+    }
+  },
+  "shufflingCards": "Shuffling the cards...",
+  "universePreparingReading": "The universe is preparing your reading",
+  "somethingWentWrong": "Something went wrong",
+  "unableToCreateReading": "Unable to create your reading. Please try again.",
+  "goBack": "Go Back",
+  "cardsBeingDealt": "Cards are being dealt...",
+  "watchCardsPlaced": "Watch as your cards are placed in their positions",
+  "tapToRevealCards": "Tap to reveal your cards",
+  "touchCardWhenReady": "Touch each card when you're ready to see its message",
+  "yourReading": "Your Reading",
+  "saveToJournal": "Save to Journal",
+  "newReading": "New Reading"
 }

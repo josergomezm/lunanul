@@ -23,7 +23,6 @@ class MockReadingService {
   }) async {
     // Simulate AI processing delay
     await Future.delayed(Duration(milliseconds: 500 + _random.nextInt(1000)));
-
     final cards = await _cardService.drawCards(
       spreadType.cardCount,
       allowReversed: true,

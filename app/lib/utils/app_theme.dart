@@ -133,13 +133,32 @@ class AppTheme {
       // Elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          backgroundColor: primaryPurple,
+          foregroundColor: Colors.white,
           elevation: 2,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
           textStyle: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.1,
+            fontFamily: 'Primary',
+          ),
+        ),
+      ),
+
+      // Outlined button theme
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: primaryPurple,
+          side: const BorderSide(color: primaryPurple),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
+          textStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.1,
+            fontFamily: 'Primary',
           ),
         ),
       ),
@@ -249,13 +268,32 @@ class AppTheme {
       // Elevated button theme for dark mode
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
+          backgroundColor: primaryPurple,
+          foregroundColor: Colors.white,
           elevation: 2,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
           textStyle: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.1,
+            fontFamily: 'Primary',
+          ),
+        ),
+      ),
+
+      // Outlined button theme for dark mode
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: primaryPurple,
+          side: const BorderSide(color: primaryPurple),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: AppTheme.buttonRadius),
+          textStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.1,
+            fontFamily: 'Primary',
           ),
         ),
       ),
