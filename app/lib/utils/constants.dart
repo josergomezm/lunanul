@@ -7,6 +7,8 @@ class AppConstants {
   // Navigation
   static const String homeRoute = '/';
   static const String readingsRoute = '/readings';
+  static const String guideSelectionRoute = '/guide-selection';
+  static const String spreadSelectionRoute = '/spread-selection';
   static const String interpretationsRoute = '/interpretations';
   static const String yourselfRoute = '/yourself';
   static const String friendsRoute = '/friends';

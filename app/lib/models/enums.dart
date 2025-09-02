@@ -111,3 +111,55 @@ enum FriendshipStatus {
     );
   }
 }
+
+/// Types of tarot guide personalities available
+enum GuideType {
+  sage(
+    'Zian',
+    'The Wise Mystic',
+    'Deep spiritual insight and universal patterns',
+  ),
+  healer(
+    'Lyra',
+    'The Compassionate Healer',
+    'Emotional healing and self-compassion',
+  ),
+  mentor(
+    'Kael',
+    'The Practical Strategist',
+    'Clear guidance and actionable advice',
+  ),
+  visionary(
+    'Elara',
+    'The Creative Muse',
+    'Inspiration and creative possibilities',
+  );
+
+  const GuideType(this.guideName, this.title, this.expertise);
+
+  final String guideName;
+  final String title;
+  final String expertise;
+
+  /// Convert from string to enum
+  static GuideType fromString(String value) {
+    return GuideType.values.firstWhere(
+      (guide) => guide.name == value,
+      orElse: () => GuideType.sage,
+    );
+  }
+
+  /// Get recommended guides for a specific reading topic
+  static List<GuideType> getRecommendedForTopic(ReadingTopic topic) {
+    switch (topic) {
+      case ReadingTopic.self:
+        return [GuideType.sage, GuideType.healer];
+      case ReadingTopic.love:
+        return [GuideType.healer, GuideType.visionary];
+      case ReadingTopic.work:
+        return [GuideType.mentor, GuideType.sage];
+      case ReadingTopic.social:
+        return [GuideType.healer, GuideType.mentor];
+    }
+  }
+}

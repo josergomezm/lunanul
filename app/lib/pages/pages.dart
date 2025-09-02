@@ -1,6 +1,7 @@
 // Export all pages
 export 'home_page.dart';
 export 'readings_page.dart';
+export 'guide_selection_page.dart';
 export 'spread_selection_page.dart';
 export 'interpretations_page.dart';
 export 'yourself_page.dart';

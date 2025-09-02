@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/manual_interpretation_provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../widgets/topic_selector_widget.dart';
+import '../widgets/guide_selector_widget.dart';
 import '../widgets/manual_card_display.dart';
 import '../widgets/card_connections_widget.dart';
 import '../widgets/card_selection_grid.dart';
@@ -61,6 +62,12 @@ class InterpretationsPage extends ConsumerWidget {
                 _buildTopicSelection(context, ref, state, notifier),
 
                 const SizedBox(height: 32),
+
+                // Guide selection (optional)
+                if (state.selectedTopic != null)
+                  _buildGuideSelection(context, ref, state, notifier),
+
+                if (state.selectedTopic != null) const SizedBox(height: 32),
 
                 // Card selection section
                 _buildCardSelection(context, ref, state, notifier),
@@ -122,6 +129,39 @@ class InterpretationsPage extends ConsumerWidget {
           selectedTopic: state.selectedTopic,
           onTopicSelected: (topic) => notifier.selectTopic(topic),
           showDescriptions: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGuideSelection(
+    BuildContext context,
+    WidgetRef ref,
+    ManualInterpretationState state,
+    ManualInterpretationNotifier notifier,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Your Guide (Optional)',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Select a guide to personalize your card interpretations, or skip for standard readings.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.outline,
+          ),
+        ),
+        const SizedBox(height: 16),
+        GuideSelectorWidget(
+          selectedGuide: state.selectedGuide,
+          onGuideSelected: (guide) => notifier.selectGuide(guide),
+          currentTopic: state.selectedTopic!,
+          allowDeselection: true,
         ),
       ],
     );
@@ -402,8 +442,9 @@ class _CardSelectionDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context);
-    final state = ref.watch(manualInterpretationProvider);
-    final notifier = ref.read(manualInterpretationProvider.notifier);
+    // Note: state and notifier variables removed as they're not currently used
+    // final state = ref.watch(manualInterpretationProvider);
+    // final notifier = ref.read(manualInterpretationProvider.notifier);
 
     return Dialog(
       child: Container(
@@ -449,15 +490,11 @@ class _CardSelectionDialog extends ConsumerWidget {
                       Navigator.of(context).pop();
                     },
                     onSearchChanged: (query) {
-                      print(
-                        'DEBUG: Search changed to: "$query"',
-                      ); // Debug print
+                      // Debug: Search changed to: "$query"
                       notifier.searchCards(query);
                     },
                     onSuitFilter: (suit) {
-                      print(
-                        'DEBUG: Filter changed to: ${suit?.name ?? "all"}',
-                      ); // Debug print
+                      // Debug: Filter changed to: ${suit?.name ?? "all"}
                       notifier.filterBySuit(suit);
                     },
                   );

@@ -253,5 +253,25 @@
   "touchCardWhenReady": "Toca cada carta cuando estés listo para ver su mensaje",
   "yourReading": "Tu Lectura",
   "saveToJournal": "Guardar en Diario",
-  "newReading": "Nueva Lectura"
+  "newReading": "Nueva Lectura",
+  
+  "guideSageName": "Zian",
+  "guideSageTitle": "El Místico Sabio",
+  "guideSageDescription": "Un guía profundo que habla en verdades cósmicas y sabiduría universal, ayudándote a entender los patrones espirituales más profundos en tu vida.",
+  "guideSageExpertise": "Perspectiva espiritual profunda, patrones kármicos y reconexión con el propósito superior",
+  
+  "guideHealerName": "Lyra",
+  "guideHealerTitle": "La Sanadora Compasiva",
+  "guideHealerDescription": "Una guía gentil y nutritiva que ofrece apoyo emocional y sabiduría sanadora, perfecta para momentos cuando necesitas consuelo y autocompasión.",
+  "guideHealerExpertise": "Sanación emocional, autocuidado, navegación de emociones difíciles y construcción del amor propio",
+  
+  "guideMentorName": "Kael",
+  "guideMentorTitle": "El Estratega Práctico",
+  "guideMentorDescription": "Un guía claro y directo que proporciona consejos accionables y soluciones prácticas, ideal para decisiones de carrera y desafíos del mundo real.",
+  "guideMentorExpertise": "Orientación profesional, decisiones prácticas, planificación estratégica y pasos accionables",
+  
+  "guideVisionaryName": "Elara",
+  "guideVisionaryTitle": "La Musa Creativa",
+  "guideVisionaryDescription": "Una guía inspiradora que te ayuda a explorar posibilidades y desbloquear tu potencial creativo, perfecta para superar bloqueos y visualizar nuevos futuros.",
+  "guideVisionaryExpertise": "Inspiración creativa, exploración de posibilidades, superación de bloqueos y liberación del potencial"
 }

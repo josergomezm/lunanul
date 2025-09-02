@@ -4,8 +4,10 @@ import '../models/reading.dart';
 import '../models/enums.dart';
 import '../providers/journal_provider.dart';
 import '../widgets/card_widget.dart';
+import '../widgets/guide_interpretation_widget.dart';
 import '../widgets/reflection_input_widget.dart';
 import '../utils/constants.dart';
+import '../services/guide_service.dart';
 
 /// Page for viewing detailed reading information with reflection editing
 class ReadingDetailPage extends ConsumerStatefulWidget {
@@ -281,10 +283,51 @@ class _ReadingDetailPageState extends ConsumerState<ReadingDetailPage> {
 
                               const SizedBox(height: 8),
 
-                              // AI interpretation
-                              Text(
-                                cardPosition.aiInterpretation,
-                                style: Theme.of(context).textTheme.bodyMedium,
+                              // Guide indicator (if guide was used)
+                              if (widget.reading.selectedGuide != null) ...[
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _getGuideColor().withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _getGuideIcon(),
+                                        size: 12,
+                                        color: _getGuideColor(),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Guided by ${_getGuideName()}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: _getGuideColor(),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+
+                              // Guide-influenced interpretation
+                              GuideInterpretationWidget(
+                                card: cardPosition.card,
+                                topic: widget.reading.topic,
+                                selectedGuide: widget.reading.selectedGuide,
+                                position: cardPosition.positionName,
+                                showGuideInfo: false, // Already shown above
                               ),
                             ],
                           ),
@@ -537,6 +580,27 @@ class _ReadingDetailPageState extends ConsumerState<ReadingDetailPage> {
       case ReadingTopic.social:
         return Colors.green;
     }
+  }
+
+  Color _getGuideColor() {
+    if (widget.reading.selectedGuide == null) return Colors.grey;
+
+    final guide = GuideService().getGuideByType(widget.reading.selectedGuide!);
+    return guide?.primaryColor ?? Colors.grey;
+  }
+
+  IconData _getGuideIcon() {
+    if (widget.reading.selectedGuide == null) return Icons.auto_awesome;
+
+    final guide = GuideService().getGuideByType(widget.reading.selectedGuide!);
+    return guide?.iconData ?? Icons.auto_awesome;
+  }
+
+  String _getGuideName() {
+    if (widget.reading.selectedGuide == null) return 'AI';
+
+    final guide = GuideService().getGuideByType(widget.reading.selectedGuide!);
+    return guide?.name ?? 'AI';
   }
 }
 

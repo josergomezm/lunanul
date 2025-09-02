@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../widgets/chat_widget.dart';
+import '../widgets/guide_interpretation_widget.dart';
 import '../widgets/reading_spread_widget.dart';
 import '../utils/constants.dart';
 
@@ -288,9 +289,12 @@ class _SharedReadingPageState extends ConsumerState<SharedReadingPage>
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            Text(
-              cardPosition.aiInterpretation,
-              style: Theme.of(context).textTheme.bodyMedium,
+            GuideInterpretationWidget(
+              card: cardPosition.card,
+              topic: widget.sharedReading.reading.topic,
+              selectedGuide: widget.sharedReading.reading.selectedGuide,
+              position: cardPosition.positionName,
+              showGuideInfo: false,
             ),
           ],
         ),

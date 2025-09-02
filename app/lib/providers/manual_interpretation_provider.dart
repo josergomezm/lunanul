@@ -14,6 +14,7 @@ final manualInterpretationServiceProvider =
 /// State for the current manual interpretation session
 class ManualInterpretationState {
   final ReadingTopic? selectedTopic;
+  final GuideType? selectedGuide;
   final List<ManualCardPosition> selectedCards;
   final List<TarotCard> availableCards;
   final bool isLoading;
@@ -24,6 +25,7 @@ class ManualInterpretationState {
 
   const ManualInterpretationState({
     this.selectedTopic,
+    this.selectedGuide,
     this.selectedCards = const [],
     this.availableCards = const [],
     this.isLoading = false,
@@ -35,6 +37,7 @@ class ManualInterpretationState {
 
   ManualInterpretationState copyWith({
     ReadingTopic? selectedTopic,
+    GuideType? selectedGuide,
     List<ManualCardPosition>? selectedCards,
     List<TarotCard>? availableCards,
     bool? isLoading,
@@ -45,6 +48,7 @@ class ManualInterpretationState {
   }) {
     return ManualInterpretationState(
       selectedTopic: selectedTopic ?? this.selectedTopic,
+      selectedGuide: selectedGuide ?? this.selectedGuide,
       selectedCards: selectedCards ?? this.selectedCards,
       availableCards: availableCards ?? this.availableCards,
       isLoading: isLoading ?? this.isLoading,
@@ -91,6 +95,11 @@ class ManualInterpretationNotifier
     state = state.copyWith(selectedTopic: topic);
   }
 
+  /// Select a guide for the interpretation
+  void selectGuide(GuideType? guide) {
+    state = state.copyWith(selectedGuide: guide);
+  }
+
   /// Add a card to the interpretation
   Future<void> addCard(
     TarotCard card, {
@@ -121,6 +130,7 @@ class ManualInterpretationNotifier
         card: orientedCard,
         topic: state.selectedTopic!,
         positionName: positionName,
+        selectedGuide: state.selectedGuide,
       );
 
       // Create new card position
@@ -186,6 +196,7 @@ class ManualInterpretationNotifier
         card: cardPosition.card,
         topic: state.selectedTopic!,
         positionName: newPositionName,
+        selectedGuide: state.selectedGuide,
       );
 
       // Update the card position
@@ -214,27 +225,23 @@ class ManualInterpretationNotifier
   /// Search cards by query
   Future<void> searchCards(String query) async {
     try {
-      print('DEBUG: Searching for: "$query"'); // Debug print
+      // Debug: Searching for: "$query"
       state = state.copyWith(isSearching: true, searchQuery: query);
 
       List<TarotCard> filteredCards;
       if (query.trim().isEmpty) {
         // If query is empty, show all cards
         filteredCards = await _cardService.getAllCards();
-        print(
-          'DEBUG: Empty query, showing ${filteredCards.length} cards',
-        ); // Debug print
+        // Debug: Empty query, showing ${filteredCards.length} cards
       } else {
         // Search with the query
         filteredCards = await _cardService.searchCards(query.trim());
-        print(
-          'DEBUG: Search found ${filteredCards.length} cards',
-        ); // Debug print
+        // Debug: Search found ${filteredCards.length} cards
       }
 
       state = state.copyWith(availableCards: filteredCards, isSearching: false);
     } catch (e) {
-      print('DEBUG: Search error: $e'); // Debug print
+      // Debug: Search error: $e
       state = state.copyWith(error: 'Search failed: $e', isSearching: false);
     }
   }
@@ -248,7 +255,7 @@ class ManualInterpretationNotifier
   /// Filter cards by suit
   Future<void> filterBySuit(TarotSuit? suit) async {
     try {
-      print('DEBUG: Filtering by suit: ${suit?.name ?? "all"}'); // Debug print
+      // Debug: Filtering by suit: ${suit?.name ?? "all"}
       state = state.copyWith(isLoading: true);
 
       List<TarotCard> filteredCards;
@@ -258,19 +265,15 @@ class ManualInterpretationNotifier
           filteredCards = await _cardService.searchCards(
             state.searchQuery.trim(),
           );
-          print(
-            'DEBUG: All cards with search "${state.searchQuery}": ${filteredCards.length}',
-          ); // Debug print
+          // Debug: All cards with search "${state.searchQuery}": ${filteredCards.length}
         } else {
           filteredCards = await _cardService.getAllCards();
-          print('DEBUG: All cards: ${filteredCards.length}'); // Debug print
+          // Debug: All cards: ${filteredCards.length}
         }
       } else {
         // Filter by suit first, then apply search if any
         filteredCards = await _cardService.getCardsBySuit(suit);
-        print(
-          'DEBUG: Cards for suit ${suit.name}: ${filteredCards.length}',
-        ); // Debug print
+        // Debug: Cards for suit ${suit.name}: ${filteredCards.length}
         if (state.searchQuery.trim().isNotEmpty) {
           final query = state.searchQuery.trim().toLowerCase();
           filteredCards = filteredCards.where((card) {
@@ -281,15 +284,13 @@ class ManualInterpretationNotifier
                 card.uprightMeaning.toLowerCase().contains(query) ||
                 card.reversedMeaning.toLowerCase().contains(query);
           }).toList();
-          print(
-            'DEBUG: Cards after search filter: ${filteredCards.length}',
-          ); // Debug print
+          // Debug: Cards after search filter: ${filteredCards.length}
         }
       }
 
       state = state.copyWith(availableCards: filteredCards, isLoading: false);
     } catch (e) {
-      print('DEBUG: Filter error: $e'); // Debug print
+      // Debug: Filter error: $e
       state = state.copyWith(error: 'Filter failed: $e', isLoading: false);
     }
   }
@@ -300,6 +301,7 @@ class ManualInterpretationNotifier
       selectedCards: [],
       connections: [],
       selectedTopic: null,
+      selectedGuide: null,
     );
   }
 

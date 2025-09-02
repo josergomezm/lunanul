@@ -2,6 +2,7 @@ import 'dart:math';
 import '../models/manual_interpretation.dart';
 import '../models/tarot_card.dart';
 import '../models/enums.dart';
+import 'mock_reading_service.dart';
 
 /// Service for managing manual interpretations
 class ManualInterpretationService {
@@ -11,14 +12,26 @@ class ManualInterpretationService {
   ManualInterpretationService._();
 
   final List<ManualInterpretation> _savedInterpretations = [];
+  final MockReadingService _readingService = MockReadingService.instance;
 
   /// Generate contextual interpretation for a card based on topic and position
   Future<String> generateInterpretation({
     required TarotCard card,
     required ReadingTopic topic,
     required String positionName,
+    GuideType? selectedGuide,
   }) async {
-    // Simulate AI processing delay
+    // Use guide-specific interpretation if a guide is selected
+    if (selectedGuide != null) {
+      return await _readingService.generateManualInterpretation(
+        card: card,
+        topic: topic,
+        position: positionName,
+        selectedGuide: selectedGuide,
+      );
+    }
+
+    // Fallback to original interpretation logic if no guide selected
     await Future.delayed(const Duration(milliseconds: 800));
 
     final baseMeaning = card.currentMeaning;

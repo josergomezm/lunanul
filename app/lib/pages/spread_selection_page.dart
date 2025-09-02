@@ -6,14 +6,21 @@ import '../models/reading.dart';
 import '../models/card_position.dart';
 import '../providers/reading_provider.dart';
 import '../utils/app_theme.dart';
+import '../utils/app_router.dart';
 import '../utils/constants.dart';
+import '../widgets/guide_interpretation_widget.dart';
 import '../widgets/save_reading_dialog.dart';
 
 /// Page for selecting a spread type after choosing a topic
 class SpreadSelectionPage extends ConsumerStatefulWidget {
   final ReadingTopic topic;
+  final GuideType? selectedGuide;
 
-  const SpreadSelectionPage({super.key, required this.topic});
+  const SpreadSelectionPage({
+    super.key,
+    required this.topic,
+    this.selectedGuide,
+  });
 
   @override
   ConsumerState<SpreadSelectionPage> createState() =>
@@ -22,6 +29,19 @@ class SpreadSelectionPage extends ConsumerStatefulWidget {
 
 class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
   bool _isNavigating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize reading flow with topic and guide if provided
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final readingFlowNotifier = ref.read(readingFlowProvider.notifier);
+      readingFlowNotifier.setTopic(widget.topic);
+      if (widget.selectedGuide != null) {
+        readingFlowNotifier.setSelectedGuide(widget.selectedGuide);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +97,52 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    // Guide selection indicator
+                    if (readingFlow.selectedGuide != null) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryPurple.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.person,
+                              size: 16,
+                              color: AppTheme.primaryPurple,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Guide: ${readingFlow.selectedGuide!.guideName}',
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
+                                    color: AppTheme.primaryPurple,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton.icon(
+                        onPressed: () => _changeGuideSelection(context, ref),
+                        icon: const Icon(Icons.edit, size: 16),
+                        label: const Text('Change Guide'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppTheme.primaryPurple,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -269,6 +335,10 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
     }
   }
 
+  void _changeGuideSelection(BuildContext context, WidgetRef ref) {
+    context.goGuideSelection(widget.topic);
+  }
+
   void _startReading(BuildContext context, WidgetRef ref) {
     if (_isNavigating) return; // Prevent multiple calls
 
@@ -284,6 +354,7 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
               builder: (context) => ReadingInProgressPage(
                 topic: readingFlow.topic!,
                 spreadType: readingFlow.spreadType!,
+                selectedGuide: readingFlow.selectedGuide,
               ),
             ),
           )
@@ -303,11 +374,13 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
 class ReadingInProgressPage extends ConsumerStatefulWidget {
   final ReadingTopic topic;
   final SpreadType spreadType;
+  final GuideType? selectedGuide;
 
   const ReadingInProgressPage({
     super.key,
     required this.topic,
     required this.spreadType,
+    this.selectedGuide,
   });
 
   @override
@@ -401,7 +474,11 @@ class _ReadingInProgressPageState extends ConsumerState<ReadingInProgressPage>
         // Start the reading creation
         await ref
             .read(currentReadingProvider.notifier)
-            .createReading(topic: widget.topic, spreadType: widget.spreadType);
+            .createReading(
+              topic: widget.topic,
+              spreadType: widget.spreadType,
+              selectedGuide: widget.selectedGuide,
+            );
 
         // Only proceed with animations if the widget is still mounted
         if (!mounted) return;
@@ -1113,11 +1190,12 @@ class _ReadingInProgressPageState extends ConsumerState<ReadingInProgressPage>
                 ],
               ),
               const SizedBox(height: 12),
-              Text(
-                cardPosition.aiInterpretation,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(height: 1.4),
+              GuideInterpretationWidget(
+                card: cardPosition.card,
+                topic: widget.topic,
+                selectedGuide: widget.selectedGuide,
+                position: cardPosition.positionName,
+                showGuideInfo: false,
               ),
             ],
           ),

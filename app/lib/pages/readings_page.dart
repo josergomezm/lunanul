@@ -6,9 +6,9 @@ import '../providers/reading_provider.dart';
 import '../providers/journal_provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../utils/constants.dart';
+import '../utils/app_router.dart';
 import '../widgets/topic_selector_widget.dart';
 import '../widgets/background_widget.dart';
-import 'spread_selection_page.dart';
 import 'reading_detail_page.dart';
 
 /// AI-powered readings page with topic selection and spreads
@@ -88,13 +88,9 @@ class ReadingsPage extends ConsumerWidget {
       elevation: 2,
       child: InkWell(
         onTap: () {
-          // Set the topic in the reading flow and navigate to spread selection
+          // Set the topic in the reading flow and navigate to guide selection
           ref.read(readingFlowProvider.notifier).setTopic(topic);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => SpreadSelectionPage(topic: topic),
-            ),
-          );
+          context.goGuideSelection(topic);
         },
         borderRadius: BorderRadius.circular(12),
         child: ClipRRect(

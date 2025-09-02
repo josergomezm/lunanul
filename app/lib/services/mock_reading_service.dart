@@ -4,6 +4,7 @@ import '../models/card_position.dart';
 import '../models/tarot_card.dart';
 import '../models/enums.dart';
 import 'card_service.dart';
+import 'guide_service.dart';
 
 /// Mock service for generating AI-powered tarot readings with realistic interpretations
 class MockReadingService {
@@ -13,6 +14,7 @@ class MockReadingService {
   MockReadingService._();
 
   final CardService _cardService = CardService.instance;
+  final GuideService _guideService = GuideService();
   final Random _random = Random();
 
   /// Create a new reading with AI-generated interpretations
@@ -20,6 +22,7 @@ class MockReadingService {
     required ReadingTopic topic,
     required SpreadType spreadType,
     String? customTitle,
+    GuideType? selectedGuide,
   }) async {
     // Simulate AI processing delay
     await Future.delayed(Duration(milliseconds: 500 + _random.nextInt(1000)));
@@ -40,6 +43,7 @@ class MockReadingService {
         position: positionName,
         topic: topic,
         spreadType: spreadType,
+        selectedGuide: selectedGuide,
       );
 
       cardPositions.add(
@@ -60,6 +64,7 @@ class MockReadingService {
       spreadType: spreadType,
       cards: cardPositions,
       title: customTitle,
+      selectedGuide: selectedGuide,
       isSaved: false,
     );
   }
@@ -70,10 +75,22 @@ class MockReadingService {
     required String position,
     required ReadingTopic topic,
     required SpreadType spreadType,
+    GuideType? selectedGuide,
   }) async {
     // Simulate AI processing time
     await Future.delayed(Duration(milliseconds: 200 + _random.nextInt(300)));
 
+    // Use guide-specific interpretation if a guide is selected
+    if (selectedGuide != null) {
+      return _guideService.generateInterpretation(
+        card,
+        selectedGuide,
+        topic,
+        position: position,
+      );
+    }
+
+    // Fallback to original interpretation logic if no guide selected
     final baseInterpretation = card.currentMeaning;
     final contextualElements = _getContextualElements(
       topic,
@@ -407,10 +424,22 @@ class MockReadingService {
     required TarotCard card,
     required ReadingTopic topic,
     String? position,
+    GuideType? selectedGuide,
   }) async {
     // Simulate AI processing delay
     await Future.delayed(Duration(milliseconds: 300 + _random.nextInt(500)));
 
+    // Use guide-specific interpretation if a guide is selected
+    if (selectedGuide != null) {
+      return _guideService.generateInterpretation(
+        card,
+        selectedGuide,
+        topic,
+        position: position,
+      );
+    }
+
+    // Fallback to original interpretation logic if no guide selected
     final contextualElements = _getContextualElements(
       topic,
       position ?? 'Your Card',

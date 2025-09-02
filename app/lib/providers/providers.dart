@@ -12,6 +12,7 @@ export 'user_provider.dart'
         SharedReadingsNotifier; // Hide conflicting providers
 export 'manual_interpretation_provider.dart';
 export 'friends_provider.dart';
+export 'guide_provider.dart';
 
 // Language and localization
 export 'language_provider.dart';

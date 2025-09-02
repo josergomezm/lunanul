@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/pages.dart';
+import '../models/enums.dart';
 import '../widgets/main_scaffold.dart';
 import 'constants.dart';
 
@@ -52,6 +53,40 @@ class AppRouter {
             name: 'settings',
             pageBuilder: (context, state) =>
                 _buildPageWithTransition(context, state, const SettingsPage()),
+          ),
+          GoRoute(
+            path: AppConstants.guideSelectionRoute,
+            name: 'guide-selection',
+            pageBuilder: (context, state) {
+              final topicParam = state.uri.queryParameters['topic'];
+              final topic = topicParam != null
+                  ? ReadingTopic.fromString(topicParam)
+                  : ReadingTopic.self;
+              return _buildPageWithTransition(
+                context,
+                state,
+                GuideSelectionPage(topic: topic),
+              );
+            },
+          ),
+          GoRoute(
+            path: AppConstants.spreadSelectionRoute,
+            name: 'spread-selection',
+            pageBuilder: (context, state) {
+              final topicParam = state.uri.queryParameters['topic'];
+              final guideParam = state.uri.queryParameters['guide'];
+              final topic = topicParam != null
+                  ? ReadingTopic.fromString(topicParam)
+                  : ReadingTopic.self;
+              final guide = guideParam != null
+                  ? GuideType.fromString(guideParam)
+                  : null;
+              return _buildPageWithTransition(
+                context,
+                state,
+                SpreadSelectionPage(topic: topic, selectedGuide: guide),
+              );
+            },
           ),
         ],
       ),
@@ -120,6 +155,18 @@ extension AppRouterExtension on BuildContext {
 
   /// Navigate to readings page
   void goReadings() => go(AppConstants.readingsRoute);
+
+  /// Navigate to guide selection page
+  void goGuideSelection(ReadingTopic topic) =>
+      go('${AppConstants.guideSelectionRoute}?topic=${topic.name}');
+
+  /// Navigate to spread selection page
+  void goSpreadSelection(ReadingTopic topic, {GuideType? selectedGuide}) {
+    final uri = selectedGuide != null
+        ? '${AppConstants.spreadSelectionRoute}?topic=${topic.name}&guide=${selectedGuide.name}'
+        : '${AppConstants.spreadSelectionRoute}?topic=${topic.name}';
+    go(uri);
+  }
 
   /// Navigate to interpretations page
   void goInterpretations() => go(AppConstants.interpretationsRoute);

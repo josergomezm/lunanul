@@ -1,0 +1,94 @@
+{
+  "sage": {
+    "openingPhrases": [
+      "The universe speaks through this card emerges from the depths of universal consciousness",
+      "In the cosmic tapestry, the eternal patterns reveal themselves",
+      "The ancient wisdom reveals the cosmic wheel turns to show you this truth",
+      "Ancient energies align to bring you this message"
+    ],
+    "contextTemplates": [
+      "The {cardName} {orientation} carries the energy of {keywords}",
+      "Through {cardName}, the cosmos shows you the path of {keywords}",
+      "The spiritual essence of {cardName} illuminates {keywords}"
+    ],
+    "actionTemplates": [
+      "Align yourself with {topicApproach} and trust in the universal flow.",
+      "Meditate on {topicApproach} to unlock deeper understanding.",
+      "The stars guide you toward {topicApproach} with divine timing."
+    ],
+    "closingPhrases": [
+      "Trust in the wisdom of the universe.",
+      "All is unfolding as it should in the grand design.",
+      "The cosmic forces are aligning for your highest good."
+    ]
+  },
+  "healer": {
+    "openingPhrases": [
+      "Your heart knows the truth, and this card offers gentle guidance for your journey",
+      "With gentle compassion, your inner healer recognizes this wisdom",
+      "Trust in your inner healing wisdom as this message comes with love and understanding",
+      "Your heart is ready to receive this healing"
+    ],
+    "contextTemplates": [
+      "The {cardName} {orientation} offers healing through {keywords}",
+      "Embrace the gentle message of {cardName} and its gift of {keywords}",
+      "Your soul is ready to receive the nurturing energy of {cardName} and {keywords}"
+    ],
+    "actionTemplates": [
+      "Be gentle with yourself as you explore {topicApproach}.",
+      "Honor your emotions and allow {topicApproach} to unfold naturally.",
+      "Practice self-compassion while embracing {topicApproach}."
+    ],
+    "closingPhrases": [
+      "You are worthy of love and healing.",
+      "Trust in your ability to heal and grow.",
+      "Your heart holds infinite wisdom and strength."
+    ]
+  },
+  "mentor": {
+    "openingPhrases": [
+      "The practical path forward is clear: this card provides the strategic insight you need",
+      "Focus your energy and attention because the solution becomes clear through this guidance",
+      "Take decisive action as this practical wisdom will serve you well",
+      "The path to success is illuminated here"
+    ],
+    "contextTemplates": [
+      "The {cardName} {orientation} provides concrete guidance through {keywords}",
+      "Analyze the message of {cardName} and apply its lessons of {keywords}",
+      "The strategic insight of {cardName} points to {keywords} as your focus"
+    ],
+    "actionTemplates": [
+      "Create a clear plan for {topicApproach} and execute it step by step.",
+      "Channel your efforts toward {topicApproach} with determination.",
+      "Set specific goals related to {topicApproach} and take immediate action."
+    ],
+    "closingPhrases": [
+      "Success comes through consistent, focused effort.",
+      "You have the skills and determination to achieve your goals.",
+      "Take the first step today—momentum builds with action."
+    ]
+  },
+  "visionary": {
+    "openingPhrases": [
+      "Imagine the possibilities as this card opens doorways to new possibilities",
+      "Your creative spirit is awakening because creative inspiration flows through this message",
+      "New horizons are calling as your potential is expanding through this revelation",
+      "Innovation and breakthrough await in this guidance"
+    ],
+    "contextTemplates": [
+      "The {cardName} {orientation} sparks inspiration through {keywords}",
+      "Envision the potential that {cardName} reveals through {keywords}",
+      "The creative energy of {cardName} illuminates new possibilities in {keywords}"
+    ],
+    "actionTemplates": [
+      "Explore the creative potential within {topicApproach} without limits.",
+      "Dream boldly about {topicApproach} and let inspiration guide you.",
+      "Embrace innovation and fresh perspectives in {topicApproach}."
+    ],
+    "closingPhrases": [
+      "The universe is conspiring to help you create something beautiful.",
+      "Your imagination is your greatest tool for transformation.",
+      "Trust in the magic of new beginnings and endless possibilities."
+    ]
+  }
+}

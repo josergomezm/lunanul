@@ -769,4 +769,60 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get newReading => 'Nueva Lectura';
+
+  @override
+  String get guideSageName => 'Zian';
+
+  @override
+  String get guideSageTitle => 'El Místico Sabio';
+
+  @override
+  String get guideSageDescription =>
+      'Un guía profundo que habla en verdades cósmicas y sabiduría universal, ayudándote a entender los patrones espirituales más profundos en tu vida.';
+
+  @override
+  String get guideSageExpertise =>
+      'Perspectiva espiritual profunda, patrones kármicos y reconexión con el propósito superior';
+
+  @override
+  String get guideHealerName => 'Lyra';
+
+  @override
+  String get guideHealerTitle => 'La Sanadora Compasiva';
+
+  @override
+  String get guideHealerDescription =>
+      'Una guía gentil y nutritiva que ofrece apoyo emocional y sabiduría sanadora, perfecta para momentos cuando necesitas consuelo y autocompasión.';
+
+  @override
+  String get guideHealerExpertise =>
+      'Sanación emocional, autocuidado, navegación de emociones difíciles y construcción del amor propio';
+
+  @override
+  String get guideMentorName => 'Kael';
+
+  @override
+  String get guideMentorTitle => 'El Estratega Práctico';
+
+  @override
+  String get guideMentorDescription =>
+      'Un guía claro y directo que proporciona consejos accionables y soluciones prácticas, ideal para decisiones de carrera y desafíos del mundo real.';
+
+  @override
+  String get guideMentorExpertise =>
+      'Orientación profesional, decisiones prácticas, planificación estratégica y pasos accionables';
+
+  @override
+  String get guideVisionaryName => 'Elara';
+
+  @override
+  String get guideVisionaryTitle => 'La Musa Creativa';
+
+  @override
+  String get guideVisionaryDescription =>
+      'Una guía inspiradora que te ayuda a explorar posibilidades y desbloquear tu potencial creativo, perfecta para superar bloqueos y visualizar nuevos futuros.';
+
+  @override
+  String get guideVisionaryExpertise =>
+      'Inspiración creativa, exploración de posibilidades, superación de bloqueos y liberación del potencial';
 }

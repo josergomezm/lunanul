@@ -5,6 +5,7 @@ import '../models/card_position.dart';
 import '../models/enums.dart';
 import '../utils/app_theme.dart';
 import '../providers/language_provider.dart';
+import '../widgets/guide_interpretation_widget.dart';
 import 'reading_spread_widget.dart';
 
 /// A widget for displaying reading history entries in the journal
@@ -320,9 +321,11 @@ class _JournalEntryWidgetState extends ConsumerState<JournalEntryWidget>
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  cardPosition.aiInterpretation,
-                  style: Theme.of(context).textTheme.bodySmall,
+                CompactGuideInterpretationWidget(
+                  card: cardPosition.card,
+                  topic: widget.reading.topic,
+                  selectedGuide: widget.reading.selectedGuide,
+                  position: cardPosition.positionName,
                 ),
               ],
             ),

@@ -1,0 +1,94 @@
+{
+  "sage": {
+    "openingPhrases": [
+      "El universo habla a través de esta carta que emerge de las profundidades de la consciencia universal",
+      "En el tapiz cósmico, los patrones eternos se revelan",
+      "La sabiduría ancestral revela que la rueda cósmica gira para mostrarte esta verdad",
+      "Las energías ancestrales se alinean para traerte este mensaje"
+    ],
+    "contextTemplates": [
+      "El {cardName} {orientation} lleva la energía de {keywords}",
+      "A través de {cardName}, el cosmos te muestra el camino de {keywords}",
+      "La esencia espiritual de {cardName} ilumina {keywords}"
+    ],
+    "actionTemplates": [
+      "Alinéate con {topicApproach} y confía en el flujo universal.",
+      "Medita sobre {topicApproach} para desbloquear una comprensión más profunda.",
+      "Las estrellas te guían hacia {topicApproach} con tiempo divino."
+    ],
+    "closingPhrases": [
+      "Confía en la sabiduría del universo.",
+      "Todo se está desarrollando como debe en el gran diseño.",
+      "Las fuerzas cósmicas se están alineando para tu mayor bien."
+    ]
+  },
+  "healer": {
+    "openingPhrases": [
+      "Tu corazón conoce la verdad, y esta carta ofrece guía gentil para tu viaje",
+      "Con compasión gentil, tu sanador interior reconoce esta sabiduría",
+      "Confía en tu sabiduría sanadora interior mientras este mensaje llega con amor y comprensión",
+      "Tu corazón está listo para recibir esta sanación"
+    ],
+    "contextTemplates": [
+      "El {cardName} {orientation} ofrece sanación a través de {keywords}",
+      "Abraza el mensaje gentil de {cardName} y su regalo de {keywords}",
+      "Tu alma está lista para recibir la energía nutritiva de {cardName} y {keywords}"
+    ],
+    "actionTemplates": [
+      "Sé gentil contigo mismo mientras exploras {topicApproach}.",
+      "Honra tus emociones y permite que {topicApproach} se desarrolle naturalmente.",
+      "Practica la autocompasión mientras abrazas {topicApproach}."
+    ],
+    "closingPhrases": [
+      "Eres digno de amor y sanación.",
+      "Confía en tu capacidad de sanar y crecer.",
+      "Tu corazón contiene sabiduría y fuerza infinitas."
+    ]
+  },
+  "mentor": {
+    "openingPhrases": [
+      "El camino práctico hacia adelante es claro: esta carta proporciona la perspectiva estratégica que necesitas",
+      "Enfoca tu energía y atención porque la solución se vuelve clara a través de esta guía",
+      "Toma acción decisiva ya que esta sabiduría práctica te servirá bien",
+      "El camino al éxito se ilumina aquí"
+    ],
+    "contextTemplates": [
+      "El {cardName} {orientation} proporciona guía concreta a través de {keywords}",
+      "Analiza el mensaje de {cardName} y aplica sus lecciones de {keywords}",
+      "La perspectiva estratégica de {cardName} señala {keywords} como tu enfoque"
+    ],
+    "actionTemplates": [
+      "Crea un plan claro para {topicApproach} y ejecútalo paso a paso.",
+      "Canaliza tus esfuerzos hacia {topicApproach} con determinación.",
+      "Establece metas específicas relacionadas con {topicApproach} y toma acción inmediata."
+    ],
+    "closingPhrases": [
+      "El éxito viene a través del esfuerzo consistente y enfocado.",
+      "Tienes las habilidades y determinación para lograr tus metas.",
+      "Da el primer paso hoy—el impulso se construye con la acción."
+    ]
+  },
+  "visionary": {
+    "openingPhrases": [
+      "Imagina las posibilidades mientras esta carta abre puertas a nuevas posibilidades",
+      "Tu espíritu creativo está despertando porque la inspiración creativa fluye a través de este mensaje",
+      "Nuevos horizontes están llamando mientras tu potencial se expande a través de esta revelación",
+      "La innovación y el avance te esperan en esta guía"
+    ],
+    "contextTemplates": [
+      "El {cardName} {orientation} despierta inspiración a través de {keywords}",
+      "Visualiza el potencial que {cardName} revela a través de {keywords}",
+      "La energía creativa de {cardName} ilumina nuevas posibilidades en {keywords}"
+    ],
+    "actionTemplates": [
+      "Explora el potencial creativo dentro de {topicApproach} sin límites.",
+      "Sueña audazmente sobre {topicApproach} y deja que la inspiración te guíe.",
+      "Abraza la innovación y perspectivas frescas en {topicApproach}."
+    ],
+    "closingPhrases": [
+      "El universo está conspirando para ayudarte a crear algo hermoso.",
+      "Tu imaginación es tu herramienta más grande para la transformación.",
+      "Confía en la magia de los nuevos comienzos y las posibilidades infinitas."
+    ]
+  }
+}

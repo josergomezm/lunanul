@@ -1,6 +1,7 @@
 // Export all reusable UI components
 export 'card_widget.dart';
 export 'topic_selector_widget.dart';
+export 'guide_selector_widget.dart';
 export 'reading_spread_widget.dart';
 export 'journal_entry_widget.dart';
 export 'main_scaffold.dart';

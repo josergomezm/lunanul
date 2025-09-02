@@ -422,5 +422,73 @@
   "touchCardWhenReady": "Touch each card when you're ready to see its message",
   "yourReading": "Your Reading",
   "saveToJournal": "Save to Journal",
-  "newReading": "New Reading"
+  "newReading": "New Reading",
+  
+  "guideSageName": "Zian",
+  "@guideSageName": {
+    "description": "Name of the Sage guide"
+  },
+  "guideSageTitle": "The Wise Mystic",
+  "@guideSageTitle": {
+    "description": "Title of the Sage guide"
+  },
+  "guideSageDescription": "A profound guide who speaks in cosmic truths and universal wisdom, helping you understand the deeper spiritual patterns in your life.",
+  "@guideSageDescription": {
+    "description": "Description of the Sage guide"
+  },
+  "guideSageExpertise": "Deep spiritual insight, karmic patterns, and reconnecting with higher purpose",
+  "@guideSageExpertise": {
+    "description": "Expertise areas of the Sage guide"
+  },
+  
+  "guideHealerName": "Lyra",
+  "@guideHealerName": {
+    "description": "Name of the Healer guide"
+  },
+  "guideHealerTitle": "The Compassionate Healer",
+  "@guideHealerTitle": {
+    "description": "Title of the Healer guide"
+  },
+  "guideHealerDescription": "A gentle, nurturing guide who offers emotional support and healing wisdom, perfect for times when you need comfort and self-compassion.",
+  "@guideHealerDescription": {
+    "description": "Description of the Healer guide"
+  },
+  "guideHealerExpertise": "Emotional healing, self-care, navigating difficult emotions, and building self-love",
+  "@guideHealerExpertise": {
+    "description": "Expertise areas of the Healer guide"
+  },
+  
+  "guideMentorName": "Kael",
+  "@guideMentorName": {
+    "description": "Name of the Mentor guide"
+  },
+  "guideMentorTitle": "The Practical Strategist",
+  "@guideMentorTitle": {
+    "description": "Title of the Mentor guide"
+  },
+  "guideMentorDescription": "A clear, direct guide who provides actionable advice and practical solutions, ideal for career decisions and real-world challenges.",
+  "@guideMentorDescription": {
+    "description": "Description of the Mentor guide"
+  },
+  "guideMentorExpertise": "Career guidance, practical decisions, strategic planning, and actionable steps",
+  "@guideMentorExpertise": {
+    "description": "Expertise areas of the Mentor guide"
+  },
+  
+  "guideVisionaryName": "Elara",
+  "@guideVisionaryName": {
+    "description": "Name of the Visionary guide"
+  },
+  "guideVisionaryTitle": "The Creative Muse",
+  "@guideVisionaryTitle": {
+    "description": "Title of the Visionary guide"
+  },
+  "guideVisionaryDescription": "An inspiring guide who helps you explore possibilities and unlock your creative potential, perfect for overcoming blocks and envisioning new futures.",
+  "@guideVisionaryDescription": {
+    "description": "Description of the Visionary guide"
+  },
+  "guideVisionaryExpertise": "Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential",
+  "@guideVisionaryExpertise": {
+    "description": "Expertise areas of the Visionary guide"
+  }
 }

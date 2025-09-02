@@ -19,6 +19,7 @@ class ReadingNotifier extends StateNotifier<AsyncValue<Reading?>> {
     required ReadingTopic topic,
     required SpreadType spreadType,
     String? customTitle,
+    GuideType? selectedGuide,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -26,6 +27,7 @@ class ReadingNotifier extends StateNotifier<AsyncValue<Reading?>> {
         topic: topic,
         spreadType: spreadType,
         customTitle: customTitle,
+        selectedGuide: selectedGuide,
       );
       state = AsyncValue.data(reading);
     } catch (error, stackTrace) {
@@ -114,7 +116,11 @@ class ReadingFlowNotifier extends StateNotifier<ReadingFlowState> {
 
   /// Set the selected topic
   void setTopic(ReadingTopic topic) {
-    state = state.copyWith(topic: topic, spreadType: null);
+    state = state.copyWith(
+      topic: topic,
+      clearSpreadType: true,
+      clearSelectedGuide: true,
+    );
   }
 
   /// Set the selected spread type
@@ -127,6 +133,11 @@ class ReadingFlowNotifier extends StateNotifier<ReadingFlowState> {
     state = state.copyWith(customTitle: title);
   }
 
+  /// Set the selected guide
+  void setSelectedGuide(GuideType? guide) {
+    state = state.copyWith(selectedGuide: guide);
+  }
+
   /// Reset the flow
   void reset() {
     state = ReadingFlowState.initial();
@@ -134,15 +145,24 @@ class ReadingFlowNotifier extends StateNotifier<ReadingFlowState> {
 
   /// Check if ready to create reading
   bool get canCreateReading => state.topic != null && state.spreadType != null;
+
+  /// Check if guide selection is complete (optional step)
+  bool get hasGuideSelection => state.selectedGuide != null;
 }
 
 /// State class for reading creation flow
 class ReadingFlowState {
-  const ReadingFlowState({this.topic, this.spreadType, this.customTitle});
+  const ReadingFlowState({
+    this.topic,
+    this.spreadType,
+    this.customTitle,
+    this.selectedGuide,
+  });
 
   final ReadingTopic? topic;
   final SpreadType? spreadType;
   final String? customTitle;
+  final GuideType? selectedGuide;
 
   factory ReadingFlowState.initial() {
     return const ReadingFlowState();
@@ -152,11 +172,17 @@ class ReadingFlowState {
     ReadingTopic? topic,
     SpreadType? spreadType,
     String? customTitle,
+    GuideType? selectedGuide,
+    bool clearSpreadType = false,
+    bool clearSelectedGuide = false,
   }) {
     return ReadingFlowState(
       topic: topic ?? this.topic,
-      spreadType: spreadType ?? this.spreadType,
+      spreadType: clearSpreadType ? null : (spreadType ?? this.spreadType),
       customTitle: customTitle ?? this.customTitle,
+      selectedGuide: clearSelectedGuide
+          ? null
+          : (selectedGuide ?? this.selectedGuide),
     );
   }
 }
@@ -165,4 +191,29 @@ class ReadingFlowState {
 final readingFlowProvider =
     StateNotifierProvider<ReadingFlowNotifier, ReadingFlowState>((ref) {
       return ReadingFlowNotifier();
+    });
+
+/// Provider that creates a reading with guide selection from the reading flow
+final createReadingWithGuideProvider =
+    FutureProvider.family<Reading, ReadingFlowState>((ref, flowState) async {
+      if (flowState.topic == null || flowState.spreadType == null) {
+        throw Exception(
+          'Topic and spread type must be selected before creating reading',
+        );
+      }
+
+      final readingNotifier = ref.read(currentReadingProvider.notifier);
+      await readingNotifier.createReading(
+        topic: flowState.topic!,
+        spreadType: flowState.spreadType!,
+        customTitle: flowState.customTitle,
+        selectedGuide: flowState.selectedGuide,
+      );
+
+      final reading = ref.read(currentReadingProvider).value;
+      if (reading == null) {
+        throw Exception('Failed to create reading');
+      }
+
+      return reading;
     });

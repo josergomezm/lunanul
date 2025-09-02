@@ -14,6 +14,7 @@ class Reading {
   final String? userReflection;
   final bool isSaved;
   final String? title; // Optional custom title for the reading
+  final GuideType? selectedGuide; // Selected guide for this reading
 
   const Reading({
     required this.id,
@@ -24,6 +25,7 @@ class Reading {
     this.userReflection,
     this.isSaved = false,
     this.title,
+    this.selectedGuide,
   });
 
   /// Create a copy of this reading with some properties changed
@@ -36,6 +38,7 @@ class Reading {
     String? userReflection,
     bool? isSaved,
     String? title,
+    GuideType? selectedGuide,
   }) {
     return Reading(
       id: id ?? this.id,
@@ -46,6 +49,7 @@ class Reading {
       userReflection: userReflection ?? this.userReflection,
       isSaved: isSaved ?? this.isSaved,
       title: title ?? this.title,
+      selectedGuide: selectedGuide ?? this.selectedGuide,
     );
   }
 
@@ -133,6 +137,7 @@ class Reading {
       'userReflection': userReflection,
       'isSaved': isSaved,
       'title': title,
+      'selectedGuide': selectedGuide?.name,
     };
   }
 
@@ -152,6 +157,9 @@ class Reading {
       userReflection: json['userReflection'] as String?,
       isSaved: json['isSaved'] as bool? ?? false,
       title: json['title'] as String?,
+      selectedGuide: json['selectedGuide'] != null
+          ? GuideType.fromString(json['selectedGuide'] as String)
+          : null,
     );
   }
 

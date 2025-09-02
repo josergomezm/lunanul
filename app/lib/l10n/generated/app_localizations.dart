@@ -1477,6 +1477,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Reading'**
   String get newReading;
+
+  /// Name of the Sage guide
+  ///
+  /// In en, this message translates to:
+  /// **'Zian'**
+  String get guideSageName;
+
+  /// Title of the Sage guide
+  ///
+  /// In en, this message translates to:
+  /// **'The Wise Mystic'**
+  String get guideSageTitle;
+
+  /// Description of the Sage guide
+  ///
+  /// In en, this message translates to:
+  /// **'A profound guide who speaks in cosmic truths and universal wisdom, helping you understand the deeper spiritual patterns in your life.'**
+  String get guideSageDescription;
+
+  /// Expertise areas of the Sage guide
+  ///
+  /// In en, this message translates to:
+  /// **'Deep spiritual insight, karmic patterns, and reconnecting with higher purpose'**
+  String get guideSageExpertise;
+
+  /// Name of the Healer guide
+  ///
+  /// In en, this message translates to:
+  /// **'Lyra'**
+  String get guideHealerName;
+
+  /// Title of the Healer guide
+  ///
+  /// In en, this message translates to:
+  /// **'The Compassionate Healer'**
+  String get guideHealerTitle;
+
+  /// Description of the Healer guide
+  ///
+  /// In en, this message translates to:
+  /// **'A gentle, nurturing guide who offers emotional support and healing wisdom, perfect for times when you need comfort and self-compassion.'**
+  String get guideHealerDescription;
+
+  /// Expertise areas of the Healer guide
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional healing, self-care, navigating difficult emotions, and building self-love'**
+  String get guideHealerExpertise;
+
+  /// Name of the Mentor guide
+  ///
+  /// In en, this message translates to:
+  /// **'Kael'**
+  String get guideMentorName;
+
+  /// Title of the Mentor guide
+  ///
+  /// In en, this message translates to:
+  /// **'The Practical Strategist'**
+  String get guideMentorTitle;
+
+  /// Description of the Mentor guide
+  ///
+  /// In en, this message translates to:
+  /// **'A clear, direct guide who provides actionable advice and practical solutions, ideal for career decisions and real-world challenges.'**
+  String get guideMentorDescription;
+
+  /// Expertise areas of the Mentor guide
+  ///
+  /// In en, this message translates to:
+  /// **'Career guidance, practical decisions, strategic planning, and actionable steps'**
+  String get guideMentorExpertise;
+
+  /// Name of the Visionary guide
+  ///
+  /// In en, this message translates to:
+  /// **'Elara'**
+  String get guideVisionaryName;
+
+  /// Title of the Visionary guide
+  ///
+  /// In en, this message translates to:
+  /// **'The Creative Muse'**
+  String get guideVisionaryTitle;
+
+  /// Description of the Visionary guide
+  ///
+  /// In en, this message translates to:
+  /// **'An inspiring guide who helps you explore possibilities and unlock your creative potential, perfect for overcoming blocks and envisioning new futures.'**
+  String get guideVisionaryDescription;
+
+  /// Expertise areas of the Visionary guide
+  ///
+  /// In en, this message translates to:
+  /// **'Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential'**
+  String get guideVisionaryExpertise;
 }
 
 class _AppLocalizationsDelegate

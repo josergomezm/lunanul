@@ -760,4 +760,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newReading => 'New Reading';
+
+  @override
+  String get guideSageName => 'Zian';
+
+  @override
+  String get guideSageTitle => 'The Wise Mystic';
+
+  @override
+  String get guideSageDescription =>
+      'A profound guide who speaks in cosmic truths and universal wisdom, helping you understand the deeper spiritual patterns in your life.';
+
+  @override
+  String get guideSageExpertise =>
+      'Deep spiritual insight, karmic patterns, and reconnecting with higher purpose';
+
+  @override
+  String get guideHealerName => 'Lyra';
+
+  @override
+  String get guideHealerTitle => 'The Compassionate Healer';
+
+  @override
+  String get guideHealerDescription =>
+      'A gentle, nurturing guide who offers emotional support and healing wisdom, perfect for times when you need comfort and self-compassion.';
+
+  @override
+  String get guideHealerExpertise =>
+      'Emotional healing, self-care, navigating difficult emotions, and building self-love';
+
+  @override
+  String get guideMentorName => 'Kael';
+
+  @override
+  String get guideMentorTitle => 'The Practical Strategist';
+
+  @override
+  String get guideMentorDescription =>
+      'A clear, direct guide who provides actionable advice and practical solutions, ideal for career decisions and real-world challenges.';
+
+  @override
+  String get guideMentorExpertise =>
+      'Career guidance, practical decisions, strategic planning, and actionable steps';
+
+  @override
+  String get guideVisionaryName => 'Elara';
+
+  @override
+  String get guideVisionaryTitle => 'The Creative Muse';
+
+  @override
+  String get guideVisionaryDescription =>
+      'An inspiring guide who helps you explore possibilities and unlock your creative potential, perfect for overcoming blocks and envisioning new futures.';
+
+  @override
+  String get guideVisionaryExpertise =>
+      'Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential';
 }
