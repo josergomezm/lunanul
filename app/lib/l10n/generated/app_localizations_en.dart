@@ -226,6 +226,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToSave => 'Failed to save';
 
   @override
+  String get interpretCards => 'Interpret Cards';
+
+  @override
+  String get interpretCardsDescription =>
+      'Generate AI interpretations for your selected cards';
+
+  @override
+  String get interpretingCards => 'Interpreting cards...';
+
+  @override
+  String get noCardsToInterpret => 'No cards selected to interpret';
+
+  @override
+  String get interpretationComplete => 'Interpretation complete';
+
+  @override
+  String get reinterpretCards => 'Re-interpret Cards';
+
+  @override
+  String get interpretations => 'Interpretations';
+
+  @override
   String get navigationHome => 'Home';
 
   @override
@@ -756,7 +778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourReading => 'Your Reading';
 
   @override
-  String get saveToJournal => 'Save to Journal';
+  String get addPersonalReflection => 'Add Personal Reflection';
 
   @override
   String get newReading => 'New Reading';
@@ -816,4 +838,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get guideVisionaryExpertise =>
       'Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential';
+
+  @override
+  String get readingComplete => 'Reading Complete';
+
+  @override
+  String get startNewReading => 'Start New Reading';
 }

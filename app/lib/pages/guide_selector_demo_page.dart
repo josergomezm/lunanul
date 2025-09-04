@@ -42,7 +42,7 @@ class _GuideSelectorDemoPageState extends ConsumerState<GuideSelectorDemoPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Select a Topic (Optional)',
+                  'Select a Topic',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

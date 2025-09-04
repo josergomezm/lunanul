@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/card_service.dart';
 import '../services/mock_reading_service.dart';
 import '../services/mock_user_service.dart';
+import '../services/mock_subscription_service.dart';
+import '../services/mock_ad_service.dart';
+import '../services/shared_preferences_usage_tracking_service.dart';
 import 'providers.dart';
 
 /// Configuration for provider overrides and dependency injection
@@ -12,6 +15,8 @@ class ProviderScopeConfig {
     CardService? cardService,
     MockReadingService? readingService,
     MockUserService? userService,
+    MockSubscriptionService? subscriptionService,
+    MockAdService? adService,
   }) {
     final overrides = <Override>[];
 
@@ -28,16 +33,83 @@ class ProviderScopeConfig {
       overrides.add(userServiceProvider.overrideWithValue(userService));
     }
 
+    // Subscription service overrides
+    if (subscriptionService != null) {
+      overrides.add(
+        subscriptionServiceProvider.overrideWithValue(subscriptionService),
+      );
+    }
+
+    if (adService != null) {
+      overrides.add(adServiceProvider.overrideWithValue(adService));
+    }
+
     return overrides;
+  }
+
+  /// Provider observer for logging provider changes in debug mode
+  static ProviderObserver? getProviderObserver() {
+    return ProviderLogger();
+  }
+}
+
+/// Logger for provider state changes (debug mode only)
+class ProviderLogger extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase<Object?> provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    developer.log(
+      'Provider updated: ${provider.name ?? provider.runtimeType}',
+      name: 'ProviderLogger',
+    );
+  }
+
+  @override
+  void didAddProvider(
+    ProviderBase<Object?> provider,
+    Object? value,
+    ProviderContainer container,
+  ) {
+    developer.log(
+      'Provider added: ${provider.name ?? provider.runtimeType}',
+      name: 'ProviderLogger',
+    );
+  }
+
+  @override
+  void didDisposeProvider(
+    ProviderBase<Object?> provider,
+    ProviderContainer container,
+  ) {
+    developer.log(
+      'Provider disposed: ${provider.name ?? provider.runtimeType}',
+      name: 'ProviderLogger',
+    );
   }
 
   /// Get provider overrides for testing with mock services
   static List<Override> getTestOverrides() {
     return [
       // Override with fresh instances for testing
-      cardServiceProvider.overrideWithValue(CardService.instance),
-      readingServiceProvider.overrideWithValue(MockReadingService.instance),
-      userServiceProvider.overrideWithValue(MockUserService.instance),
+      // cardServiceProvider.overrideWithValue(CardService.instance),
+      // readingServiceProvider.overrideWithValue(MockReadingService.instance),
+      // userServiceProvider.overrideWithValue(MockUserService.instance),
+
+      // Subscription service overrides for testing
+      // subscriptionServiceProvider.overrideWithValue(MockSubscriptionService()),
+      // adServiceProvider.overrideWithValue(MockAdService()),
+      // usageTrackingServiceProvider.overrideWithValue(
+      //   SharedPreferencesUsageTrackingService(),
+      // ),
+      // featureGateServiceProvider.overrideWith(
+      //   (ref) => SubscriptionFeatureGateService(
+      //     usageTrackingService: ref.watch(usageTrackingServiceProvider),
+      //   ),
+      // ),
     ];
   }
 
@@ -53,6 +125,18 @@ class ProviderScopeConfig {
 
       // Load card of the day
       await container.read(cardOfTheDayProvider.future);
+
+      // Initialize subscription system
+      container.read(subscriptionProvider);
+
+      // Initialize usage tracking
+      container.read(usageTrackingNotifierProvider);
+
+      // Initialize feature gate service
+      container.read(featureGateServiceProvider);
+
+      // Initialize subscription onboarding
+      // container.read(subscriptionOnboardingNotifierProvider);
     } catch (e) {
       // Handle initialization errors gracefully
       developer.log(
@@ -69,53 +153,19 @@ class ProviderScopeConfig {
 
     // Clear user service data (for testing)
     MockUserService.instance.clearUserData();
-  }
-}
 
-/// Provider observer for debugging and logging
-class ProviderLogger extends ProviderObserver {
-  @override
-  void didUpdateProvider(
-    ProviderBase<Object?> provider,
-    Object? previousValue,
-    Object? newValue,
-    ProviderContainer container,
-  ) {
-    // Log provider updates in debug mode
-    if (const bool.fromEnvironment('dart.vm.product') == false) {
-      developer.log(
-        'Provider ${provider.name ?? provider.runtimeType} updated: $newValue',
-        name: 'ProviderLogger',
-      );
+    // Clear subscription service data (for testing)
+    final subscriptionService = container.read(subscriptionServiceProvider);
+    if (subscriptionService is MockSubscriptionService) {
+      // Reset subscription service if it has a reset method
+      // subscriptionService.reset();
     }
-  }
 
-  @override
-  void didDisposeProvider(
-    ProviderBase<Object?> provider,
-    ProviderContainer container,
-  ) {
-    // Log provider disposal in debug mode
-    if (const bool.fromEnvironment('dart.vm.product') == false) {
-      developer.log(
-        'Provider ${provider.name ?? provider.runtimeType} disposed',
-        name: 'ProviderLogger',
-      );
+    // Clear usage tracking data (for testing)
+    final usageService = container.read(usageTrackingServiceProvider);
+    if (usageService is SharedPreferencesUsageTrackingService) {
+      usageService.clearAllUsage();
     }
-  }
-
-  @override
-  void providerDidFail(
-    ProviderBase<Object?> provider,
-    Object error,
-    StackTrace stackTrace,
-    ProviderContainer container,
-  ) {
-    // Log provider errors
-    developer.log(
-      'Provider ${provider.name ?? provider.runtimeType} failed: $error',
-      name: 'ProviderLogger',
-    );
   }
 }
 
@@ -155,6 +205,19 @@ extension WidgetRefExtensions on WidgetRef {
       savedReadingsProvider,
       recentReadingsProvider,
       userStatisticsProvider,
+      subscriptionProvider,
+      subscriptionProductsProvider,
+      subscriptionHealthProvider,
+    ]);
+  }
+
+  /// Refresh subscription-related providers
+  void refreshSubscriptionData() {
+    invalidateAll([
+      subscriptionProvider,
+      subscriptionProductsProvider,
+      subscriptionHealthProvider,
+      usageTrackingNotifierProvider,
     ]);
   }
 }

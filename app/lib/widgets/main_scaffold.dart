@@ -151,6 +151,10 @@ class BottomNavBar extends StatelessWidget {
         return 3;
       case AppConstants.friendsRoute:
         return 4;
+      // Keep readings selected for AI reading flow routes
+      case AppConstants.guideSelectionRoute:
+      case AppConstants.spreadSelectionRoute:
+        return 1;
       default:
         return 0;
     }

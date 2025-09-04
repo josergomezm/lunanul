@@ -231,7 +231,10 @@ class DynamicContentLocalizations {
         case SpreadType.threeCard:
           return 'Pasado, Presente, Futuro o Situación, Acción, Resultado';
         case SpreadType.celtic:
+        case SpreadType.celticCross:
           return 'Lectura completa para situaciones complejas';
+        case SpreadType.horseshoe:
+          return 'Tirada de siete cartas para guía y resultados';
         case SpreadType.relationship:
           return 'Enfocado en dinámicas de relación';
         case SpreadType.career:
@@ -245,7 +248,10 @@ class DynamicContentLocalizations {
         case SpreadType.threeCard:
           return 'Past, Present, Future or Situation, Action, Outcome';
         case SpreadType.celtic:
+        case SpreadType.celticCross:
           return 'Comprehensive reading for complex situations';
+        case SpreadType.horseshoe:
+          return 'Seven-card spread for guidance and outcomes';
         case SpreadType.relationship:
           return 'Focused on relationship dynamics';
         case SpreadType.career:
@@ -263,7 +269,10 @@ class DynamicContentLocalizations {
         case SpreadType.threeCard:
           return 'Tres Cartas';
         case SpreadType.celtic:
+        case SpreadType.celticCross:
           return 'Cruz Celta';
+        case SpreadType.horseshoe:
+          return 'Herradura';
         case SpreadType.relationship:
           return 'Relación';
         case SpreadType.career:
@@ -277,7 +286,10 @@ class DynamicContentLocalizations {
         case SpreadType.threeCard:
           return 'Three Card';
         case SpreadType.celtic:
+        case SpreadType.celticCross:
           return 'Celtic Cross';
+        case SpreadType.horseshoe:
+          return 'Horseshoe';
         case SpreadType.relationship:
           return 'Relationship';
         case SpreadType.career:

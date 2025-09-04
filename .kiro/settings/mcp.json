@@ -15,7 +15,8 @@
         "mcp_dart_hover",
         "mcp_dart_signature_help",
         "analyze_files",
-        "pub"
+        "pub",
+        "add_roots"
       ]
     }
   }

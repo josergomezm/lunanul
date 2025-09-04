@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../widgets/language_selection_widget.dart';
+import '../widgets/subscription_settings_widget.dart';
 import '../utils/constants.dart';
 
 /// Settings page with language selection and other preferences
@@ -41,13 +42,17 @@ class SettingsPage extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
+              // Subscription Settings Section
+              const SubscriptionSettingsWidget(),
+
+              const SizedBox(height: 24),
+
               // Language Selection Section
               const LanguageSelectionWidget(),
 
               const SizedBox(height: 24),
 
               // Future settings sections can be added here
-              // For now, we'll just have language selection as per the task requirements
             ],
           ),
         ),

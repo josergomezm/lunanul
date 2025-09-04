@@ -9,6 +9,7 @@ import '../utils/constants.dart';
 import '../utils/app_router.dart';
 import '../widgets/topic_selector_widget.dart';
 import '../widgets/background_widget.dart';
+import '../widgets/usage_tracker_widget.dart';
 import 'reading_detail_page.dart';
 
 /// AI-powered readings page with topic selection and spreads
@@ -33,6 +34,14 @@ class ReadingsPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Usage tracker at the top
+                const UsageTrackerWidget(
+                  featureKey: 'readings',
+                  featureName: 'AI Readings',
+                ),
+
+                const SizedBox(height: 16),
+
                 // Page description
                 Text(
                   localizations.chooseTopicForReading,

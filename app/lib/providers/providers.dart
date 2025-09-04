@@ -14,6 +14,16 @@ export 'manual_interpretation_provider.dart';
 export 'friends_provider.dart';
 export 'guide_provider.dart';
 
+// Subscription and monetization
+export 'subscription_provider.dart';
+export 'subscription_providers.dart';
+export 'feature_gate_provider.dart';
+export 'usage_tracking_provider.dart' hide usageCountsProvider;
+export 'ad_provider.dart';
+export 'subscription_onboarding_provider.dart';
+export 'subscription_sync_provider.dart';
+export 'subscription_analytics_provider.dart';
+
 // Language and localization
 export 'language_provider.dart';
 

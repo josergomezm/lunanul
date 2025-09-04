@@ -141,14 +141,27 @@ class GuideTheme {
     bool isSelected = false,
     bool isHovered = false,
     bool isRecommended = false,
+    bool isLocked = false,
   }) {
     final primary = getPrimaryColor(guideType);
 
     return BoxDecoration(
       borderRadius: GuideBorderRadius.card,
-      gradient: getGradient(guideType),
+      gradient: isLocked
+          ? LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.grey.withValues(alpha: 0.1),
+                Colors.grey.withValues(alpha: 0.2),
+                Colors.grey.withValues(alpha: 0.1),
+              ],
+            )
+          : getGradient(guideType),
       border: Border.all(
-        color: isSelected
+        color: isLocked
+            ? Colors.grey.withValues(alpha: 0.4)
+            : isSelected
             ? primary
             : isRecommended
             ? AppTheme.primaryPurple.withValues(alpha: 0.5)
@@ -161,7 +174,9 @@ class GuideTheme {
       ),
       boxShadow: [
         BoxShadow(
-          color: getShadowColor(guideType),
+          color: isLocked
+              ? Colors.grey.withValues(alpha: 0.2)
+              : getShadowColor(guideType),
           blurRadius: isSelected
               ? GuideElevations.selectedCard
               : isHovered

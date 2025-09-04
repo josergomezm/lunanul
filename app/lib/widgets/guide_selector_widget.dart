@@ -5,8 +5,10 @@ import '../models/enums.dart';
 import '../models/tarot_guide.dart';
 import '../services/guide_service.dart';
 import '../providers/guide_provider.dart';
+import '../providers/feature_gate_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/guide_theme.dart';
+import '../utils/app_router.dart';
 
 import '../l10n/generated/app_localizations.dart';
 
@@ -41,7 +43,8 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    final localizedGuides = ref.read(
+    // Get all guides for display (including locked ones)
+    final allGuides = ref.read(
       localizedGuidesWithLocalizationsProvider(localizations),
     );
     final recommendedGuides = widget.currentTopic != null
@@ -60,10 +63,9 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
               _buildRecommendationBanner(context, recommendedGuides),
               const SizedBox(height: AppTheme.spacingM),
             ],
-            _buildGuideGrid(context, localizedGuides, recommendedGuides),
+            _buildGuideGrid(context, allGuides, recommendedGuides),
             if (widget.allowDeselection) ...[
               const SizedBox(height: AppTheme.spacingM),
-              _buildNoGuideOption(context),
             ],
           ],
         ),
@@ -183,8 +185,16 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
     bool isExpanded,
     int index,
   ) {
-    return GestureDetector(
-          onTap: () => _handleGuideSelection(guide.type),
+    return Consumer(
+      builder: (context, ref, child) {
+        final isGuideAvailable = ref.watch(
+          isGuideAvailableProvider(guide.type),
+        );
+
+        // Build the guide card content
+        final guideCardContent = GestureDetector(
+          onTap: () =>
+              _handleGuideSelection(guide.type, isGuideAvailable, context, ref),
           onLongPress: () => _toggleExpansion(guide.type),
           child: AnimatedContainer(
             duration: GuideAnimations.selectionDuration,
@@ -199,49 +209,65 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
                   guide.type,
                   isSelected: isSelected,
                   isRecommended: isRecommended,
+                  isLocked: false, // Remove locked styling
                 ),
                 child: ClipRRect(
                   borderRadius: GuideBorderRadius.card,
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      _buildGuideBackground(guide, isSelected),
+                      _buildGuideBackground(
+                        guide,
+                        isSelected,
+                        false, // Remove locked styling
+                      ),
                       _buildGuideContent(
                         context,
                         guide,
                         isSelected,
                         isRecommended,
                         isExpanded,
+                        false, // Remove locked styling
                       ),
                       if (isSelected) _buildSelectionIndicator(guide),
-                      if (isRecommended && !isSelected)
+                      if (isRecommended && !isSelected && isGuideAvailable)
                         _buildRecommendationBadge(),
+                      if (!isGuideAvailable)
+                        _buildPremiumIndicator(context, guide),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-        )
-        .animate()
-        .fadeIn(duration: AppTheme.mediumAnimation, delay: (index * 100).ms)
-        .scale(
-          begin: const Offset(0.8, 0.8),
-          end: const Offset(1.0, 1.0),
-          duration: AppTheme.mediumAnimation,
-          delay: (index * 100).ms,
-          curve: Curves.elasticOut,
-        )
-        .slideY(
-          begin: 0.3,
-          end: 0,
-          duration: AppTheme.mediumAnimation,
-          delay: (index * 100).ms,
-          curve: Curves.easeOutBack,
         );
+
+        return guideCardContent
+            .animate()
+            .fadeIn(duration: AppTheme.mediumAnimation, delay: (index * 100).ms)
+            .scale(
+              begin: const Offset(0.8, 0.8),
+              end: const Offset(1.0, 1.0),
+              duration: AppTheme.mediumAnimation,
+              delay: (index * 100).ms,
+              curve: Curves.elasticOut,
+            )
+            .slideY(
+              begin: 0.3,
+              end: 0,
+              duration: AppTheme.mediumAnimation,
+              delay: (index * 100).ms,
+              curve: Curves.easeOutBack,
+            );
+      },
+    );
   }
 
-  Widget _buildGuideBackground(TarotGuide guide, bool isSelected) {
+  Widget _buildGuideBackground(
+    TarotGuide guide,
+    bool isSelected,
+    bool isLocked,
+  ) {
     return Stack(
       children: [
         // Guide image as background
@@ -302,6 +328,7 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
     bool isSelected,
     bool isRecommended,
     bool isExpanded,
+    bool isLocked,
   ) {
     return Positioned(
       bottom: 0,
@@ -503,7 +530,18 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
         );
   }
 
-  void _handleGuideSelection(GuideType guideType) {
+  void _handleGuideSelection(
+    GuideType guideType,
+    bool isAvailable,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    if (!isAvailable) {
+      // Show upgrade modal for locked guides
+      _showUpgradeModal(context, ref, guideType);
+      return;
+    }
+
     // If deselection is allowed and the same guide is tapped, deselect it
     if (widget.allowDeselection && widget.selectedGuide == guideType) {
       widget.onGuideSelected(null);
@@ -521,67 +559,673 @@ class _GuideSelectorWidgetState extends ConsumerState<GuideSelectorWidget> {
     });
   }
 
-  Widget _buildNoGuideOption(BuildContext context) {
-    final isSelected = widget.selectedGuide == null;
-
-    return GestureDetector(
-      onTap: () => widget.onGuideSelected(null),
-      child: AnimatedContainer(
-        duration: AppTheme.mediumAnimation,
-        padding: const EdgeInsets.all(AppTheme.spacingM),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.primaryPurple.withValues(alpha: 0.1)
-              : Colors.grey.withValues(alpha: 0.05),
-          borderRadius: AppTheme.cardRadius,
-          border: Border.all(
-            color: isSelected
-                ? AppTheme.primaryPurple
-                : Colors.grey.withValues(alpha: 0.3),
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppTheme.primaryPurple.withValues(alpha: 0.2)
-                    : Colors.grey.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
+  Widget _buildPremiumIndicator(BuildContext context, TarotGuide guide) {
+    return Positioned(
+          top: AppTheme.spacingS,
+          left: AppTheme.spacingS,
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppTheme.stardustGold, AppTheme.softGold],
               ),
-              child: Icon(
-                Icons.auto_awesome_outlined,
-                color: isSelected ? AppTheme.primaryPurple : Colors.grey,
-                size: 20,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(Icons.star, color: Colors.white, size: 16),
+          ),
+        )
+        .animate()
+        .fadeIn(duration: AppTheme.mediumAnimation, delay: 300.ms)
+        .scale(
+          begin: const Offset(0, 0),
+          end: const Offset(1, 1),
+          duration: AppTheme.mediumAnimation,
+          delay: 300.ms,
+          curve: Curves.elasticOut,
+        )
+        .then()
+        .shimmer(
+          duration: 2000.ms,
+          color: AppTheme.stardustGold.withValues(alpha: 0.5),
+        );
+  }
+
+  Widget _buildGuideUpgradeModal(
+    BuildContext context,
+    WidgetRef ref,
+    TarotGuide guide,
+  ) {
+    final requiredTier = _getRequiredTierForGuide(guide.type);
+
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 400),
+      padding: const EdgeInsets.all(AppTheme.spacingL),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Close button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close),
+                iconSize: 20,
+                color: AppTheme.darkGray.withValues(alpha: 0.6),
+              ),
+            ],
+          ),
+
+          // Guide icon with premium indicator
+          Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      GuideTheme.getPrimaryColor(
+                        guide.type,
+                      ).withValues(alpha: 0.1),
+                      GuideTheme.getAccentColor(
+                        guide.type,
+                      ).withValues(alpha: 0.05),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: GuideTheme.getPrimaryColor(
+                      guide.type,
+                    ).withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  guide.iconData,
+                  size: 40,
+                  color: GuideTheme.getPrimaryColor(guide.type),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppTheme.stardustGold, AppTheme.softGold],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.star, color: Colors.white, size: 16),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: AppTheme.spacingL),
+
+          // Guide name and title
+          Text(
+            guide.effectiveName,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: GuideTheme.getPrimaryColor(guide.type),
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppTheme.spacingXS),
+          Text(
+            guide.effectiveTitle,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: GuideTheme.getAccentColor(guide.type),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: AppTheme.spacingL),
+
+          // Premium feature message
+          Container(
+            padding: const EdgeInsets.all(AppTheme.spacingM),
+            decoration: BoxDecoration(
+              color: AppTheme.stardustGold.withValues(alpha: 0.1),
+              borderRadius: AppTheme.cardRadius,
+              border: Border.all(
+                color: AppTheme.stardustGold.withValues(alpha: 0.3),
               ),
             ),
-            const SizedBox(width: AppTheme.spacingM),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Standard Reading',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            child: Row(
+              children: [
+                Icon(Icons.star, color: AppTheme.stardustGold, size: 20),
+                const SizedBox(width: AppTheme.spacingS),
+                Expanded(
+                  child: Text(
+                    'Premium Guide',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: AppTheme.stardustGold,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? AppTheme.primaryPurple : null,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Use traditional card meanings without guide personalization',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: AppTheme.spacingM),
+
+          // Guide description
+          Text(
+            guide.effectiveDescription,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppTheme.darkGray.withValues(alpha: 0.8),
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: AppTheme.spacingL),
+
+          // Upgrade message
+          Text(
+            'Unlock ${guide.effectiveName}\'s wisdom and enhance your spiritual journey with ${requiredTier.displayName}.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppTheme.darkGray.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: AppTheme.spacingXL),
+
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showGuidePreview(context, ref, guide.type);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: GuideTheme.getPrimaryColor(
+                        guide.type,
+                      ).withValues(alpha: 0.5),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppTheme.spacingM,
+                    ),
+                  ),
+                  child: Text(
+                    'Preview',
+                    style: TextStyle(
+                      color: GuideTheme.getPrimaryColor(guide.type),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppTheme.spacingM),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _handleUpgradeRequest(context, ref, requiredTier);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: GuideTheme.getPrimaryColor(guide.type),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppTheme.spacingM,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: AppTheme.buttonRadius,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(_getTierIcon(requiredTier), size: 18),
+                      const SizedBox(width: AppTheme.spacingS),
+                      Text(
+                        'Upgrade',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUpgradeModal(
+    BuildContext context,
+    WidgetRef ref,
+    GuideType guideType,
+  ) {
+    final guide = _guideService.getGuideByType(guideType);
+    if (guide == null) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: AppTheme.cardRadius),
+        child: _buildGuideUpgradeModal(context, ref, guide),
+      ),
+    );
+  }
+
+  void _showGuidePreview(
+    BuildContext context,
+    WidgetRef ref,
+    GuideType guideType,
+  ) {
+    final guide = _guideService.getGuideByType(guideType);
+    if (guide == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => _GuidePreviewDialog(guide: guide),
+    );
+  }
+
+  SubscriptionTier _getRequiredTierForGuide(GuideType guide) {
+    // Based on subscription config, Sage and Visionary require Mystic tier
+    switch (guide) {
+      case GuideType.healer:
+      case GuideType.mentor:
+        return SubscriptionTier.seeker; // Available in free tier
+      case GuideType.sage:
+      case GuideType.visionary:
+        return SubscriptionTier.mystic; // Require paid tier
+    }
+  }
+
+  IconData _getTierIcon(SubscriptionTier tier) {
+    switch (tier) {
+      case SubscriptionTier.seeker:
+        return Icons.explore;
+      case SubscriptionTier.mystic:
+        return Icons.auto_awesome;
+      case SubscriptionTier.oracle:
+        return Icons.diamond;
+    }
+  }
+
+  void _handleUpgradeRequest(
+    BuildContext context,
+    WidgetRef ref,
+    SubscriptionTier tier,
+  ) {
+    // Navigate to subscription management page
+    context.goSubscriptionManagement();
+  }
+}
+
+/// Dialog for previewing locked guides
+class _GuidePreviewDialog extends StatelessWidget {
+  final TarotGuide guide;
+
+  const _GuidePreviewDialog({required this.guide});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              GuideTheme.getPrimaryColor(guide.type).withValues(alpha: 0.1),
+              GuideTheme.getAccentColor(guide.type).withValues(alpha: 0.05),
+              Colors.white,
+            ],
+          ),
+          borderRadius: AppTheme.cardRadius,
+          border: Border.all(
+            color: GuideTheme.getPrimaryColor(
+              guide.type,
+            ).withValues(alpha: 0.3),
+            width: 2,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header with close button
+            Container(
+              padding: const EdgeInsets.all(AppTheme.spacingM),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    GuideTheme.getPrimaryColor(
+                      guide.type,
+                    ).withValues(alpha: 0.1),
+                    GuideTheme.getAccentColor(
+                      guide.type,
+                    ).withValues(alpha: 0.05),
+                  ],
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Guide Preview',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: GuideTheme.getPrimaryColor(guide.type),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: Icon(
+                      Icons.close,
+                      color: GuideTheme.getPrimaryColor(guide.type),
                     ),
                   ),
                 ],
               ),
             ),
-            if (isSelected)
-              Icon(Icons.check_circle, color: AppTheme.primaryPurple, size: 24),
+
+            // Guide content
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppTheme.spacingL),
+                child: Column(
+                  children: [
+                    // Guide image
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: GuideTheme.getPrimaryColor(guide.type),
+                          width: 3,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          guide.iconPath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                gradient: GuideTheme.getGradient(guide.type),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                guide.iconData,
+                                size: 48,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: AppTheme.spacingL),
+
+                    // Guide name and title
+                    Text(
+                      guide.effectiveName,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            color: GuideTheme.getPrimaryColor(guide.type),
+                            fontWeight: FontWeight.w700,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: AppTheme.spacingXS),
+
+                    Text(
+                      guide.effectiveTitle,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: GuideTheme.getAccentColor(guide.type),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: AppTheme.spacingL),
+
+                    // Description
+                    Container(
+                      padding: const EdgeInsets.all(AppTheme.spacingM),
+                      decoration: BoxDecoration(
+                        color: GuideTheme.getPrimaryColor(
+                          guide.type,
+                        ).withValues(alpha: 0.05),
+                        borderRadius: AppTheme.cardRadius,
+                        border: Border.all(
+                          color: GuideTheme.getPrimaryColor(
+                            guide.type,
+                          ).withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Text(
+                        guide.effectiveDescription,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.darkGray.withValues(alpha: 0.8),
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+
+                    const SizedBox(height: AppTheme.spacingM),
+
+                    // Expertise
+                    Container(
+                      padding: const EdgeInsets.all(AppTheme.spacingM),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            GuideTheme.getPrimaryColor(
+                              guide.type,
+                            ).withValues(alpha: 0.1),
+                            GuideTheme.getAccentColor(
+                              guide.type,
+                            ).withValues(alpha: 0.05),
+                          ],
+                        ),
+                        borderRadius: AppTheme.cardRadius,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Expertise',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: GuideTheme.getPrimaryColor(guide.type),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          const SizedBox(height: AppTheme.spacingS),
+                          Text(
+                            guide.effectiveExpertise,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: AppTheme.darkGray.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: AppTheme.spacingL),
+
+                    // Best for topics
+                    if (guide.bestForTopics.isNotEmpty) ...[
+                      Text(
+                        'Best for',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: GuideTheme.getPrimaryColor(guide.type),
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      const SizedBox(height: AppTheme.spacingS),
+                      Wrap(
+                        spacing: AppTheme.spacingS,
+                        runSpacing: AppTheme.spacingXS,
+                        children: guide.bestForTopics.map((topic) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppTheme.spacingM,
+                              vertical: AppTheme.spacingXS,
+                            ),
+                            decoration: BoxDecoration(
+                              color: GuideTheme.getAccentColor(
+                                guide.type,
+                              ).withValues(alpha: 0.2),
+                              borderRadius: AppTheme.chipRadius,
+                              border: Border.all(
+                                color: GuideTheme.getAccentColor(
+                                  guide.type,
+                                ).withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Text(
+                              topic.displayName,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: GuideTheme.getPrimaryColor(
+                                      guide.type,
+                                    ),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+
+            // Footer with upgrade button
+            Container(
+              padding: const EdgeInsets.all(AppTheme.spacingL),
+              decoration: BoxDecoration(
+                color: GuideTheme.getPrimaryColor(
+                  guide.type,
+                ).withValues(alpha: 0.05),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppTheme.spacingM),
+                    decoration: BoxDecoration(
+                      color: GuideTheme.getAccentColor(
+                        guide.type,
+                      ).withValues(alpha: 0.1),
+                      borderRadius: AppTheme.cardRadius,
+                      border: Border.all(
+                        color: GuideTheme.getAccentColor(
+                          guide.type,
+                        ).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.lock,
+                          color: GuideTheme.getPrimaryColor(guide.type),
+                          size: 20,
+                        ),
+                        const SizedBox(width: AppTheme.spacingS),
+                        Expanded(
+                          child: Text(
+                            'Unlock ${guide.effectiveName} with Mystic subscription',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: GuideTheme.getPrimaryColor(guide.type),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: AppTheme.spacingM),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(
+                          context,
+                        ).pushNamed('/subscription-management');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: GuideTheme.getPrimaryColor(guide.type),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppTheme.spacingM,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppTheme.buttonRadius,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.auto_awesome, size: 20),
+                          const SizedBox(width: AppTheme.spacingS),
+                          Text(
+                            'Upgrade to Mystic',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

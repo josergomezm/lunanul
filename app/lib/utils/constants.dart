@@ -13,6 +13,7 @@ class AppConstants {
   static const String yourselfRoute = '/yourself';
   static const String friendsRoute = '/friends';
   static const String settingsRoute = '/settings';
+  static const String subscriptionManagementRoute = '/subscription-management';
 
   // Storage Keys
   static const String userPrefsKey = 'user_preferences';

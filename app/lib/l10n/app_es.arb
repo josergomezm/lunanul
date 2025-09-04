@@ -73,6 +73,14 @@
   "interpretationSaved": "Interpretación guardada en el diario",
   "failedToSave": "Error al guardar",
   
+  "interpretCards": "Interpretar Cartas",
+  "interpretCardsDescription": "Generar interpretaciones de IA para tus cartas seleccionadas",
+  "interpretingCards": "Interpretando cartas...",
+  "noCardsToInterpret": "No hay cartas seleccionadas para interpretar",
+  "interpretationComplete": "Interpretación completa",
+  "reinterpretCards": "Re-interpretar Cartas",
+  "interpretations": "Interpretaciones",
+  
   "navigationHome": "Inicio",
   "navigationReadings": "Lecturas",
   "navigationManual": "Manual",
@@ -252,7 +260,7 @@
   "tapToRevealCards": "Toca para revelar tus cartas",
   "touchCardWhenReady": "Toca cada carta cuando estés listo para ver su mensaje",
   "yourReading": "Tu Lectura",
-  "saveToJournal": "Guardar en Diario",
+  "addPersonalReflection": "Agregar reflexión personal",
   "newReading": "Nueva Lectura",
   
   "guideSageName": "Zian",
@@ -273,5 +281,8 @@
   "guideVisionaryName": "Elara",
   "guideVisionaryTitle": "La Musa Creativa",
   "guideVisionaryDescription": "Una guía inspiradora que te ayuda a explorar posibilidades y desbloquear tu potencial creativo, perfecta para superar bloqueos y visualizar nuevos futuros.",
-  "guideVisionaryExpertise": "Inspiración creativa, exploración de posibilidades, superación de bloqueos y liberación del potencial"
+  "guideVisionaryExpertise": "Inspiración creativa, exploración de posibilidades, superación de bloqueos y liberación del potencial",
+  
+  "readingComplete": "Lectura Completa",
+  "startNewReading": "Comenzar Nueva Lectura"
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/journal_provider.dart';
+
 import '../models/reading.dart';
 import '../models/enums.dart';
 import '../utils/constants.dart';
 import '../widgets/journal_entry_widget.dart';
+import '../widgets/journal_management_widget.dart';
 import '../widgets/share_reading_dialog.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'reading_detail_page.dart';
@@ -38,27 +40,34 @@ class _JournalPageState extends ConsumerState<JournalPage> {
         title: Text(localizations.readingJournal),
         centerTitle: true,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              ref.read(savedReadingsProvider.notifier).refresh();
-            },
-          ),
-        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Search and filter section
-            _buildSearchAndFilter(context),
+        child: CustomScrollView(
+          slivers: [
+            // Journal management widget (shows usage and limits)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: const CompactJournalManagementWidget(),
+              ),
+            ),
 
-            // Journal entries list
-            Expanded(
-              child: savedReadingsAsync.when(
-                data: (readings) => _buildJournalList(context, readings),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) => _buildErrorState(context, error),
+            // Search and filter section
+            SliverToBoxAdapter(child: _buildSearchAndFilter(context)),
+
+            // Journal entries list with fixed height and scrollable content
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height:
+                    MediaQuery.of(context).size.height *
+                    0.6, // Fixed 60vh height
+                child: savedReadingsAsync.when(
+                  data: (readings) =>
+                      _buildScrollableJournalList(context, readings),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, _) => _buildErrorState(context, error),
+                ),
               ),
             ),
           ],
@@ -154,7 +163,10 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     );
   }
 
-  Widget _buildJournalList(BuildContext context, List<Reading> readings) {
+  Widget _buildScrollableJournalList(
+    BuildContext context,
+    List<Reading> readings,
+  ) {
     // Filter readings based on search and topic
     final filteredReadings = readings.where((reading) {
       // Topic filter

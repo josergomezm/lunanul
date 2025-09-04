@@ -112,12 +112,8 @@ class DateTimeLocalizations {
   }
 
   /// Format date for reading display
+  /// Format date for readings
   static String formatReadingDate(DateTime date, Locale locale) {
-    return getRelativeDate(date, locale);
-  }
-
-  /// Format date for journal entries
-  static String formatJournalDate(DateTime date, Locale locale) {
     final now = DateTime.now();
     final difference = now.difference(date);
 

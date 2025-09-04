@@ -13,3 +13,4 @@ export 'reading_patterns_page.dart';
 export 'reading_detail_page.dart';
 export 'shared_reading_page.dart';
 export 'settings_page.dart';
+export 'subscription_settings_page.dart';

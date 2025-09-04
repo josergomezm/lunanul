@@ -9,6 +9,9 @@ import '../widgets/manual_card_display.dart';
 import '../widgets/card_connections_widget.dart';
 import '../widgets/card_selection_grid.dart';
 import '../widgets/background_widget.dart';
+import '../widgets/subscription_gate.dart';
+import '../widgets/usage_tracker_widget.dart';
+import '../widgets/error_display_widget.dart';
 import '../utils/constants.dart';
 
 /// Manual interpretation page for physical tarot decks
@@ -27,12 +30,6 @@ class InterpretationsPage extends ConsumerWidget {
         centerTitle: true,
         elevation: 0,
         actions: [
-          if (state.hasSelectedCards)
-            IconButton(
-              onPressed: () => _showSaveDialog(context, ref),
-              icon: const Icon(Icons.save),
-              tooltip: localizations.saveInterpretation,
-            ),
           IconButton(
             onPressed: () => notifier.clearSelection(),
             icon: const Icon(Icons.refresh),
@@ -48,6 +45,21 @@ class InterpretationsPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Usage tracker at the top
+                const UsageTrackerWidget(
+                  featureKey: 'manual_interpretations',
+                  featureName: 'Manual Interpretations',
+                ),
+
+                const SizedBox(height: 16),
+
+                // Error display at the top
+                if (state.error != null)
+                  ErrorDisplayWidget(
+                    error: state.error!,
+                    onDismiss: () => notifier.clearError(),
+                  ),
+
                 const SizedBox(height: 8),
                 Text(
                   localizations.inputPhysicalDeck,
@@ -72,7 +84,64 @@ class InterpretationsPage extends ConsumerWidget {
                 // Card selection section
                 _buildCardSelection(context, ref, state, notifier),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+
+                // Interpret button - shown when cards are selected but interpretations not requested yet
+                if (state.canInterpretCards &&
+                    !(state.hasRequestedInterpretation == true)) ...[
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SubscriptionGate(
+                      featureKey: 'manual_interpretations',
+                      gateType: GateType.action,
+                      child: ElevatedButton.icon(
+                        onPressed: state.isLoading
+                            ? null
+                            : () => _interpretAllCards(context, ref),
+                        icon: state.isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.auto_awesome),
+                        label: Text(
+                          state.isLoading
+                              ? localizations.interpretingCards
+                              : (state.hasCardsWithoutInterpretation
+                                    ? localizations.interpretCards
+                                    : localizations.reinterpretCards),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 16),
+
+                // Interpretations display (only show after user clicks "Interpret")
+                if (state.shouldShowInterpretations) ...[
+                  InterpretationDisplay(
+                    selectedCards: state.selectedCards,
+                    isLoading: state.isLoading,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Save reading section - only shows after interpretation
+                  _buildSaveReadingSection(context, ref, state),
+                  const SizedBox(height: 32),
+                ],
 
                 // Selected cards display
                 ManualCardDisplay(
@@ -143,19 +212,7 @@ class InterpretationsPage extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Choose Your Guide (Optional)',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        ),
         const SizedBox(height: 8),
-        Text(
-          'Select a guide to personalize your card interpretations, or skip for standard readings.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.outline,
-          ),
-        ),
         const SizedBox(height: 16),
         GuideSelectorWidget(
           selectedGuide: state.selectedGuide,
@@ -209,41 +266,29 @@ class InterpretationsPage extends ConsumerWidget {
             // Add card button
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: canAddCards
-                    ? () => _showCardSelectionDialog(context, ref)
-                    : null,
-                icon: const Icon(Icons.add),
-                label: Text(localizations.addCardFromDeck),
+              child: SubscriptionGate(
+                featureKey: 'manual_interpretations',
+                gateType: GateType.action,
+                child: ElevatedButton.icon(
+                  onPressed: canAddCards
+                      ? () => _showCardSelectionDialog(context, ref)
+                      : null,
+                  icon: const Icon(Icons.add),
+                  label: Text(localizations.addCardFromDeck),
+                ),
               ),
             ),
 
+            // Clear cards button - only show when cards are selected
             if (state.hasSelectedCards) ...[
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-
-              // Quick actions
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => notifier.clearSelection(),
-                      icon: const Icon(Icons.clear_all),
-                      label: Text(localizations.clearAll),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: state.canGenerateInterpretation
-                          ? () => _showSaveDialog(context, ref)
-                          : null,
-                      icon: const Icon(Icons.save),
-                      label: Text(localizations.saveReading),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => notifier.clearSelection(),
+                  icon: const Icon(Icons.clear_all),
+                  label: Text(localizations.clearAll),
+                ),
               ),
             ],
           ],
@@ -352,8 +397,105 @@ class InterpretationsPage extends ConsumerWidget {
     );
   }
 
+  Widget _buildSaveReadingSection(
+    BuildContext context,
+    WidgetRef ref,
+    ManualInterpretationState state,
+  ) {
+    final localizations = AppLocalizations.of(context);
+
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.bookmark,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  localizations.saveReading,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Save this reading to review later or start a new one.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _showSaveDialog(context, ref),
+                    icon: const Icon(Icons.save),
+                    label: Text(localizations.saveReading),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onSecondary,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => ref
+                        .read(manualInterpretationProvider.notifier)
+                        .clearSelection(),
+                    icon: const Icon(Icons.refresh),
+                    label: Text(localizations.startNewReading),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showCardSelectionDialog(BuildContext context, WidgetRef ref) {
     showDialog(context: context, builder: (context) => _CardSelectionDialog());
+  }
+
+  Future<void> _interpretAllCards(BuildContext context, WidgetRef ref) async {
+    final localizations = AppLocalizations.of(context);
+    final notifier = ref.read(manualInterpretationProvider.notifier);
+
+    try {
+      await notifier.interpretAllCards();
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(localizations.interpretationComplete),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to interpret cards: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
   }
 
   void _showSaveDialog(BuildContext context, WidgetRef ref) {
@@ -486,7 +628,11 @@ class _CardSelectionDialog extends ConsumerWidget {
                     isLoading: state.isLoading || state.isSearching,
                     searchQuery: state.searchQuery,
                     onCardSelected: (card, {bool isReversed = false}) {
-                      notifier.addCard(card, isReversed: isReversed);
+                      // Add card without interpretation for faster workflow
+                      notifier.addCardWithoutInterpretation(
+                        card,
+                        isReversed: isReversed,
+                      );
                       Navigator.of(context).pop();
                     },
                     onSearchChanged: (query) {

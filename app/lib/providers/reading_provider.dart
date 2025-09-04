@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import '../services/mock_reading_service.dart';
 import '../services/journal_service.dart';
+import 'feature_gate_provider.dart';
 
 /// Provider for the MockReadingService instance
 final readingServiceProvider = Provider<MockReadingService>((ref) {
@@ -10,9 +11,11 @@ final readingServiceProvider = Provider<MockReadingService>((ref) {
 
 /// State notifier for managing current reading state
 class ReadingNotifier extends StateNotifier<AsyncValue<Reading?>> {
-  ReadingNotifier(this._readingService) : super(const AsyncValue.data(null));
+  ReadingNotifier(this._readingService, this._ref)
+    : super(const AsyncValue.data(null));
 
   final MockReadingService _readingService;
+  final Ref _ref;
 
   /// Create a new reading
   Future<void> createReading({
@@ -23,12 +26,25 @@ class ReadingNotifier extends StateNotifier<AsyncValue<Reading?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
+      // Check if user can perform reading and consume usage
+      final featureGateService = _ref.read(featureGateServiceProvider);
+      final canPerform = await featureGateService.validateAndConsumeUsage(
+        'readings',
+      );
+
+      if (!canPerform) {
+        throw Exception(
+          'Reading limit reached. Please upgrade your plan to continue.',
+        );
+      }
+
       final reading = await _readingService.createReading(
         topic: topic,
         spreadType: spreadType,
         customTitle: customTitle,
         selectedGuide: selectedGuide,
       );
+
       state = AsyncValue.data(reading);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -84,7 +100,7 @@ class ReadingNotifier extends StateNotifier<AsyncValue<Reading?>> {
 /// Provider for current reading state
 final currentReadingProvider =
     StateNotifierProvider<ReadingNotifier, AsyncValue<Reading?>>((ref) {
-      return ReadingNotifier(ref.read(readingServiceProvider));
+      return ReadingNotifier(ref.read(readingServiceProvider), ref);
     });
 
 /// Provider for sample readings
@@ -109,6 +125,18 @@ final spreadsByTopicProvider = Provider.family<List<SpreadType>, ReadingTopic>((
 ) {
   return SpreadType.getSpreadsByTopic(topic);
 });
+
+/// Provider for spreads available for a topic filtered by subscription tier
+final availableSpreadsByTopicProvider =
+    Provider.family<List<SpreadType>, ReadingTopic>((ref, topic) {
+      final allSpreads = SpreadType.getSpreadsByTopic(topic);
+      final availableSpreads = ref.watch(availableSpreadsProvider);
+
+      // Return only spreads that are available for the current subscription tier
+      return allSpreads
+          .where((spread) => availableSpreads.contains(spread))
+          .toList();
+    });
 
 /// State notifier for reading creation flow
 class ReadingFlowNotifier extends StateNotifier<ReadingFlowState> {

@@ -16,3 +16,8 @@ export 'tarot_guide.dart';
 // Social features
 export 'friendship.dart';
 export 'shared_reading.dart';
+
+// Subscription system
+export 'subscription_status.dart';
+export 'feature_access.dart';
+export 'subscription_product.dart';

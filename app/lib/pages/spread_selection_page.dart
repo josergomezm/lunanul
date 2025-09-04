@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../models/enums.dart';
-import '../models/reading.dart';
-import '../models/card_position.dart';
 import '../providers/reading_provider.dart';
+import '../providers/feature_gate_provider.dart';
 import '../utils/app_theme.dart';
 import '../utils/app_router.dart';
 import '../utils/constants.dart';
-import '../widgets/guide_interpretation_widget.dart';
-import '../widgets/save_reading_dialog.dart';
+import 'reading_results_page.dart';
 
 /// Page for selecting a spread type after choosing a topic
 class SpreadSelectionPage extends ConsumerStatefulWidget {
@@ -54,6 +52,11 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
         title: Text('${widget.topic.displayName} ${localizations.readings}'),
         centerTitle: true,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () => context.goGuideSelection(widget.topic),
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'Back to Guide Selection',
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -182,7 +185,12 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: readingFlow.spreadType != null && !_isNavigating
+                  onPressed:
+                      readingFlow.spreadType != null &&
+                          !_isNavigating &&
+                          ref.read(
+                            isSpreadAvailableProvider(readingFlow.spreadType!),
+                          )
                       ? () => _startReading(context, ref)
                       : null,
                   child: Text(
@@ -207,6 +215,9 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
     SpreadType spread,
     bool isSelected,
   ) {
+    final isAvailable = ref.watch(isSpreadAvailableProvider(spread));
+    final isPremium = !isAvailable;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Material(
@@ -214,7 +225,11 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
         borderRadius: AppTheme.cardRadius,
         child: InkWell(
           onTap: () {
-            ref.read(readingFlowProvider.notifier).setSpreadType(spread);
+            if (isAvailable) {
+              ref.read(readingFlowProvider.notifier).setSpreadType(spread);
+            } else {
+              _showSpreadUpgradeModal(context, ref, spread);
+            }
           },
           borderRadius: AppTheme.cardRadius,
           child: AnimatedContainer(
@@ -234,84 +249,104 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
                   ? AppTheme.primaryPurple.withValues(alpha: 0.05)
                   : Theme.of(context).colorScheme.surface,
             ),
-            child: Row(
+            child: Stack(
               children: [
-                // Card count indicator
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppTheme.primaryPurple
-                        : Theme.of(
-                            context,
-                          ).colorScheme.outline.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${spread.cardCount}',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    // Card count indicator
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
                         color: isSelected
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.onSurface,
+                            ? AppTheme.primaryPurple
+                            : Theme.of(
+                                context,
+                              ).colorScheme.outline.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Spread details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        spread.displayName,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? AppTheme.primaryPurple
-                                  : Theme.of(context).colorScheme.onSurface,
-                            ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        spread.description,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.7),
+                      child: Center(
+                        child: Text(
+                          '${spread.cardCount}',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? Colors.white
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${spread.cardCount} card${spread.cardCount > 1 ? 's' : ''}',
-                        style: Theme.of(context).textTheme.labelMedium
-                            ?.copyWith(
-                              color: isSelected
-                                  ? AppTheme.primaryPurple
-                                  : Theme.of(context).colorScheme.outline,
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Selection indicator
-                if (isSelected)
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryPurple,
-                      shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 16,
+                    const SizedBox(width: 16),
+                    // Spread details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            spread.displayName,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isSelected
+                                      ? AppTheme.primaryPurple
+                                      : Theme.of(context).colorScheme.onSurface,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            spread.description,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
+                                ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '${spread.cardCount} card${spread.cardCount > 1 ? 's' : ''}',
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(
+                                  color: isSelected
+                                      ? AppTheme.primaryPurple
+                                      : Theme.of(context).colorScheme.outline,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Selection indicator
+                    if (isSelected)
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryPurple,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                  ],
+                ),
+                // Premium star indicator in top right corner
+                if (isPremium)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppTheme.stardustGold, AppTheme.softGold],
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.star, color: Colors.white, size: 16),
                     ),
                   ),
               ],
@@ -332,6 +367,259 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
         return Icons.work;
       case ReadingTopic.social:
         return Icons.people;
+    }
+  }
+
+  void _showSpreadUpgradeModal(
+    BuildContext context,
+    WidgetRef ref,
+    SpreadType spreadType,
+  ) {
+    final requiredTier = _getRequiredTierForSpread(spreadType);
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: AppTheme.cardRadius),
+        child: _buildSpreadUpgradeModal(context, ref, spreadType, requiredTier),
+      ),
+    );
+  }
+
+  Widget _buildSpreadUpgradeModal(
+    BuildContext context,
+    WidgetRef ref,
+    SpreadType spreadType,
+    SubscriptionTier requiredTier,
+  ) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 400),
+      padding: const EdgeInsets.all(AppConstants.defaultPadding),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Close button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close),
+                iconSize: 20,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+            ],
+          ),
+
+          // Spread icon with premium indicator
+          Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.primaryPurple.withValues(alpha: 0.1),
+                      AppTheme.stardustGold.withValues(alpha: 0.05),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppTheme.stardustGold.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: Text(
+                  '${spreadType.cardCount}',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.stardustGold,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppTheme.stardustGold, AppTheme.softGold],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.star, color: Colors.white, size: 16),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // Spread name and description
+          Text(
+            spreadType.displayName,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: AppTheme.stardustGold,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${spreadType.cardCount} Card Spread',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppTheme.primaryPurple,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Premium feature message
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppTheme.stardustGold.withValues(alpha: 0.1),
+              borderRadius: AppTheme.cardRadius,
+              border: Border.all(
+                color: AppTheme.stardustGold.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.star, color: AppTheme.stardustGold, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Premium Spread',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: AppTheme.stardustGold,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Spread description
+          Text(
+            spreadType.description,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.8),
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Upgrade message
+          Text(
+            'Unlock the ${spreadType.displayName} spread and explore deeper insights with ${requiredTier.displayName}.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 32),
+
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: AppTheme.stardustGold.withValues(alpha: 0.5),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: AppTheme.stardustGold,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.goSubscriptionManagement();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.stardustGold,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: AppTheme.buttonRadius,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(_getTierIcon(requiredTier), size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Upgrade',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  SubscriptionTier _getRequiredTierForSpread(SpreadType spread) {
+    // Based on feature access, only single card and three card are available for Seeker
+    // All other spreads require Mystic tier
+    switch (spread) {
+      case SpreadType.singleCard:
+      case SpreadType.threeCard:
+        return SubscriptionTier.seeker; // Available in free tier
+      case SpreadType.celtic:
+      case SpreadType.celticCross:
+      case SpreadType.horseshoe:
+      case SpreadType.relationship:
+      case SpreadType.career:
+        return SubscriptionTier.mystic; // Require paid tier
+    }
+  }
+
+  IconData _getTierIcon(SubscriptionTier tier) {
+    switch (tier) {
+      case SubscriptionTier.seeker:
+        return Icons.explore;
+      case SubscriptionTier.mystic:
+        return Icons.auto_awesome;
+      case SubscriptionTier.oracle:
+        return Icons.diamond;
     }
   }
 
@@ -351,7 +639,7 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
       Navigator.of(context)
           .push(
             MaterialPageRoute(
-              builder: (context) => ReadingInProgressPage(
+              builder: (context) => ReadingResultsPage(
                 topic: readingFlow.topic!,
                 spreadType: readingFlow.spreadType!,
                 selectedGuide: readingFlow.selectedGuide,
@@ -367,911 +655,5 @@ class _SpreadSelectionPageState extends ConsumerState<SpreadSelectionPage> {
             }
           });
     }
-  }
-}
-
-/// Page that shows the reading in progress with card dealing animation
-class ReadingInProgressPage extends ConsumerStatefulWidget {
-  final ReadingTopic topic;
-  final SpreadType spreadType;
-  final GuideType? selectedGuide;
-
-  const ReadingInProgressPage({
-    super.key,
-    required this.topic,
-    required this.spreadType,
-    this.selectedGuide,
-  });
-
-  @override
-  ConsumerState<ReadingInProgressPage> createState() =>
-      _ReadingInProgressPageState();
-}
-
-class _ReadingInProgressPageState extends ConsumerState<ReadingInProgressPage>
-    with TickerProviderStateMixin {
-  late AnimationController _dealingController;
-  late AnimationController _revealController;
-  late List<Animation<Offset>> _cardSlideAnimations;
-  late List<Animation<double>> _cardFadeAnimations;
-  late List<AnimationController> _flipControllers;
-  late List<Animation<double>> _flipAnimations;
-
-  bool _isDealingComplete = false;
-  List<bool> _revealedCards = [];
-  List<bool> _isFlipping = [];
-  final List<int> _revealOrder = []; // Track the order cards were revealed
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeAnimations();
-    _startReading();
-  }
-
-  void _initializeAnimations() {
-    _dealingController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
-
-    _revealController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    // Initialize card animations with proper interval bounds
-    _cardSlideAnimations = List.generate(widget.spreadType.cardCount, (index) {
-      final startTime = (index * 0.1).clamp(0.0, 0.7);
-      final endTime = (startTime + 0.3).clamp(startTime, 1.0);
-      return Tween<Offset>(
-        begin: const Offset(0, -1),
-        end: Offset.zero,
-      ).animate(
-        CurvedAnimation(
-          parent: _dealingController,
-          curve: Interval(startTime, endTime, curve: Curves.easeOutBack),
-        ),
-      );
-    });
-
-    _cardFadeAnimations = List.generate(widget.spreadType.cardCount, (index) {
-      final startTime = (index * 0.1).clamp(0.0, 0.7);
-      final endTime = (startTime + 0.3).clamp(startTime, 1.0);
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _dealingController,
-          curve: Interval(startTime, endTime, curve: Curves.easeOut),
-        ),
-      );
-    });
-
-    // Initialize flip animations for each card
-    _flipControllers = List.generate(
-      widget.spreadType.cardCount,
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 600),
-        vsync: this,
-      ),
-    );
-
-    _flipAnimations = _flipControllers
-        .map(
-          (controller) => Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-          ),
-        )
-        .toList();
-
-    _revealedCards = List.filled(widget.spreadType.cardCount, false);
-    _isFlipping = List.filled(widget.spreadType.cardCount, false);
-  }
-
-  void _startReading() {
-    // Delay the provider modification to avoid modifying during widget build
-    Future(() async {
-      try {
-        // Start the reading creation
-        await ref
-            .read(currentReadingProvider.notifier)
-            .createReading(
-              topic: widget.topic,
-              spreadType: widget.spreadType,
-              selectedGuide: widget.selectedGuide,
-            );
-
-        // Only proceed with animations if the widget is still mounted
-        if (!mounted) return;
-
-        // Start dealing animation
-        await _dealingController.forward();
-
-        if (!mounted) return;
-        setState(() {
-          _isDealingComplete = true;
-        });
-
-        // Wait a moment for smooth transition
-        await Future.delayed(const Duration(milliseconds: 500));
-      } catch (error) {
-        // Error handling is managed by the provider's AsyncValue
-        // The UI will show the error state automatically
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _dealingController.dispose();
-    _revealController.dispose();
-    for (final controller in _flipControllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
-    final readingAsync = ref.watch(currentReadingProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.topic.displayName} ${localizations.readings}'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: readingAsync.when(
-          loading: () => _buildLoadingState(),
-          error: (error, stack) => _buildErrorState(error),
-          data: (reading) => reading != null
-              ? _buildReadingState(reading)
-              : _buildLoadingState(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingState() {
-    final localizations = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 24),
-          Text(
-            localizations.shufflingCards,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            localizations.universePreparingReading,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(Object error) {
-    final localizations = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            localizations.somethingWentWrong,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            localizations.unableToCreateReading,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(localizations.goBack),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReadingState(Reading reading) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppConstants.defaultPadding),
-      child: Column(
-        children: [
-          // Reading header
-          _buildReadingHeader(),
-          const SizedBox(height: 32),
-
-          // Cards display
-          _buildCardsDisplay(reading),
-
-          const SizedBox(height: 32),
-
-          // Instructions, revealed cards, or final interpretation
-          if (!_isDealingComplete)
-            _buildDealingInstructions()
-          else if (!_areAllCardsRevealed()) ...[
-            _buildRevealInstructions(),
-            const SizedBox(height: 24),
-            _buildRevealedCardMeanings(reading),
-          ] else ...[
-            _buildRevealedCardMeanings(reading),
-            const SizedBox(height: 32),
-            _buildOverallInterpretation(reading),
-          ],
-
-          const SizedBox(height: 32),
-
-          // Action buttons
-          if (_areAllCardsRevealed()) _buildActionButtons(reading),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReadingHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primaryPurple.withValues(alpha: 0.1),
-            AppTheme.primaryPurple.withValues(alpha: 0.05),
-          ],
-        ),
-        borderRadius: AppTheme.cardRadius,
-        border: Border.all(
-          color: AppTheme.primaryPurple.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            _getTopicIcon(widget.topic),
-            size: 40,
-            color: AppTheme.primaryPurple,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            widget.spreadType.displayName,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: AppTheme.primaryPurple,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Focus: ${widget.topic.displayName}',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCardsDisplay(Reading reading) {
-    return SizedBox(
-      height: 300,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SizedBox(
-          width: _getTotalCardsWidth(reading.cards.length),
-          child: Stack(
-            children: [
-              for (int i = 0; i < reading.cards.length; i++)
-                Positioned(
-                  left: _getCardPosition(i).dx,
-                  top: _getCardPosition(i).dy,
-                  child: AnimatedBuilder(
-                    animation: Listenable.merge([
-                      _cardSlideAnimations[i],
-                      _cardFadeAnimations[i],
-                    ]),
-                    builder: (context, child) {
-                      return SlideTransition(
-                        position: _cardSlideAnimations[i],
-                        child: FadeTransition(
-                          opacity: _cardFadeAnimations[i],
-                          child: _buildAnimatedCard(reading.cards[i], i),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedCard(CardPosition cardPosition, int index) {
-    final isRevealed = _revealedCards.length > index
-        ? _revealedCards[index]
-        : false;
-    final isFlipping = _isFlipping.length > index ? _isFlipping[index] : false;
-
-    return GestureDetector(
-      onTap: _isDealingComplete && !isRevealed && !isFlipping
-          ? () => _revealCard(index)
-          : null,
-      child: AnimatedBuilder(
-        animation: _flipAnimations[index],
-        builder: (context, child) {
-          final flipValue = _flipAnimations[index].value;
-          final isShowingFront = flipValue >= 0.5;
-
-          return Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.001) // Add perspective
-              ..rotateY(flipValue * 3.14159), // Rotate around Y-axis
-            child: Container(
-              width: 100,
-              height: 160,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: isShowingFront && (isRevealed || isFlipping)
-                    ? Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.identity()
-                          ..rotateY(3.14159), // Flip the front face
-                        child: _buildCardFront(cardPosition),
-                      )
-                    : _buildCardBack(),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildCardFront(CardPosition cardPosition) {
-    final cardContent = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.auto_stories, size: 32, color: AppTheme.primaryPurple),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            cardPosition.card.name,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppTheme.primaryPurple,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: cardPosition.card.isReversed
-              ? Colors.orange.shade700
-              : AppTheme.primaryPurple.withValues(alpha: 0.3),
-          width: 2,
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Main card content (rotated if reversed)
-          cardPosition.card.isReversed
-              ? Transform.rotate(
-                  angle: 3.14159, // 180 degrees
-                  child: cardContent,
-                )
-              : cardContent,
-          // Reversed indicator badge
-          if (cardPosition.card.isReversed)
-            Positioned(
-              top: 4,
-              right: 4,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade700,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  'R',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCardBack() {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Card back image
-        Image.asset(
-          'assets/images/card_back.png',
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppTheme.primaryPurple.withValues(alpha: 0.8),
-                    AppTheme.deepBlue.withValues(alpha: 0.9),
-                  ],
-                ),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.auto_awesome,
-                      color: Colors.white.withValues(alpha: 0.8),
-                      size: 24,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'LUNANUL',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        fontSize: 8,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-        // Subtle overlay for depth
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.05),
-                Colors.transparent,
-                Colors.black.withValues(alpha: 0.05),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Offset _getCardPosition(int index) {
-    // Horizontal layout with consistent spacing
-    const cardWidth = 100.0;
-    const cardSpacing = 16.0;
-
-    return Offset(index * (cardWidth + cardSpacing), 50);
-  }
-
-  double _getTotalCardsWidth(int cardCount) {
-    const cardWidth = 100.0;
-    const cardSpacing = 16.0;
-    return cardCount * cardWidth + (cardCount - 1) * cardSpacing;
-  }
-
-  bool _areAllCardsRevealed() {
-    return _revealedCards.every((revealed) => revealed);
-  }
-
-  void _revealCard(int index) async {
-    if (_isFlipping[index]) return; // Prevent multiple flips
-
-    setState(() {
-      _isFlipping[index] = true;
-    });
-
-    // Start the flip animation
-    await _flipControllers[index].forward();
-
-    // Mark as revealed after flip completes
-    if (mounted) {
-      setState(() {
-        _revealedCards[index] = true;
-        _isFlipping[index] = false;
-        _revealOrder.add(index); // Track reveal order
-      });
-    }
-  }
-
-  Widget _buildDealingInstructions() {
-    final localizations = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: AppTheme.cardRadius,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.shuffle, size: 32, color: AppTheme.primaryPurple),
-          const SizedBox(height: 12),
-          Text(
-            localizations.cardsBeingDealt,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            localizations.watchCardsPlaced,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRevealInstructions() {
-    final localizations = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: AppTheme.cardRadius,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.touch_app, size: 32, color: AppTheme.primaryPurple),
-          const SizedBox(height: 12),
-          Text(
-            localizations.tapToRevealCards,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            localizations.touchCardWhenReady,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRevealedCardMeanings(Reading reading) {
-    if (_revealOrder.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    // Use reveal order (reversed so newest appears at top)
-    final reversedOrder = _revealOrder.reversed.toList();
-    final mostRecentlyRevealed = _revealOrder.isNotEmpty
-        ? _revealOrder.last
-        : -1;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Card Meanings',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
-        ...reversedOrder.map((index) {
-          final shouldAnimate = index == mostRecentlyRevealed;
-          return shouldAnimate
-              ? _buildAnimatedCardMeaning(reading.cards[index], index)
-              : _buildCardMeaning(reading.cards[index], index);
-        }),
-      ],
-    );
-  }
-
-  Widget _buildOverallInterpretation(Reading reading) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Reading Interpretation',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          elevation: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.auto_awesome,
-                      color: AppTheme.primaryPurple,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Overall Interpretation for ${widget.topic.displayName}',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: AppTheme.primaryPurple,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryPurple.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppTheme.primaryPurple.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: Text(
-                    'Generated interpretation would be here. This will provide insights about how the revealed cards work together to answer your question about ${widget.topic.displayName.toLowerCase()}. The AI will analyze the card positions, their meanings, and their relationships to provide personalized guidance.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCardMeaning(CardPosition cardPosition, int index) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryPurple.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${index + 1}',
-                        style: TextStyle(
-                          color: AppTheme.primaryPurple,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cardPosition.positionName,
-                          style: Theme.of(context).textTheme.labelMedium
-                              ?.copyWith(
-                                color: AppTheme.primaryPurple,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        Text(
-                          cardPosition.card.name,
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (cardPosition.card.isReversed)
-                        Container(
-                          margin: const EdgeInsets.only(right: 4),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            'Reversed',
-                            style: TextStyle(
-                              color: Colors.orange.shade700,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryPurple.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          'Revealed',
-                          style: TextStyle(
-                            color: AppTheme.primaryPurple,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              GuideInterpretationWidget(
-                card: cardPosition.card,
-                topic: widget.topic,
-                selectedGuide: widget.selectedGuide,
-                position: cardPosition.positionName,
-                showGuideInfo: false,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedCardMeaning(CardPosition cardPosition, int index) {
-    return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 600),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: _buildCardMeaning(cardPosition, index),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildActionButtons(Reading reading) {
-    final localizations = AppLocalizations.of(context);
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => _saveReading(reading),
-            child: Text(localizations.saveToJournal),
-          ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () => _startNewReading(),
-            child: Text(localizations.newReading),
-          ),
-        ),
-      ],
-    );
-  }
-
-  IconData _getTopicIcon(ReadingTopic topic) {
-    switch (topic) {
-      case ReadingTopic.self:
-        return Icons.self_improvement;
-      case ReadingTopic.love:
-        return Icons.favorite;
-      case ReadingTopic.work:
-        return Icons.work;
-      case ReadingTopic.social:
-        return Icons.people;
-    }
-  }
-
-  void _saveReading(Reading reading) {
-    // Show save dialog for adding reflection
-    showDialog(
-      context: context,
-      builder: (context) => SaveReadingDialog(reading: reading),
-    ).then((saved) {
-      if (saved == true) {
-        // Mark as saved in current reading provider
-        ref.read(currentReadingProvider.notifier).markAsSaved();
-      }
-    });
-  }
-
-  void _startNewReading() {
-    ref.read(readingFlowProvider.notifier).reset();
-    ref.read(currentReadingProvider.notifier).clearReading();
-    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }

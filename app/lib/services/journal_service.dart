@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/reading.dart';
 import '../models/enums.dart';
+import 'usage_tracking_service.dart';
 
 /// Service for managing saved readings and journal functionality
 class JournalService {
@@ -10,6 +11,13 @@ class JournalService {
 
   static const String _savedReadingsKey = 'saved_readings';
   static const String _readingCounterKey = 'reading_counter';
+
+  UsageTrackingService? _usageTrackingService;
+
+  /// Set the usage tracking service for subscription integration
+  void setUsageTrackingService(UsageTrackingService service) {
+    _usageTrackingService = service;
+  }
 
   /// Save a reading to local storage
   Future<bool> saveReading(Reading reading) async {
@@ -35,6 +43,11 @@ class JournalService {
 
       // Save to SharedPreferences
       await prefs.setStringList(_savedReadingsKey, readingJsonList);
+
+      // Update usage tracking if available
+      if (_usageTrackingService != null) {
+        await _usageTrackingService!.incrementUsage('journal_entries');
+      }
 
       return true;
     } catch (e) {
@@ -92,6 +105,7 @@ class JournalService {
   Future<bool> deleteReading(String readingId) async {
     try {
       final savedReadings = await getSavedReadings();
+      final initialCount = savedReadings.length;
       savedReadings.removeWhere((r) => r.id == readingId);
 
       // Save back to SharedPreferences
@@ -101,6 +115,21 @@ class JournalService {
           .toList();
 
       await prefs.setStringList(_savedReadingsKey, readingJsonList);
+
+      // Update usage tracking if a reading was actually deleted
+      if (_usageTrackingService != null &&
+          savedReadings.length < initialCount) {
+        final currentUsage = await _usageTrackingService!.getUsageCount(
+          'journal_entries',
+        );
+        if (currentUsage > 0) {
+          // Decrement usage count by setting it directly
+          await _usageTrackingService!.setUsageCount(
+            'journal_entries',
+            currentUsage - 1,
+          );
+        }
+      }
 
       return true;
     } catch (e) {

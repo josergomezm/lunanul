@@ -518,6 +518,48 @@ abstract class AppLocalizations {
   /// **'Failed to save'**
   String get failedToSave;
 
+  /// No description provided for @interpretCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Interpret Cards'**
+  String get interpretCards;
+
+  /// No description provided for @interpretCardsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate AI interpretations for your selected cards'**
+  String get interpretCardsDescription;
+
+  /// No description provided for @interpretingCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Interpreting cards...'**
+  String get interpretingCards;
+
+  /// No description provided for @noCardsToInterpret.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards selected to interpret'**
+  String get noCardsToInterpret;
+
+  /// No description provided for @interpretationComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Interpretation complete'**
+  String get interpretationComplete;
+
+  /// No description provided for @reinterpretCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-interpret Cards'**
+  String get reinterpretCards;
+
+  /// No description provided for @interpretations.
+  ///
+  /// In en, this message translates to:
+  /// **'Interpretations'**
+  String get interpretations;
+
   /// No description provided for @navigationHome.
   ///
   /// In en, this message translates to:
@@ -1466,11 +1508,11 @@ abstract class AppLocalizations {
   /// **'Your Reading'**
   String get yourReading;
 
-  /// No description provided for @saveToJournal.
+  /// No description provided for @addPersonalReflection.
   ///
   /// In en, this message translates to:
-  /// **'Save to Journal'**
-  String get saveToJournal;
+  /// **'Add Personal Reflection'**
+  String get addPersonalReflection;
 
   /// No description provided for @newReading.
   ///
@@ -1573,6 +1615,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential'**
   String get guideVisionaryExpertise;
+
+  /// Title shown when a reading interpretation is complete
+  ///
+  /// In en, this message translates to:
+  /// **'Reading Complete'**
+  String get readingComplete;
+
+  /// Button text to start a new reading after completing one
+  ///
+  /// In en, this message translates to:
+  /// **'Start New Reading'**
+  String get startNewReading;
 }
 
 class _AppLocalizationsDelegate

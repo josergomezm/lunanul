@@ -220,6 +220,31 @@ class MockReadingService {
           'Action to Take',
           'Outcome',
         ];
+
+      case SpreadType.celticCross:
+        return [
+          'Present Situation',
+          'Challenge/Cross',
+          'Distant Past/Foundation',
+          'Recent Past',
+          'Possible Outcome',
+          'Near Future',
+          'Your Approach',
+          'External Influences',
+          'Hopes and Fears',
+          'Final Outcome',
+        ];
+
+      case SpreadType.horseshoe:
+        return [
+          'Past',
+          'Present',
+          'Hidden Influences',
+          'Obstacles',
+          'Possible Outcome',
+          'Action to Take',
+          'Final Result',
+        ];
     }
   }
 

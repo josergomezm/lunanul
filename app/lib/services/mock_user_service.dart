@@ -4,6 +4,7 @@ import '../models/user.dart';
 import '../models/reading.dart';
 import '../models/friendship.dart';
 import '../models/shared_reading.dart';
+import '../models/subscription_status.dart';
 import '../models/enums.dart';
 
 /// Mock service for user management, authentication, and user data
@@ -59,19 +60,66 @@ class MockUserService {
 
     final now = DateTime.now();
 
+    // Create a mock subscription status (mostly free users for testing)
+    final subscriptionStatus = _createMockSubscriptionStatus();
+
     return User(
       id: userId,
       name: name,
       email: '${name.toLowerCase()}@lunanul.app',
       createdAt: now.subtract(Duration(days: _random.nextInt(365))),
       lastActiveAt: now,
+      subscriptionStatus: subscriptionStatus,
       preferences: {
         'allowReversedCards': true,
         'dailyNotifications': true,
         'shareReadings': true,
         'theme': 'auto',
         'profileImageUrl': 'https://api.lunanul.com/avatars/$name.png',
+        'completedOnboarding': _random.nextBool(),
       },
+    );
+  }
+
+  /// Create a mock subscription status
+  SubscriptionStatus _createMockSubscriptionStatus() {
+    // 70% free users, 20% mystic, 10% oracle
+    final tierRandom = _random.nextDouble();
+    SubscriptionTier tier;
+    bool isActive = true;
+    DateTime? expirationDate;
+    String? platformSubscriptionId;
+
+    if (tierRandom < 0.7) {
+      tier = SubscriptionTier.seeker;
+    } else if (tierRandom < 0.9) {
+      tier = SubscriptionTier.mystic;
+      expirationDate = DateTime.now().add(
+        Duration(days: 30 + _random.nextInt(335)),
+      );
+      platformSubscriptionId = 'mock_mystic_${_random.nextInt(99999)}';
+    } else {
+      tier = SubscriptionTier.oracle;
+      expirationDate = DateTime.now().add(
+        Duration(days: 30 + _random.nextInt(335)),
+      );
+      platformSubscriptionId = 'mock_oracle_${_random.nextInt(99999)}';
+    }
+
+    // Add some mock usage counts for free users
+    final usageCounts = <String, int>{};
+    if (tier == SubscriptionTier.seeker) {
+      usageCounts['manual_interpretations'] = _random.nextInt(6); // 0-5
+      usageCounts['readings'] = _random.nextInt(4); // 0-3
+    }
+
+    return SubscriptionStatus(
+      tier: tier,
+      isActive: isActive,
+      expirationDate: expirationDate,
+      platformSubscriptionId: platformSubscriptionId,
+      usageCounts: usageCounts,
+      lastUpdated: DateTime.now(),
     );
   }
 
@@ -80,6 +128,7 @@ class MockUserService {
     String? name,
     String? email,
     Map<String, dynamic>? preferences,
+    SubscriptionStatus? subscriptionStatus,
   }) async {
     // Simulate network delay
     await Future.delayed(Duration(milliseconds: 300 + _random.nextInt(400)));
@@ -92,9 +141,46 @@ class MockUserService {
       name: name ?? _currentUser!.name,
       email: email ?? _currentUser!.email,
       preferences: preferences ?? _currentUser!.preferences,
+      subscriptionStatus:
+          subscriptionStatus ?? _currentUser!.subscriptionStatus,
     );
 
     return _currentUser!;
+  }
+
+  /// Update user subscription status
+  Future<User> updateSubscriptionStatus(
+    SubscriptionStatus subscriptionStatus,
+  ) async {
+    return updateUserProfile(subscriptionStatus: subscriptionStatus);
+  }
+
+  /// Get current subscription status
+  Future<SubscriptionStatus> getSubscriptionStatus() async {
+    final user = await getCurrentUser();
+    return user.subscriptionStatus;
+  }
+
+  /// Increment usage for a feature
+  Future<User> incrementUsage(String feature) async {
+    if (_currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    final updatedUser = _currentUser!.incrementUsage(feature);
+    _currentUser = updatedUser;
+    return updatedUser;
+  }
+
+  /// Reset monthly usage
+  Future<User> resetUsage() async {
+    if (_currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    final updatedUser = _currentUser!.resetUsage();
+    _currentUser = updatedUser;
+    return updatedUser;
   }
 
   /// Save a reading to user's journal

@@ -30,6 +30,12 @@ enum SpreadType {
     'Past, Present, Future or Situation, Action, Outcome',
   ),
   celtic('Celtic Cross', 10, 'Comprehensive reading for complex situations'),
+  celticCross(
+    'Celtic Cross',
+    10,
+    'Comprehensive reading for complex situations',
+  ), // Alias for backward compatibility
+  horseshoe('Horseshoe', 7, 'Seven-card spread for guidance and outcomes'),
   relationship('Relationship', 5, 'Focused on relationship dynamics'),
   career('Career Path', 7, 'Professional guidance and career decisions');
 
@@ -162,4 +168,35 @@ enum GuideType {
         return [GuideType.healer, GuideType.mentor];
     }
   }
+}
+
+/// Subscription tiers available in the app
+enum SubscriptionTier {
+  seeker('Seeker', 'Free', 'Essential daily tarot experience'),
+  mystic('Mystic', '\$4.99/month', 'Complete tarot experience without limits'),
+  oracle(
+    'Oracle',
+    '\$9.99/month',
+    'Premium features and advanced capabilities',
+  );
+
+  const SubscriptionTier(this.displayName, this.price, this.description);
+
+  final String displayName;
+  final String price;
+  final String description;
+
+  /// Convert from string to enum
+  static SubscriptionTier fromString(String value) {
+    return SubscriptionTier.values.firstWhere(
+      (tier) => tier.name == value,
+      orElse: () => SubscriptionTier.seeker,
+    );
+  }
+
+  /// Check if this tier is paid
+  bool get isPaid => this != SubscriptionTier.seeker;
+
+  /// Check if this tier has premium features
+  bool get hasPremiumFeatures => this == SubscriptionTier.oracle;
 }

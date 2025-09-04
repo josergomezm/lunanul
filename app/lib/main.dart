@@ -19,7 +19,16 @@ void main() async {
   // Initialize image cache service
   ImageCacheService().initialize();
 
-  runApp(const ProviderScope(child: LunanulApp()));
+  runApp(
+    ProviderScope(
+      observers: [
+        if (ProviderScopeConfig.getProviderObserver() != null)
+          ProviderScopeConfig.getProviderObserver()!,
+      ],
+      overrides: ProviderScopeConfig.getOverrides(),
+      child: const LunanulApp(),
+    ),
+  );
 }
 
 class LunanulApp extends ConsumerWidget {
@@ -36,6 +45,16 @@ class LunanulApp extends ConsumerWidget {
     // Initialize language on app start
     ref.listen(languageInitializationProvider, (previous, next) {
       // Language initialization is handled automatically by the provider
+    });
+
+    // Initialize subscription system
+    ref.listen(subscriptionProvider, (previous, next) {
+      // Subscription status changes are handled automatically
+    });
+
+    // Initialize subscription onboarding
+    ref.listen(subscriptionOnboardingProvider, (previous, next) {
+      // Onboarding state changes are handled automatically
     });
 
     return MaterialApp.router(

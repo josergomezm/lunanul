@@ -85,6 +85,14 @@
   "interpretationSaved": "Interpretation saved to journal",
   "failedToSave": "Failed to save",
   
+  "interpretCards": "Interpret Cards",
+  "interpretCardsDescription": "Generate AI interpretations for your selected cards",
+  "interpretingCards": "Interpreting cards...",
+  "noCardsToInterpret": "No cards selected to interpret",
+  "interpretationComplete": "Interpretation complete",
+  "reinterpretCards": "Re-interpret Cards",
+  "interpretations": "Interpretations",
+  
   "navigationHome": "Home",
   "navigationReadings": "Readings",
   "navigationManual": "Manual",
@@ -421,7 +429,7 @@
   "tapToRevealCards": "Tap to reveal your cards",
   "touchCardWhenReady": "Touch each card when you're ready to see its message",
   "yourReading": "Your Reading",
-  "saveToJournal": "Save to Journal",
+  "addPersonalReflection": "Add Personal Reflection",
   "newReading": "New Reading",
   
   "guideSageName": "Zian",
@@ -490,5 +498,14 @@
   "guideVisionaryExpertise": "Creative inspiration, exploring possibilities, overcoming blocks, and unlocking potential",
   "@guideVisionaryExpertise": {
     "description": "Expertise areas of the Visionary guide"
+  },
+  
+  "readingComplete": "Reading Complete",
+  "@readingComplete": {
+    "description": "Title shown when a reading interpretation is complete"
+  },
+  "startNewReading": "Start New Reading",
+  "@startNewReading": {
+    "description": "Button text to start a new reading after completing one"
   }
 }

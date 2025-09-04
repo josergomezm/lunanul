@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'subscription_status.dart';
+import 'enums.dart';
 
 /// Represents a user of the Lunanul app
 class User {
@@ -8,15 +10,17 @@ class User {
   final DateTime createdAt;
   final DateTime lastActiveAt;
   final Map<String, dynamic> preferences;
+  final SubscriptionStatus subscriptionStatus;
 
-  const User({
+  User({
     required this.id,
     required this.name,
     this.email,
     required this.createdAt,
     required this.lastActiveAt,
     this.preferences = const {},
-  });
+    SubscriptionStatus? subscriptionStatus,
+  }) : subscriptionStatus = subscriptionStatus ?? SubscriptionStatus.free();
 
   /// Create a copy of this user with some properties changed
   User copyWith({
@@ -26,6 +30,7 @@ class User {
     DateTime? createdAt,
     DateTime? lastActiveAt,
     Map<String, dynamic>? preferences,
+    SubscriptionStatus? subscriptionStatus,
   }) {
     return User(
       id: id ?? this.id,
@@ -34,6 +39,7 @@ class User {
       createdAt: createdAt ?? this.createdAt,
       lastActiveAt: lastActiveAt ?? this.lastActiveAt,
       preferences: preferences ?? this.preferences,
+      subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
     );
   }
 
@@ -81,6 +87,68 @@ class User {
     return copyWith(preferences: newPreferences);
   }
 
+  /// Update subscription status
+  User updateSubscriptionStatus(SubscriptionStatus newStatus) {
+    return copyWith(subscriptionStatus: newStatus);
+  }
+
+  /// Get current subscription tier
+  SubscriptionTier get subscriptionTier => subscriptionStatus.tier;
+
+  /// Check if user has active subscription
+  bool get hasActiveSubscription => subscriptionStatus.isValid;
+
+  /// Check if user is on free tier
+  bool get isFreeUser => subscriptionStatus.tier == SubscriptionTier.seeker;
+
+  /// Check if user is on paid tier
+  bool get isPaidUser => subscriptionStatus.tier != SubscriptionTier.seeker;
+
+  /// Check if user has specific tier or higher
+  bool hasAtLeastTier(SubscriptionTier minimumTier) {
+    const tierHierarchy = {
+      SubscriptionTier.seeker: 0,
+      SubscriptionTier.mystic: 1,
+      SubscriptionTier.oracle: 2,
+    };
+
+    final currentLevel = tierHierarchy[subscriptionStatus.tier] ?? 0;
+    final minimumLevel = tierHierarchy[minimumTier] ?? 0;
+
+    return currentLevel >= minimumLevel;
+  }
+
+  /// Get usage count for a specific feature
+  int getUsageCount(String feature) {
+    return subscriptionStatus.getUsageCount(feature);
+  }
+
+  /// Increment usage for a feature
+  User incrementUsage(String feature) {
+    final updatedStatus = subscriptionStatus.incrementUsage(feature);
+    return copyWith(subscriptionStatus: updatedStatus);
+  }
+
+  /// Reset monthly usage
+  User resetUsage() {
+    final updatedStatus = subscriptionStatus.resetUsage();
+    return copyWith(subscriptionStatus: updatedStatus);
+  }
+
+  /// Get subscription-aware preferences
+  Map<String, dynamic> getSubscriptionAwarePreferences() {
+    final basePreferences = Map<String, dynamic>.from(preferences);
+
+    // Add subscription-specific preferences
+    basePreferences['subscriptionTier'] = subscriptionStatus.tier.name;
+    basePreferences['subscriptionActive'] = subscriptionStatus.isActive;
+    basePreferences['subscriptionExpiration'] = subscriptionStatus
+        .expirationDate
+        ?.toIso8601String();
+
+    return basePreferences;
+  }
+
   /// Validate user data
   bool get isValid {
     return id.isNotEmpty && name.isNotEmpty;
@@ -95,6 +163,7 @@ class User {
       'createdAt': createdAt.toIso8601String(),
       'lastActiveAt': lastActiveAt.toIso8601String(),
       'preferences': preferences,
+      'subscriptionStatus': subscriptionStatus.toJson(),
     };
   }
 
@@ -107,6 +176,11 @@ class User {
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastActiveAt: DateTime.parse(json['lastActiveAt'] as String),
       preferences: Map<String, dynamic>.from(json['preferences'] as Map? ?? {}),
+      subscriptionStatus: json['subscriptionStatus'] != null
+          ? SubscriptionStatus.fromJson(
+              json['subscriptionStatus'] as Map<String, dynamic>,
+            )
+          : SubscriptionStatus.free(),
     );
   }
 
@@ -129,6 +203,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email)';
+    return 'User(id: $id, name: $name, email: $email, tier: ${subscriptionStatus.tier})';
   }
 }

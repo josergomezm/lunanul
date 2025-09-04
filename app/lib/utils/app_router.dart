@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../pages/pages.dart';
+import '../pages/subscription_management_page.dart';
 import '../models/enums.dart';
 import '../widgets/main_scaffold.dart';
 import 'constants.dart';
@@ -87,6 +88,15 @@ class AppRouter {
                 SpreadSelectionPage(topic: topic, selectedGuide: guide),
               );
             },
+          ),
+          GoRoute(
+            path: AppConstants.subscriptionManagementRoute,
+            name: 'subscription-management',
+            pageBuilder: (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              const SubscriptionManagementPage(),
+            ),
           ),
         ],
       ),
@@ -179,6 +189,10 @@ extension AppRouterExtension on BuildContext {
 
   /// Navigate to settings page
   void goSettings() => go(AppConstants.settingsRoute);
+
+  /// Navigate to subscription management page
+  void goSubscriptionManagement() =>
+      go(AppConstants.subscriptionManagementRoute);
 
   /// Get current route path
   String get currentRoute => GoRouterState.of(this).uri.path;

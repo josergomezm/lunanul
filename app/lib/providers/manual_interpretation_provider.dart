@@ -4,6 +4,7 @@ import '../models/tarot_card.dart';
 import '../models/enums.dart';
 import '../services/manual_interpretation_service.dart';
 import '../services/card_service.dart';
+import 'feature_gate_provider.dart';
 
 /// Provider for manual interpretation service
 final manualInterpretationServiceProvider =
@@ -22,6 +23,7 @@ class ManualInterpretationState {
   final List<CardConnection> connections;
   final bool isSearching;
   final String searchQuery;
+  final bool hasRequestedInterpretation;
 
   const ManualInterpretationState({
     this.selectedTopic,
@@ -33,6 +35,7 @@ class ManualInterpretationState {
     this.connections = const [],
     this.isSearching = false,
     this.searchQuery = '',
+    this.hasRequestedInterpretation = false,
   });
 
   ManualInterpretationState copyWith({
@@ -45,6 +48,7 @@ class ManualInterpretationState {
     List<CardConnection>? connections,
     bool? isSearching,
     String? searchQuery,
+    bool? hasRequestedInterpretation,
   }) {
     return ManualInterpretationState(
       selectedTopic: selectedTopic ?? this.selectedTopic,
@@ -56,25 +60,72 @@ class ManualInterpretationState {
       connections: connections ?? this.connections,
       isSearching: isSearching ?? this.isSearching,
       searchQuery: searchQuery ?? this.searchQuery,
+      hasRequestedInterpretation:
+          hasRequestedInterpretation ?? this.hasRequestedInterpretation,
     );
   }
 
-  bool get hasSelectedCards => selectedCards.isNotEmpty;
-  bool get canGenerateInterpretation =>
-      selectedTopic != null && hasSelectedCards;
-  bool get hasConnections => connections.isNotEmpty;
+  bool get hasSelectedCards {
+    try {
+      return selectedCards.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool get canGenerateInterpretation {
+    try {
+      return selectedTopic != null && hasSelectedCards;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool get hasConnections {
+    try {
+      return connections.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool get hasCardsWithoutInterpretation {
+    try {
+      return selectedCards.any((card) => card.interpretation.isEmpty);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool get canInterpretCards {
+    try {
+      return selectedTopic != null && hasSelectedCards;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool get shouldShowInterpretations {
+    try {
+      return (hasRequestedInterpretation == true) &&
+          selectedCards.any((card) => card.interpretation.isNotEmpty);
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 /// Notifier for managing manual interpretation state
 class ManualInterpretationNotifier
     extends StateNotifier<ManualInterpretationState> {
-  ManualInterpretationNotifier(this._service, this._cardService)
+  ManualInterpretationNotifier(this._service, this._cardService, this._ref)
     : super(const ManualInterpretationState()) {
     _loadAvailableCards();
   }
 
   final ManualInterpretationService _service;
   final CardService _cardService;
+  final Ref _ref;
 
   /// Load all available cards
   Future<void> _loadAvailableCards() async {
@@ -100,6 +151,55 @@ class ManualInterpretationNotifier
     state = state.copyWith(selectedGuide: guide);
   }
 
+  /// Check if user can perform manual interpretation and consume usage
+  Future<bool> validateManualInterpretationUsage() async {
+    try {
+      // Use the feature gate service to validate and consume usage
+      final featureGateNotifier = _ref.read(
+        featureGateNotifierProvider.notifier,
+      );
+      return await featureGateNotifier.validateAndConsumeUsage(
+        'manual_interpretations',
+      );
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Add a card to the interpretation without generating interpretation
+  void addCardWithoutInterpretation(
+    TarotCard card, {
+    String? customPosition,
+    bool isReversed = false,
+  }) {
+    if (state.selectedTopic == null) return;
+
+    // Apply reversed orientation to the card
+    final orientedCard = card.copyWith(isReversed: isReversed);
+
+    // Determine position name
+    final currentCount = state.selectedCards.length;
+    final suggestedPositions = _service.getSuggestedPositions(currentCount + 1);
+    final positionName =
+        customPosition ??
+        (currentCount < suggestedPositions.length
+            ? suggestedPositions[currentCount]
+            : 'Position ${currentCount + 1}');
+
+    // Create new card position without interpretation
+    final cardPosition = ManualCardPosition(
+      card: orientedCard,
+      positionName: positionName,
+      interpretation: '', // Empty interpretation - will be filled later
+      order: currentCount,
+    );
+
+    // Add to selected cards
+    final updatedCards = [...state.selectedCards, cardPosition];
+
+    state = state.copyWith(selectedCards: updatedCards);
+  }
+
   /// Add a card to the interpretation
   Future<void> addCard(
     TarotCard card, {
@@ -110,6 +210,17 @@ class ManualInterpretationNotifier
 
     try {
       state = state.copyWith(isLoading: true, error: null);
+
+      // Check if user can perform manual interpretation and consume usage
+      final canPerform = await validateManualInterpretationUsage();
+      if (!canPerform) {
+        state = state.copyWith(
+          error:
+              'You have reached your monthly limit for manual interpretations. Upgrade to continue.',
+          isLoading: false,
+        );
+        return;
+      }
 
       // Apply reversed orientation to the card
       final orientedCard = card.copyWith(isReversed: isReversed);
@@ -302,6 +413,7 @@ class ManualInterpretationNotifier
       connections: [],
       selectedTopic: null,
       selectedGuide: null,
+      hasRequestedInterpretation: false,
     );
   }
 
@@ -315,6 +427,59 @@ class ManualInterpretationNotifier
       topic: state.selectedTopic!,
       selectedCards: state.selectedCards,
     );
+  }
+
+  /// Generate interpretations for all selected cards
+  Future<void> interpretAllCards() async {
+    if (state.selectedTopic == null || state.selectedCards.isEmpty) return;
+
+    try {
+      state = state.copyWith(isLoading: true, error: null);
+
+      // Check if user can perform manual interpretation and consume usage
+      final canPerform = await validateManualInterpretationUsage();
+      if (!canPerform) {
+        state = state.copyWith(
+          error:
+              'You have reached your monthly limit for manual interpretations. Upgrade to continue.',
+          isLoading: false,
+        );
+        return;
+      }
+
+      // Generate interpretations for all cards
+      final updatedCards = <ManualCardPosition>[];
+
+      for (int i = 0; i < state.selectedCards.length; i++) {
+        final cardPosition = state.selectedCards[i];
+
+        // Generate new interpretation
+        final interpretation = await _service.generateInterpretation(
+          card: cardPosition.card,
+          topic: state.selectedTopic!,
+          positionName: cardPosition.positionName,
+          selectedGuide: state.selectedGuide,
+        );
+
+        // Update the card position with new interpretation
+        updatedCards.add(cardPosition.copyWith(interpretation: interpretation));
+      }
+
+      // Analyze connections with updated cards
+      final connections = _service.analyzeCardConnections(updatedCards);
+
+      state = state.copyWith(
+        selectedCards: updatedCards,
+        connections: connections,
+        isLoading: false,
+        hasRequestedInterpretation: true,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        error: 'Failed to interpret cards: $e',
+        isLoading: false,
+      );
+    }
   }
 
   /// Clear any error state
@@ -331,7 +496,7 @@ final manualInterpretationProvider =
     >((ref) {
       final service = ref.watch(manualInterpretationServiceProvider);
       final cardService = CardService.instance;
-      return ManualInterpretationNotifier(service, cardService);
+      return ManualInterpretationNotifier(service, cardService, ref);
     });
 
 /// Provider for saved manual interpretations
@@ -340,3 +505,16 @@ final savedManualInterpretationsProvider =
       final service = ref.watch(manualInterpretationServiceProvider);
       return service.getSavedInterpretations();
     });
+
+/// Provider for checking manual interpretation access (without consuming usage)
+final canAccessManualInterpretationProvider = FutureProvider<bool>((ref) async {
+  return ref.watch(canPerformManualInterpretationProvider).value ?? false;
+});
+
+/// Provider for manual interpretation usage info
+final manualInterpretationUsageProvider = FutureProvider<Map<String, dynamic>>((
+  ref,
+) async {
+  return ref.watch(featureUsageInfoProvider('manual_interpretations')).value ??
+      {};
+});

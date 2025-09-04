@@ -4,6 +4,7 @@ import '../models/enums.dart';
 import '../services/guide_service.dart';
 import '../services/guide_localizations.dart';
 import '../l10n/generated/app_localizations.dart';
+import 'feature_gate_provider.dart';
 
 /// Provider for the GuideService instance
 final guideServiceProvider = Provider<GuideService>((ref) {
@@ -19,10 +20,22 @@ final guideLocalizationsProvider = Provider<GuideLocalizations>((ref) {
 /// This is reset when a new reading session starts
 final selectedGuideProvider = StateProvider<GuideType?>((ref) => null);
 
-/// Provider for all available guides
-final availableGuidesProvider = Provider<List<TarotGuide>>((ref) {
+/// Provider for all guides (regardless of subscription)
+final allGuidesProvider = Provider<List<TarotGuide>>((ref) {
   final guideService = ref.read(guideServiceProvider);
   return guideService.getAllGuides();
+});
+
+/// Provider for subscription-filtered available guides
+final subscriptionFilteredGuidesProvider = Provider<List<TarotGuide>>((ref) {
+  final allGuides = ref.watch(allGuidesProvider);
+  // Get available guide types from feature gate provider
+  final availableGuideTypes = ref.watch(availableGuidesProvider);
+
+  // Filter guides based on subscription access
+  return allGuides
+      .where((guide) => availableGuideTypes.contains(guide.type))
+      .toList();
 });
 
 /// Provider for localized guides based on current locale

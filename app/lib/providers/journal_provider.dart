@@ -2,10 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/reading.dart';
 import '../models/enums.dart';
 import '../services/journal_service.dart';
+import 'usage_tracking_provider.dart';
 
 /// Provider for the JournalService instance
 final journalServiceProvider = Provider<JournalService>((ref) {
-  return JournalService.instance;
+  final service = JournalService.instance;
+  final usageTrackingService = ref.read(usageTrackingServiceProvider);
+  service.setUsageTrackingService(usageTrackingService);
+  return service;
 });
 
 /// State notifier for managing saved readings

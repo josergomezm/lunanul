@@ -42,7 +42,9 @@ class ReadingSpreadWidget extends StatelessWidget {
             Text(
               spreadType.description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -61,11 +63,14 @@ class ReadingSpreadWidget extends StatelessWidget {
       case SpreadType.threeCard:
         return _buildThreeCardLayout();
       case SpreadType.celtic:
+      case SpreadType.celticCross:
         return _buildCelticCrossLayout(context);
       case SpreadType.relationship:
         return _buildRelationshipLayout();
       case SpreadType.career:
         return _buildCareerLayout();
+      case SpreadType.horseshoe:
+        return _buildHorseshoeLayout();
     }
   }
 
@@ -134,6 +139,33 @@ class ReadingSpreadWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildHorseshoeLayout() {
+    if (cards.length < 7) return const SizedBox.shrink();
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildCardWithLabel(0, 'Past'),
+            _buildCardWithLabel(1, 'Present'),
+            _buildCardWithLabel(2, 'Future'),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildCardWithLabel(3, 'Foundation'),
+            _buildCardWithLabel(4, 'Challenges'),
+            _buildCardWithLabel(5, 'Guidance'),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _buildCardWithLabel(6, 'Outcome'),
+      ],
+    );
+  }
+
   Widget _buildCardWithLabel(int index, String label) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -161,26 +193,23 @@ class ReadingSpreadWidget extends StatelessWidget {
     }
 
     return CardWidget.legacy(
-      card: cards[index].card,
-      width: cardWidth,
-      height: cardHeight,
-      onTap: enableCardInteraction && onCardTapped != null
-          ? () => onCardTapped!(index)
-          : null,
-      enableFlipAnimation: false,
-    )
-    .animate()
-    .fadeIn(
-      duration: AppTheme.mediumAnimation,
-      delay: (index * 150).ms,
-    )
-    .slideY(
-      begin: 0.5,
-      end: 0,
-      duration: AppTheme.mediumAnimation,
-      delay: (index * 150).ms,
-      curve: Curves.easeOutBack,
-    );
+          card: cards[index].card,
+          width: cardWidth,
+          height: cardHeight,
+          onTap: enableCardInteraction && onCardTapped != null
+              ? () => onCardTapped!(index)
+              : null,
+          enableFlipAnimation: false,
+        )
+        .animate()
+        .fadeIn(duration: AppTheme.mediumAnimation, delay: (index * 150).ms)
+        .slideY(
+          begin: 0.5,
+          end: 0,
+          duration: AppTheme.mediumAnimation,
+          delay: (index * 150).ms,
+          curve: Curves.easeOutBack,
+        );
   }
 }
 
@@ -209,22 +238,30 @@ class CompactReadingSpreadWidget extends StatelessWidget {
 
   Widget _buildCompactLayout() {
     if (cards.isEmpty) return const SizedBox.shrink();
-    
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: cards.take(3).map((cardPosition) {
-        final index = cards.indexOf(cardPosition);
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: CardWidget.legacy(
-            card: cardPosition.card,
-            width: cardSize,
-            height: cardSize * 1.6,
-            onTap: onCardTapped != null ? () => onCardTapped!(index) : null,
-            enableFlipAnimation: false,
-          ),
-        );
-      }).toList(),
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 96, // Minimum height for card display
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: cards.take(3).map((cardPosition) {
+            final index = cards.indexOf(cardPosition);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: CardWidget.legacy(
+                card: cardPosition.card,
+                width: cardSize,
+                height: cardSize * 1.6,
+                onTap: onCardTapped != null ? () => onCardTapped!(index) : null,
+                enableFlipAnimation: false,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 }
